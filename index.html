@@ -661,9 +661,11 @@ function autoSaveRecording(mode) {
   var now = new Date();
   var pad = function(n) { return String(n).padStart(2, '0'); };
   var ext = mtype.includes('mp4') ? 'm4a' : mtype.includes('ogg') ? 'ogg' : 'webm';
+  var scriptId = (current && current.id) ? current.id : 'unknown';
+  // 形式: YYYY-MM-DD-HH-MM-{scriptId}-{mode}.ext
   var fname = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate())
     + '-' + pad(now.getHours()) + '-' + pad(now.getMinutes())
-    + '-' + mode + '.' + ext;
+    + '-' + scriptId + '-' + mode + '.' + ext;
   var reader = new FileReader();
   reader.onload = function() {
     var b64 = reader.result.split(',')[1];
@@ -1121,18 +1123,34 @@ function loadPastRecordings() {
       return;
     }
     files.sort(function(a, b) { return b.name.localeCompare(a.name); });
+    // スクリプトID→タイトルの対応表を作成
+    var scriptTitleMap = {};
+    SCRIPTS.forEach(function(s) { scriptTitleMap[s.id] = s.title; });
+
     var html = files.slice(0, 20).map(function(f) {
       var rawUrl = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/recordings/' + f.name;
       var base = f.name.replace(/\.(m4a|webm|ogg|mp4)$/, '');
-      var parts = base.split('-'); // YYYY-MM-DD-HH-MM-mode
-      var modeKey = parts[5] || '';
+      var parts = base.split('-');
+      // 新形式: YYYY-MM-DD-HH-MM-{scriptId}-{mode}  (7部分)
+      // 旧形式: YYYY-MM-DD-HH-MM-{mode}              (6部分)
+      var scriptId, modeKey;
+      if (parts.length >= 7) {
+        scriptId = parts[5];
+        modeKey  = parts[6];
+      } else {
+        scriptId = '';
+        modeKey  = parts[5] || '';
+      }
       var modeStr = modeKey === 'shadowing' ? 'シャドーイング' : '音読';
-      var icon = modeKey === 'shadowing' ? '🎧' : '📖';
+      var icon    = modeKey === 'shadowing' ? '🎧' : '📖';
       var dateLabel = (parts[0]||'') + '/' + (parts[1]||'') + '/' + (parts[2]||'')
         + ' ' + (parts[3]||'') + ':' + (parts[4]||'');
+      var scriptLabel = scriptId ? (scriptTitleMap[scriptId] || scriptId) : '';
+      var titleLine = icon + ' ' + modeStr
+        + (scriptLabel ? ' · ' + scriptLabel : '')
+        + ' · ' + dateLabel;
       return '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px">'
-        + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px">'
-        + icon + ' ' + modeStr + ' · ' + dateLabel + '</div>'
+        + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px">' + titleLine + '</div>'
         + '<audio controls style="width:100%;height:36px" src="' + rawUrl + '"></audio>'
         + '</div>';
     }).join('');
