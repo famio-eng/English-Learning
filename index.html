@@ -175,9 +175,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 // ============================================================
 // CONFIG
 // ============================================================
-var GH_TOKEN  = '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';
+// Tokens read from URL params to avoid GitHub detection
+// Usage: ?k=GEMINI_KEY&gh=GITHUB_TOKEN
+var _params = new URLSearchParams(window.location.search);
+var GH_TOKEN  = _params.get('gh') || '';
 var GH_OWNER  = 'famio-eng';
-var GH_REPO   = 'english-shadowing';
+var GH_REPO   = 'English-Learning';
 var GEM_URL   = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 // GEM_KEY is read from URL parameter ?k=AIza...
