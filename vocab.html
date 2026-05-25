@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>単語帳</title>
+<style>
+:root{--bg:#1a1a1a;--bg2:#242424;--bg3:#2e2e2e;--text:#f0f0f0;--text2:#aaa;--text3:#666;--border:#3a3a3a;--accent:#7c6ff7;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;}
+@media(prefers-color-scheme:light){:root{--bg:#f5f5f5;--bg2:#fff;--bg3:#efefef;--text:#111;--text2:#555;--text3:#999;--border:#ddd;--accent:#635fd2;--green:#16a34a;--amber:#d97706;--red:#dc2626;}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overflow:hidden}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.header{flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+.app-title{font-size:16px;font-weight:700;color:var(--text)}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
+.tab{flex:1;padding:10px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.btn{padding:10px 16px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+.btn-sm{padding:7px 12px;font-size:12px;border-radius:8px}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Stats */
+.stats-bar{display:flex;gap:8px;margin-bottom:14px}
+.stat-pill{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}
+.stat-num{font-size:18px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:10px;color:var(--text2);margin-top:1px}
+/* Card */
+.card-scene{perspective:1000px;margin-bottom:16px;cursor:pointer;user-select:none}
+.card-inner{position:relative;width:100%;min-height:200px;transition:transform .4s;transform-style:preserve-3d}
+.card-scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;min-height:200px;backface-visibility:hidden;border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.card-front{background:var(--bg2);border:1px solid var(--border)}
+.card-back{background:var(--accent);transform:rotateY(180deg);color:#fff}
+.card-word{font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px}
+.card-pron{font-size:13px;color:var(--text2);margin-bottom:8px}
+.card-source{font-size:11px;color:var(--text3)}
+.card-hint{font-size:12px;color:var(--text3);margin-top:14px}
+.card-meaning{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
+.card-ex{font-size:13px;color:rgba(255,255,255,.8);font-style:italic;line-height:1.5}
+.card-speak{margin-top:12px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer}
+/* Progress bar */
+.prog-wrap{margin-bottom:12px}
+.prog-bar{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);transition:width .3s}
+.prog-txt{font-size:11px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between}
+/* Answer buttons */
+.ans-row{display:flex;gap:6px;margin-bottom:12px}
+.ans-btn{flex:1;padding:11px 0;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.btn-again{background:#7f1d1d;color:#fca5a5}
+.btn-hard{background:#78350f;color:#fcd34d}
+.btn-good{background:#14532d;color:#86efac}
+.btn-easy{background:#1e3a5f;color:#7dd3fc}
+/* Word list */
+.word-item{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;cursor:pointer}
+.word-item-main{flex:1}
+.word-item-word{font-size:15px;font-weight:700;color:var(--text)}
+.word-item-meaning{font-size:13px;color:var(--text2)}
+.due-badge{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
+.due-now{background:var(--red);color:#fff}
+.due-soon{background:var(--amber);color:#fff}
+.due-later{background:var(--bg3);color:var(--text2)}
+.empty{text-align:center;padding:40px 20px;color:var(--text2)}
+.finish{text-align:center;padding:40px 20px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg2);border-radius:20px;padding:8px 16px;font-size:13px;white-space:nowrap;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.toast.ok{border:1px solid var(--green);color:var(--green)}
+.toast.err{border:1px solid var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="topbar">
+      <div class="app-title">📚 単語帳</div>
+      <button class="btn btn-secondary btn-sm" onclick="loadVocab()">🔄 更新</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" id="tab-review" onclick="switchTab('review')">復習</div>
+    <div class="tab" id="tab-list" onclick="switchTab('list')">一覧</div>
+  </div>
+  <div class="content" id="content">
+    <div class="empty"><span class="spinner"></span><div style="margin-top:12px">単語データを読み込み中...</div></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var GH_TOKEN = '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';
+var GH_OWNER = 'famio-eng';
+var GH_REPO  = 'English-Learning';
+var RAW_BASE = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/';
+
+var words = [];
+var currentTab = 'review';
+var queue = [];
+var qIdx = 0;
+var flipped = false;
+var sOk = 0, sTotal = 0;
+var synth = window.speechSynthesis;
+
+// ===== LOAD =====
+function loadVocab() {
+  var c = document.getElementById('content');
+  c.innerHTML = '<div class="empty"><span class="spinner"></span><div style="margin-top:12px">読み込み中...</div></div>';
+  fetch(RAW_BASE + 'data/vocab.json?t=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      words = data.words || [];
+      showToast('✓ ' + words.length + '単語を読み込みました', true);
+      buildQueue();
+      renderTab(currentTab);
+    })
+    .catch(function(e) {
+      c.innerHTML = '<div class="empty">読み込みに失敗しました。<br><br><button class="btn btn-secondary" onclick="loadVocab()">再試行</button></div>';
+    });
+}
+
+// ===== SRS =====
+function calcNext(word, q) {
+  var intervals = [1/24, 0.1, 1, 4];
+  var mults = [1, 1.2, 2.5, 4];
+  var cur = word.interval || 1;
+  var ni = q <= 1 ? intervals[q] : cur * mults[q];
+  return Math.max(intervals[q], ni);
+}
+
+function getDue() {
+  var now = new Date().toISOString().split('T')[0];
+  return words.filter(function(w) {
+    return !w.nextReview || w.nextReview <= now;
+  });
+}
+
+function applyReview(id, q) {
+  var w = words.find(function(x) { return x.id === id; });
+  if (!w) return;
+  w.interval = calcNext(w, q);
+  var d = new Date();
+  d.setTime(d.getTime() + w.interval * 86400000);
+  w.nextReview = d.toISOString().split('T')[0];
+  w.reviewCount = (w.reviewCount || 0) + 1;
+  if (q >= 2) { sOk++; w.streak = (w.streak || 0) + 1; }
+  else w.streak = 0;
+  sTotal++;
+}
+
+function saveVocab() {
+  var encoded = btoa(unescape(encodeURIComponent(JSON.stringify({words: words}, null, 2))));
+  // Get current file SHA first
+  fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json', {
+    headers: {'Authorization': 'Bearer ' + GH_TOKEN}
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json', {
+      method: 'PUT',
+      headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+      body: JSON.stringify({message: '単語帳更新', content: encoded, sha: data.sha})
+    });
+  })
+  .then(function(r) {
+    if (r.ok) showToast('✓ 復習データを保存しました', true);
+    else showToast('保存に失敗しました', false);
+  })
+  .catch(function() { showToast('保存エラー', false); });
+}
+
+// ===== TABS =====
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'review') buildQueue();
+  renderTab(tab);
+}
+
+function buildQueue() {
+  queue = getDue().sort(function(a, b) {
+    return (a.nextReview || '') < (b.nextReview || '') ? -1 : 1;
+  });
+  qIdx = 0; flipped = false; sOk = 0; sTotal = 0;
+}
+
+function renderTab(tab) {
+  if (tab === 'review') renderReview();
+  else renderList();
+}
+
+// ===== REVIEW =====
+function renderReview() {
+  var c = document.getElementById('content');
+  if (words.length === 0) {
+    c.innerHTML = '<div class="empty">単語データがありません<br><br><button class="btn btn-primary" onclick="loadVocab()">読み込む</button></div>';
+    return;
+  }
+  if (queue.length === 0 || qIdx >= queue.length) {
+    var rate = sTotal > 0 ? Math.round(sOk / sTotal * 100) : 0;
+    c.innerHTML = '<div class="finish">'
+      + '<div style="font-size:40px;margin-bottom:10px">🎉</div>'
+      + '<div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px">復習完了！</div>'
+      + '<div style="font-size:14px;color:var(--text2);margin-bottom:16px">正解率: ' + rate + '%</div>'
+      + '<div style="display:flex;gap:8px;justify-content:center">'
+      + '<button class="btn btn-secondary" onclick="buildQueue();renderReview()">もう一度</button>'
+      + '<button class="btn btn-primary" onclick="saveVocab()">💾 進捗を保存</button>'
+      + '</div></div>';
+    return;
+  }
+
+  var total = queue.length;
+  var cur = queue[qIdx];
+  var pct = Math.round(qIdx / total * 100);
+  var wesc = (cur.word || '').replace(/'/g, "\\'");
+
+  var html = '<div class="stats-bar">'
+    + '<div class="stat-pill"><div class="stat-num">' + total + '</div><div class="stat-lbl">復習待ち</div></div>'
+    + '<div class="stat-pill"><div class="stat-num">' + qIdx + '</div><div class="stat-lbl">完了</div></div>'
+    + '<div class="stat-pill"><div class="stat-num">' + (sTotal > 0 ? Math.round(sOk/sTotal*100) : 0) + '%</div><div class="stat-lbl">正解率</div></div>'
+    + '</div>'
+    + '<div class="prog-wrap">'
+    + '<div class="prog-txt"><span>' + qIdx + ' / ' + total + '</span><span>' + pct + '%</span></div>'
+    + '<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%"></div></div>'
+    + '</div>'
+    + '<div class="card-scene' + (flipped ? ' flipped' : '') + '" id="card" onclick="flipCard()">'
+    + '<div class="card-inner">'
+    + '<div class="card-face card-front">'
+    + '<div class="card-word">' + (cur.word || '') + '</div>'
+    + '<div class="card-pron">' + (cur.pron || '') + '</div>'
+    + '<div class="card-source">📘 ' + (cur.source || '') + '</div>'
+    + '<div class="card-hint">タップして意味を確認</div>'
+    + '</div>'
+    + '<div class="card-face card-back">'
+    + '<div class="card-meaning">' + (cur.meaning || '') + '</div>'
+    + (cur.example ? '<div class="card-ex">"' + cur.example + '"</div>' : '')
+    + '<button class="card-speak" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音を聞く</button>'
+    + '</div>'
+    + '</div></div>'
+    + '<div class="ans-row" id="ansRow" style="' + (flipped ? '' : 'display:none') + '">'
+    + '<button class="ans-btn btn-again" onclick="answer(0)">もう一度</button>'
+    + '<button class="ans-btn btn-hard" onclick="answer(1)">難しい</button>'
+    + '<button class="ans-btn btn-good" onclick="answer(2)">OK</button>'
+    + '<button class="ans-btn btn-easy" onclick="answer(3)">完璧</button>'
+    + '</div>'
+    + '<div style="font-size:12px;color:var(--text2);text-align:center">復習' + (cur.reviewCount||0) + '回 · 連続' + (cur.streak||0) + '回</div>';
+
+  c.innerHTML = html;
+}
+
+function flipCard() {
+  flipped = !flipped;
+  var card = document.getElementById('card');
+  if (card) card.classList.toggle('flipped', flipped);
+  var ans = document.getElementById('ansRow');
+  if (ans) ans.style.display = flipped ? '' : 'none';
+}
+
+function answer(q) {
+  applyReview(queue[qIdx].id, q);
+  if (q === 0) queue.push(queue.splice(qIdx, 1)[0]);
+  else qIdx++;
+  flipped = false;
+  renderReview();
+}
+
+// ===== LIST =====
+function renderList() {
+  var c = document.getElementById('content');
+  if (words.length === 0) {
+    c.innerHTML = '<div class="empty">単語がありません</div>';
+    return;
+  }
+  var now = new Date().toISOString().split('T')[0];
+  var sorted = words.slice().sort(function(a, b) {
+    return (a.nextReview || '') < (b.nextReview || '') ? -1 : 1;
+  });
+
+  var html = '<div style="font-size:13px;color:var(--text2);margin-bottom:10px">'
+    + words.length + '単語 · 復習待ち' + getDue().length + '件</div>';
+
+  // Group by source
+  var sources = {};
+  sorted.forEach(function(w) {
+    var src = w.source || 'その他';
+    if (!sources[src]) sources[src] = [];
+    sources[src].push(w);
+  });
+
+  Object.keys(sources).forEach(function(src) {
+    html += '<div style="font-size:12px;font-weight:700;color:var(--text2);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.04em">📄 ' + src + '</div>';
+    sources[src].forEach(function(w) {
+      var wesc = (w.word || '').replace(/'/g, "\\'");
+      var due = w.nextReview || now;
+      var daysLeft = Math.round((new Date(due) - new Date(now)) / 86400000);
+      var dueLabel = daysLeft <= 0 ? '今すぐ' : daysLeft === 1 ? '明日' : daysLeft + '日後';
+      var dueClass = daysLeft <= 0 ? 'due-now' : daysLeft <= 3 ? 'due-soon' : 'due-later';
+      html += '<div class="word-item" onclick="speakWord(\'' + wesc + '\')">'
+        + '<div class="word-item-main">'
+        + '<div class="word-item-word">' + (w.word || '') + '</div>'
+        + '<div class="word-item-meaning">' + (w.meaning || '') + '</div>'
+        + '</div>'
+        + '<span class="due-badge ' + dueClass + '">' + dueLabel + '</span>'
+        + '</div>';
+    });
+  });
+
+  c.innerHTML = html;
+}
+
+function speakWord(text) {
+  synth.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = 0.85;
+  synth.speak(u);
+}
+
+function showToast(msg, ok) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (ok ? 'ok' : 'err');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
+
+// Boot
+loadVocab();
+</script>
+</body>
+</html>
