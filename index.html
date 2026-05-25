@@ -1123,9 +1123,9 @@ function loadPastRecordings() {
       return;
     }
     files.sort(function(a, b) { return b.name.localeCompare(a.name); });
-    // スクリプトID→タイトルの対応表を作成
-    var scriptTitleMap = {};
-    SCRIPTS.forEach(function(s) { scriptTitleMap[s.id] = s.title; });
+    // スクリプトID・モードの固定対応表
+    var scriptNameMap = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版'};
+    var modeNameMap   = {reading:'音読', shadowing:'シャドーイング'};
 
     var html = files.slice(0, 20).map(function(f) {
       var rawUrl = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/recordings/' + f.name;
@@ -1141,14 +1141,13 @@ function loadPastRecordings() {
         scriptId = '';
         modeKey  = parts[5] || '';
       }
-      var modeStr = modeKey === 'shadowing' ? 'シャドーイング' : '音読';
-      var icon    = modeKey === 'shadowing' ? '🎧' : '📖';
-      var dateLabel = (parts[0]||'') + '/' + (parts[1]||'') + '/' + (parts[2]||'')
+      var dateLabel = (parts[0]||'') + '-' + (parts[1]||'') + '-' + (parts[2]||'')
         + ' ' + (parts[3]||'') + ':' + (parts[4]||'');
-      var scriptLabel = scriptId ? (scriptTitleMap[scriptId] || scriptId) : '';
-      var titleLine = icon + ' ' + modeStr
+      var scriptLabel = scriptId ? (scriptNameMap[scriptId] || scriptId) : '';
+      var modeStr = modeNameMap[modeKey] || modeKey;
+      var titleLine = dateLabel
         + (scriptLabel ? ' · ' + scriptLabel : '')
-        + ' · ' + dateLabel;
+        + ' · ' + modeStr;
       return '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px">'
         + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px">' + titleLine + '</div>'
         + '<audio controls style="width:100%;height:36px" src="' + rawUrl + '"></audio>'
