@@ -8,10 +8,10 @@
       "example": "We are developing an electrosurgical generator for minimally invasive surgery.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0
+      "interval": 2.5,
+      "nextReview": "2026-05-28",
+      "reviewCount": 1,
+      "streak": 1
     },
     {
       "id": "w002",
@@ -21,10 +21,10 @@
       "example": "Endoscopic surgery requires precision instruments.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0
+      "interval": 2.5,
+      "nextReview": "2026-05-28",
+      "reviewCount": 1,
+      "streak": 1
     },
     {
       "id": "w003",
@@ -34,9 +34,9 @@
       "example": "We are preparing for regulatory approval across multiple countries.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 1,
+      "interval": 0.1,
       "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "reviewCount": 2,
       "streak": 0
     },
     {
@@ -47,10 +47,10 @@
       "example": "I obtained my PMP certification to strengthen my project management skills.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0
+      "interval": 2.5,
+      "nextReview": "2026-05-28",
+      "reviewCount": 1,
+      "streak": 1
     },
     {
       "id": "w005",
