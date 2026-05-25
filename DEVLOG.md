@@ -61,6 +61,51 @@
 
 ---
 
+## 2026-05-25 セッション2: タスク1〜4完了
+
+### ✅ タスク1: vocab.html + data/vocab.json 追加
+- vocab.html をリポジトリに追加
+- data/vocab.json（21語）をリポジトリに追加
+- recordings/ フォルダも作成済み（3件の録音あり）
+
+### ✅ タスク2: vocab.html GH_TOKEN URLパラメータ対応
+- `var GH_TOKEN = new URLSearchParams(...).get('gh') || ''` を追加
+- `saveToGitHub()` 関数を新規実装（SHA取得→PUT で data/vocab.json に進捗保存）
+- ヘッダーに 💾 ボタン追加（GH_TOKEN有り時のみ表示）
+- 復習完了画面: GH_TOKEN有り→「💾 GitHubに保存」/ なし→「📤 バックアップ」
+- 既存バグ修正: speakWord呼び出しの文字列結合ミス（Node.js --check で検出）
+- アクセスURL: https://famio-eng.github.io/English-Learning/vocab.html?gh=GH_TOKEN
+
+### ✅ タスク3: 録音ファイル名にscriptId追加（セッション1末に実装済み）
+- `autoSaveRecording(mode)` に `current.id` を組み込み
+- 新形式: `recordings/YYYY-MM-DD-HH-MM-{scriptId}-{mode}.ext`
+  例: `recordings/2026-05-25-21-30-short-reading.m4a`
+- 旧形式（3件: scriptIdなし）は `loadPastRecordings()` で後方互換表示
+
+### ✅ タスク4: 記録タブで過去の録音を再生（セッション1末に実装済み）
+- `renderProgress()` に「🎙 過去の録音」セクションを追加
+- `loadPastRecordings()`: GitHub API で recordings/ 一覧取得（最新20件）
+- ファイル名パース: `scriptTitleMap` でスクリプト名解決
+  表示例: `🎧 シャドーイング · 自己紹介 ショート版 · 2026/05/25 16:35`
+- audio タグで raw.githubusercontent.com から直接再生
+
+### 現在のファイル構成
+```
+English-Learning/
+├── index.html        ✅ シャドーイングアプリ（録音→AI評価→GitHub保存）
+├── vocab.html        ✅ 単語帳アプリ（SM-2・GitHub進捗保存）
+├── DEVLOG.md         ✅ 開発記録（本ファイル）
+├── data/
+│   └── vocab.json    ✅ 21語（3スクリプト分）
+├── records/          ✅ 学習記録Markdown（2件）
+└── recordings/       ✅ 録音データ（3件: 旧形式.m4a）
+```
+
+### 残タスク
+- [ ] タスク5: claude-external-brain の context.md に英語学習プロジェクト情報を追記
+
+---
+
 ## 次にやること（優先順）
 
 ### 1. vocab.htmlとdata/vocab.jsonをGitHubに追加
