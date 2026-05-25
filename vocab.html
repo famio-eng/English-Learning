@@ -13,6 +13,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .header{flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
 .app-title{font-size:16px;font-weight:700;color:var(--text)}
+.header-actions{display:flex;gap:6px}
 .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
 .tab{flex:1;padding:10px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
@@ -76,7 +77,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   <div class="header">
     <div class="topbar">
       <div class="app-title">📚 単語帳</div>
-      <button class="btn btn-secondary btn-sm" onclick="loadVocab()">🔄 更新</button>
+      <div class="header-actions">
+        <button class="btn btn-secondary btn-sm" onclick="exportProgress()" title="進捗をエクスポート">📤</button>
+        <button class="btn btn-secondary btn-sm" onclick="importProgress()" title="進捗をインポート">📥</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadVocab()" title="単語リストを更新">🔄</button>
+      </div>
     </div>
   </div>
   <div class="tabs">
@@ -90,10 +95,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 <div class="toast" id="toast"></div>
 
 <script>
-var GH_TOKEN = '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';
 var GH_OWNER = 'famio-eng';
 var GH_REPO  = 'English-Learning';
 var RAW_BASE = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/';
+var PROGRESS_KEY = 'vocab_progress_v1';
 
 var words = [];
 var currentTab = 'review';
@@ -103,6 +108,56 @@ var flipped = false;
 var sOk = 0, sTotal = 0;
 var synth = window.speechSynthesis;
 
+// ===== LOCAL STORAGE =====
+function getProgress() {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+
+function saveProgressSilent() {
+  var p = {};
+  words.forEach(function(w) {
+    p[w.id] = {interval: w.interval, nextReview: w.nextReview, reviewCount: w.reviewCount, streak: w.streak};
+  });
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+}
+
+function exportProgress() {
+  saveProgressSilent();
+  var p = getProgress();
+  var blob = new Blob([JSON.stringify(p, null, 2)], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'vocab-progress-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📤 エクスポートしました', true);
+}
+
+function importProgress() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev) {
+      try {
+        var p = JSON.parse(ev.target.result);
+        localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+        loadVocab();
+        showToast('✓ インポートしました', true);
+      } catch(err) {
+        showToast('インポートエラー', false);
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
 // ===== LOAD =====
 function loadVocab() {
   var c = document.getElementById('content');
@@ -110,7 +165,23 @@ function loadVocab() {
   fetch(RAW_BASE + 'data/vocab.json?t=' + Date.now())
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      words = data.words || [];
+      var progress = getProgress();
+      words = (data.words || []).map(function(w) {
+        var p = progress[w.id] || {};
+        return {
+          id: w.id,
+          word: w.word,
+          pron: w.pron,
+          meaning: w.meaning,
+          example: w.example,
+          source: w.source,
+          added: w.added,
+          interval: p.interval !== undefined ? p.interval : (w.interval || 1),
+          nextReview: p.nextReview || w.nextReview || new Date().toISOString().split('T')[0],
+          reviewCount: p.reviewCount !== undefined ? p.reviewCount : (w.reviewCount || 0),
+          streak: p.streak !== undefined ? p.streak : (w.streak || 0)
+        };
+      });
       showToast('✓ ' + words.length + '単語を読み込みました', true);
       buildQueue();
       renderTab(currentTab);
@@ -149,27 +220,6 @@ function applyReview(id, q) {
   sTotal++;
 }
 
-function saveVocab() {
-  var encoded = btoa(unescape(encodeURIComponent(JSON.stringify({words: words}, null, 2))));
-  // Get current file SHA first
-  fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json', {
-    headers: {'Authorization': 'Bearer ' + GH_TOKEN}
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json', {
-      method: 'PUT',
-      headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
-      body: JSON.stringify({message: '単語帳更新', content: encoded, sha: data.sha})
-    });
-  })
-  .then(function(r) {
-    if (r.ok) showToast('✓ 復習データを保存しました', true);
-    else showToast('保存に失敗しました', false);
-  })
-  .catch(function() { showToast('保存エラー', false); });
-}
-
 // ===== TABS =====
 function switchTab(tab) {
   currentTab = tab;
@@ -204,10 +254,12 @@ function renderReview() {
       + '<div style="font-size:40px;margin-bottom:10px">🎉</div>'
       + '<div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px">復習完了！</div>'
       + '<div style="font-size:14px;color:var(--text2);margin-bottom:16px">正解率: ' + rate + '%</div>'
-      + '<div style="display:flex;gap:8px;justify-content:center">'
+      + '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
       + '<button class="btn btn-secondary" onclick="restartReview()">もう一度</button>'
-      + '<button class="btn btn-primary" onclick="saveVocab()">💾 進捗を保存</button>'
-      + '</div></div>';
+      + '<button class="btn btn-primary" onclick="exportProgress()">📤 バックアップ</button>'
+      + '</div>'
+      + '<div style="font-size:11px;color:var(--text3);margin-top:12px">進捗はブラウザに自動保存済み</div>'
+      + '</div>';
     return;
   }
 
@@ -236,7 +288,7 @@ function renderReview() {
     + '<div class="card-face card-back">'
     + '<div class="card-meaning">' + (cur.meaning || '') + '</div>'
     + (cur.example ? '<div class="card-ex">"' + cur.example + '"</div>' : '')
-    + '<button class="card-speak" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音を聞く</button>'
+    + '<button class="card-speak" onclick="event.stopPropagation();speakWord(\'' + wesc + \')">🔊 発音を聞く</button>'
     + '</div>'
     + '</div></div>'
     + '<div class="ans-row" id="ansRow" style="' + (flipped ? '' : 'display:none') + '">'
@@ -260,6 +312,7 @@ function flipCard() {
 
 function answer(q) {
   applyReview(queue[qIdx].id, q);
+  saveProgressSilent();
   if (q === 0) queue.push(queue.splice(qIdx, 1)[0]);
   else qIdx++;
   flipped = false;
@@ -281,7 +334,6 @@ function renderList() {
   var html = '<div style="font-size:13px;color:var(--text2);margin-bottom:10px">'
     + words.length + '単語 · 復習待ち' + getDue().length + '件</div>';
 
-  // Group by source
   var sources = {};
   sorted.forEach(function(w) {
     var src = w.source || 'その他';
@@ -297,7 +349,7 @@ function renderList() {
       var daysLeft = Math.round((new Date(due) - new Date(now)) / 86400000);
       var dueLabel = daysLeft <= 0 ? '今すぐ' : daysLeft === 1 ? '明日' : daysLeft + '日後';
       var dueClass = daysLeft <= 0 ? 'due-now' : daysLeft <= 3 ? 'due-soon' : 'due-later';
-      html += '<div class="word-item" onclick="speakWord(\'' + wesc + '\')">'
+      html += '<div class="word-item" onclick="speakWord(\'' + wesc + '\')">'  
         + '<div class="word-item-main">'
         + '<div class="word-item-word">' + (w.word || '') + '</div>'
         + '<div class="word-item-meaning">' + (w.meaning || '') + '</div>'

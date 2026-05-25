@@ -1,0 +1,104 @@
+name: 単語追加
+
+# Claude Code から新しい単語を vocab.json に追加するワークフロー
+# 使い方: GitHub Actions UI または API から workflow_dispatch で起動
+
+on:
+  workflow_dispatch:
+    inputs:
+      words_json:
+        description: '追加する単語データ（JSON配列）例: [{"id":"w022","word":"..."}]'
+        required: true
+        type: string
+      source:
+        description: '単語のソース（例: 会議 フォーマル版）'
+        required: false
+        type: string
+        default: '手動追加'
+
+jobs:
+  add-words:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: 単語を追加
+        run: |
+          python3 << 'PYEOF'
+          import json
+          import sys
+          from datetime import date
+
+          # 現在の vocab.json を読み込み
+          with open('data/vocab.json', 'r', encoding='utf-8') as f:
+              data = json.load(f)
+
+          # 新しい単語を解析
+          new_words_raw = '''${{ inputs.words_json }}'''
+          try:
+              new_words = json.loads(new_words_raw)
+              if isinstance(new_words, dict):
+                  new_words = [new_words]
+          except json.JSONDecodeError as e:
+              print(f'JSON解析エラー: {e}', file=sys.stderr)
+              sys.exit(1)
+
+          # 既存IDを取得
+          existing_ids = {w['id'] for w in data['words']}
+
+          # 最大IDを取得して連番を続ける
+          max_num = 0
+          for w in data['words']:
+              try:
+                  num = int(w['id'].replace('w', ''))
+                  max_num = max(max_num, num)
+              except:
+                  pass
+
+          today = date.today().isoformat()
+          added = 0
+
+          for w in new_words:
+              # IDが未設定または重複の場合は自動採番
+              if not w.get('id') or w['id'] in existing_ids:
+                  max_num += 1
+                  w['id'] = f'w{max_num:03d}'
+
+              # デフォルト値を設定
+              w.setdefault('added', today)
+              w.setdefault('source', '${{ inputs.source }}')
+              w.setdefault('interval', 1)
+              w.setdefault('nextReview', today)
+              w.setdefault('reviewCount', 0)
+              w.setdefault('streak', 0)
+
+              if w['id'] not in existing_ids:
+                  data['words'].append(w)
+                  existing_ids.add(w['id'])
+                  added += 1
+                  print(f"追加: {w['id']} - {w.get('word', '')}")
+
+          # 保存
+          with open('data/vocab.json', 'w', encoding='utf-8') as f:
+              json.dump(data, f, ensure_ascii=False, indent=2)
+
+          print(f'\n✓ {added}単語を追加しました（合計: {len(data["words"])}単語）')
+          PYEOF
+
+      - name: 変更をコミット・プッシュ
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/vocab.json
+          if git diff --staged --quiet; then
+            echo "変更なし（重複単語のみ）"
+          else
+            COUNT=$(git diff HEAD data/vocab.json | grep '^+' | grep -c '"word"' || true)
+            git commit -m "📚 単語追加: $(date +%Y-%m-%d)"
+            git push
+            echo "✓ プッシュ完了"
+          fi
