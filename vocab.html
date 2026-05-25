@@ -78,6 +78,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div class="topbar">
       <div class="app-title">📚 単語帳</div>
       <div class="header-actions">
+        <button class="btn btn-secondary btn-sm" id="ghSaveBtn" onclick="saveToGitHub()" title="GitHubに進捗を保存" style="display:none">💾</button>
         <button class="btn btn-secondary btn-sm" onclick="exportProgress()" title="進捗をエクスポート">📤</button>
         <button class="btn btn-secondary btn-sm" onclick="importProgress()" title="進捗をインポート">📥</button>
         <button class="btn btn-secondary btn-sm" onclick="loadVocab()" title="単語リストを更新">🔄</button>
@@ -95,9 +96,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 <div class="toast" id="toast"></div>
 
 <script>
-var GH_OWNER = 'famio-eng';
-var GH_REPO  = 'English-Learning';
-var RAW_BASE = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/';
+var GH_OWNER  = 'famio-eng';
+var GH_REPO   = 'English-Learning';
+var GH_TOKEN  = (new URLSearchParams(window.location.search)).get('gh') || '';
+var RAW_BASE  = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/';
 var PROGRESS_KEY = 'vocab_progress_v1';
 
 var words = [];
@@ -120,6 +122,57 @@ function saveProgressSilent() {
     p[w.id] = {interval: w.interval, nextReview: w.nextReview, reviewCount: w.reviewCount, streak: w.streak};
   });
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+}
+
+// ===== GITHUB SAVE =====
+function saveToGitHub() {
+  if (!GH_TOKEN) {
+    showToast('URLに?gh=トークンが必要です', false);
+    return;
+  }
+  // 進捗フィールドを埋め込んだvocab.jsonをGitHubに保存
+  var vocabData = {
+    words: words.map(function(w) {
+      return {
+        id: w.id, word: w.word, pron: w.pron,
+        meaning: w.meaning, example: w.example,
+        source: w.source, added: w.added,
+        interval: w.interval, nextReview: w.nextReview,
+        reviewCount: w.reviewCount, streak: w.streak
+      };
+    })
+  };
+  var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(vocabData, null, 2))));
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json';
+  var saveBtn = document.getElementById('ghSaveBtn');
+  if (saveBtn) { saveBtn.textContent = '⏳'; saveBtn.disabled = true; }
+
+  // SHA取得 → PUT
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) {
+      if (!r.ok) throw new Error('SHA取得失敗 ' + r.status);
+      return r.json();
+    })
+    .then(function(d) {
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: '📚 単語帳進捗保存: ' + new Date().toISOString().split('T')[0],
+          content: encoded,
+          sha: d.sha
+        })
+      });
+    })
+    .then(function(r) {
+      if (saveBtn) { saveBtn.textContent = '💾'; saveBtn.disabled = false; }
+      if (r.ok) showToast('✓ GitHubに保存しました', true);
+      else showToast('保存に失敗しました (HTTP ' + r.status + ')', false);
+    })
+    .catch(function(e) {
+      if (saveBtn) { saveBtn.textContent = '💾'; saveBtn.disabled = false; }
+      showToast('保存エラー: ' + e.message, false);
+    });
 }
 
 function exportProgress() {
@@ -256,7 +309,9 @@ function renderReview() {
       + '<div style="font-size:14px;color:var(--text2);margin-bottom:16px">正解率: ' + rate + '%</div>'
       + '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
       + '<button class="btn btn-secondary" onclick="restartReview()">もう一度</button>'
-      + '<button class="btn btn-primary" onclick="exportProgress()">📤 バックアップ</button>'
+      + (GH_TOKEN
+          ? '<button class="btn btn-primary" onclick="saveToGitHub()">💾 GitHubに保存</button>'
+          : '<button class="btn btn-primary" onclick="exportProgress()">📤 バックアップ</button>')
       + '</div>'
       + '<div style="font-size:11px;color:var(--text3);margin-top:12px">進捗はブラウザに自動保存済み</div>'
       + '</div>';
@@ -288,7 +343,7 @@ function renderReview() {
     + '<div class="card-face card-back">'
     + '<div class="card-meaning">' + (cur.meaning || '') + '</div>'
     + (cur.example ? '<div class="card-ex">"' + cur.example + '"</div>' : '')
-    + '<button class="card-speak" onclick="event.stopPropagation();speakWord(\'' + wesc + \')">🔊 発音を聞く</button>'
+    + '<button class="card-speak" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音を聞く</button>'
     + '</div>'
     + '</div></div>'
     + '<div class="ans-row" id="ansRow" style="' + (flipped ? '' : 'display:none') + '">'
@@ -382,6 +437,10 @@ function showToast(msg, ok) {
 }
 
 // Boot
+if (GH_TOKEN) {
+  var b = document.getElementById('ghSaveBtn');
+  if (b) b.style.display = '';
+}
 loadVocab();
 </script>
 </body>
