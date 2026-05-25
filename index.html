@@ -329,6 +329,7 @@ var mediaRec = null;
 var recChunks = [];
 var recMimeType = '';
 var lastRecDataUrl = ''; // persists audio after eval
+var lastSavedRecUrl = ''; // GitHub raw URL after auto-save
 var synth = window.speechSynthesis;
 
 // ============================================================
@@ -641,13 +642,47 @@ function onRecReady(mode) {
 
 function retryRec(mode) {
   recChunks = [];
+  lastSavedRecUrl = '';
   var fa = document.getElementById('fbArea');
   if (fa) fa.innerHTML = '';
   var st = document.getElementById('recSt');
   if (st) st.textContent = mode === 'shadowing' ? '再生と同時に録音' : '録音後にAIが評価します';
 }
 
+// ============================================================
+// RECORDING AUTO-SAVE TO GITHUB
+// ============================================================
+function autoSaveRecording(mode) {
+  if (!GH_TOKEN) return;
+  var totalSize = recChunks.reduce(function(s, c) { return s + c.size; }, 0);
+  if (totalSize === 0) return;
+  var mtype = recMimeType || 'audio/webm';
+  var blob = new Blob(recChunks, {type: mtype});
+  var now = new Date();
+  var pad = function(n) { return String(n).padStart(2, '0'); };
+  var ext = mtype.includes('mp4') ? 'm4a' : mtype.includes('ogg') ? 'ogg' : 'webm';
+  var fname = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate())
+    + '-' + pad(now.getHours()) + '-' + pad(now.getMinutes())
+    + '-' + mode + '.' + ext;
+  var reader = new FileReader();
+  reader.onload = function() {
+    var b64 = reader.result.split(',')[1];
+    fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/recordings/' + fname, {
+      method: 'PUT',
+      headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+      body: JSON.stringify({message: '🎤 録音: ' + fname, content: b64})
+    }).then(function(r) {
+      if (r.ok) {
+        lastSavedRecUrl = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/recordings/' + fname;
+        showToast('🎙 録音を保存しました', true);
+      }
+    }).catch(function() {}); // サイレント失敗（評価に影響させない）
+  };
+  reader.readAsDataURL(blob);
+}
+
 function evalRec(mode) {
+  autoSaveRecording(mode); // バックグラウンドで録音をGitHubに保存
   var fa = document.getElementById('fbArea');
   if (fa) fa.innerHTML = '<div style="text-align:center;padding:16px"><span class="spinner"></span><div style="font-size:13px;color:var(--text2);margin-top:8px">Gemini AI評価中...</div></div>';
 
@@ -970,7 +1005,15 @@ function renderProgress(c) {
     + '<div class="stat-card"><div class="stat-num">' + avg + '</div><div class="stat-lbl">平均スコア</div></div>'
     + '</div>'
     + '<div class="sec-title">📝 履歴（タップで詳細）</div>'
-    + histHTML + recBtn + '</div>';
+    + histHTML + recBtn
+    + '<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+    + '<div class="sec-title" style="margin:0">🎙 過去の録音</div>'
+    + '<button class="btn btn-secondary btn-sm" onclick="loadPastRecordings()">読み込む</button>'
+    + '</div>'
+    + '<div id="pastRecArea"><div style="font-size:12px;color:var(--text3)">「読み込む」を押すとGitHubから取得します</div></div>'
+    + '</div>'
+    + '</div>';
 }
 
 function toggleHistDetail(i) {
@@ -1021,6 +1064,12 @@ function saveRecord() {
     '- 平均スコア: ' + avgScore + '点'
   ];
   if (memo) lines.push('- メモ: ' + memo);
+  if (lastSavedRecUrl) {
+    lines.push('', '## 録音');
+    lines.push('[🎧 再生](' + lastSavedRecUrl + ')');
+    lines.push('');
+    lines.push('`' + lastSavedRecUrl + '`');
+  }
   lines.push('', '## セッション詳細');
   practiceHistory.forEach(function(h) {
     lines.push('- ' + (h.mode === 'reading' ? '音読' : 'シャドーイング') + ': ' + h.score + '点 ×' + h.rate);
@@ -1047,6 +1096,49 @@ function saveRecord() {
     btn.disabled = false;
     btn.textContent = 'GitHubに保存する';
     showToast('エラーが発生しました', false);
+  });
+}
+
+// ============================================================
+// PAST RECORDINGS
+// ============================================================
+function loadPastRecordings() {
+  if (!GH_TOKEN) {
+    showToast('URLにgh=トークンが必要です', false);
+    return;
+  }
+  var el = document.getElementById('pastRecArea');
+  if (el) el.innerHTML = '<div style="text-align:center;padding:12px"><span class="spinner"></span><div style="font-size:12px;color:var(--text2);margin-top:6px">読み込み中...</div></div>';
+  fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/recordings', {
+    headers: {'Authorization': 'Bearer ' + GH_TOKEN}
+  }).then(function(r) {
+    if (r.status === 404) return [];
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(files) {
+    if (!Array.isArray(files) || files.length === 0) {
+      if (el) el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px">録音がまだありません</div>';
+      return;
+    }
+    files.sort(function(a, b) { return b.name.localeCompare(a.name); });
+    var html = files.slice(0, 20).map(function(f) {
+      var rawUrl = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/recordings/' + f.name;
+      var base = f.name.replace(/\.(m4a|webm|ogg|mp4)$/, '');
+      var parts = base.split('-'); // YYYY-MM-DD-HH-MM-mode
+      var modeKey = parts[5] || '';
+      var modeStr = modeKey === 'shadowing' ? 'シャドーイング' : '音読';
+      var icon = modeKey === 'shadowing' ? '🎧' : '📖';
+      var dateLabel = (parts[0]||'') + '/' + (parts[1]||'') + '/' + (parts[2]||'')
+        + ' ' + (parts[3]||'') + ':' + (parts[4]||'');
+      return '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px">'
+        + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px">'
+        + icon + ' ' + modeStr + ' · ' + dateLabel + '</div>'
+        + '<audio controls style="width:100%;height:36px" src="' + rawUrl + '"></audio>'
+        + '</div>';
+    }).join('');
+    if (el) el.innerHTML = html;
+  }).catch(function(e) {
+    if (el) el.innerHTML = '<div style="font-size:12px;color:var(--red);padding:8px">読み込みエラー: ' + e.message + '</div>';
   });
 }
 
