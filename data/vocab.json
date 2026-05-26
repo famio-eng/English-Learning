@@ -34,10 +34,10 @@
       "example": "We are preparing for regulatory approval across multiple countries.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 0.1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 2,
-      "streak": 0
+      "interval": 1,
+      "nextReview": "2026-05-27",
+      "reviewCount": 3,
+      "streak": 1
     },
     {
       "id": "w004",
@@ -60,10 +60,10 @@
       "example": "Our team is committed to driving the project forward.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0
+      "interval": 2.5,
+      "nextReview": "2026-05-29",
+      "reviewCount": 1,
+      "streak": 1
     },
     {
       "id": "w006",
@@ -73,9 +73,9 @@
       "example": "I am relatively new to this industry but eager to learn.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0
     },
     {
@@ -86,10 +86,10 @@
       "example": "We plan to submit applications to regulatory bodies next quarter.",
       "source": "自己紹介 ショート版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0
+      "interval": 2.5,
+      "nextReview": "2026-05-29",
+      "reviewCount": 1,
+      "streak": 1
     },
     {
       "id": "w008",
@@ -99,9 +99,9 @@
       "example": "It's been a challenging but rewarding experience.",
       "source": "自己紹介 カジュアル版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0
     },
     {
@@ -112,9 +112,9 @@
       "example": "Minimally invasive surgery reduces recovery time.",
       "source": "自己紹介 カジュアル版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0
     },
     {
@@ -125,9 +125,9 @@
       "example": "Understanding regulatory pathways is essential.",
       "source": "自己紹介 カジュアル版",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0
     },
     {
