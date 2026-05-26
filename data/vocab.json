@@ -9,10 +9,6 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 2.5,
-      "nextReview": "2026-05-28",
-      "reviewCount": 1,
-      "streak": 1,
       "level": [
         "ビジネス英語",
         "TOEIC900+"
@@ -23,7 +19,13 @@
         "develop an electrosurgical generator",
         "electrosurgical unit (ESU)",
         "RF energy output"
-      ]
+      ],
+      "interval": 4.4,
+      "nextReview": "2026-05-31",
+      "reviewCount": 2,
+      "streak": 2,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w002",
@@ -34,10 +36,6 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 2.5,
-      "nextReview": "2026-05-28",
-      "reviewCount": 1,
-      "streak": 1,
       "level": [
         "ビジネス英語",
         "TOEIC800"
@@ -48,7 +46,13 @@
         "perform endoscopic surgery",
         "endoscopic procedure",
         "endoscopic device"
-      ]
+      ],
+      "interval": 4.4,
+      "nextReview": "2026-05-31",
+      "reviewCount": 2,
+      "streak": 2,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w003",
@@ -59,10 +63,6 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-27",
-      "reviewCount": 3,
-      "streak": 1,
       "level": [
         "ビジネス英語",
         "TOEIC800"
@@ -74,7 +74,13 @@
         "gain regulatory approval",
         "regulatory submission",
         "FDA clearance"
-      ]
+      ],
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-05-28",
+      "reviewCount": 4,
+      "streak": 2,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w004",
@@ -85,10 +91,6 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 2.5,
-      "nextReview": "2026-05-28",
-      "reviewCount": 1,
-      "streak": 1,
       "level": [
         "ビジネス英語",
         "TOEIC600"
@@ -99,7 +101,13 @@
         "obtain a certification",
         "hold a PMP certification",
         "certified project manager"
-      ]
+      ],
+      "interval": 4.4,
+      "nextReview": "2026-05-31",
+      "reviewCount": 2,
+      "streak": 2,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w005",
@@ -110,10 +118,6 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 2.5,
-      "nextReview": "2026-05-29",
-      "reviewCount": 1,
-      "streak": 1,
       "level": [
         "ビジネス英語",
         "TOEIC700"
@@ -128,7 +132,13 @@
         "drive innovation",
         "drive results",
         "drive change"
-      ]
+      ],
+      "interval": 1.2000000000000002,
+      "nextReview": "2026-05-27",
+      "reviewCount": 2,
+      "streak": 0,
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w006",
@@ -139,10 +149,6 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 0.1,
-      "nextReview": "2026-05-26",
-      "reviewCount": 1,
-      "streak": 0,
       "level": [
         "高校英語",
         "TOEIC600"
@@ -153,7 +159,13 @@
         "relatively new to the field",
         "new to the role",
         "new to the team"
-      ]
+      ],
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 2,
+      "streak": 0,
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w007",
@@ -164,10 +176,6 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 2.5,
-      "nextReview": "2026-05-29",
-      "reviewCount": 1,
-      "streak": 1,
       "level": [
         "高校英語",
         "TOEIC600",
@@ -182,7 +190,13 @@
         "file an application",
         "application process",
         "regulatory submission"
-      ]
+      ],
+      "interval": 1.2000000000000002,
+      "nextReview": "2026-05-27",
+      "reviewCount": 2,
+      "streak": 0,
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w008",
@@ -193,10 +207,6 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 0.1,
-      "nextReview": "2026-05-26",
-      "reviewCount": 1,
-      "streak": 0,
       "level": [
         "高校英語",
         "大学受験",
@@ -212,7 +222,13 @@
         "rewarding career",
         "challenging but rewarding",
         "find something rewarding"
-      ]
+      ],
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w009",
@@ -223,10 +239,6 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 0.1,
-      "nextReview": "2026-05-26",
-      "reviewCount": 1,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC800"
@@ -238,7 +250,13 @@
         "minimally invasive procedure",
         "minimally invasive device",
         "MIS"
-      ]
+      ],
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w010",
@@ -249,10 +267,6 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 0.1,
-      "nextReview": "2026-05-26",
-      "reviewCount": 1,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC900+"
@@ -264,7 +278,13 @@
         "510(k) pathway",
         "PMA pathway",
         "regulatory strategy"
-      ]
+      ],
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w011",
@@ -275,10 +295,6 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC700"
@@ -290,7 +306,13 @@
         "reach a milestone",
         "key milestone",
         "project milestone"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w012",
@@ -301,10 +323,6 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ネイティブ日常",
         "TOEIC800"
@@ -316,7 +334,13 @@
         "quite a feat",
         "a remarkable feat",
         "an impressive feat"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w013",
@@ -327,10 +351,6 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ネイティブ日常",
         "ビジネス英語"
@@ -343,7 +363,13 @@
         "many moving parts",
         "manage all the moving parts",
         "a lot of moving parts"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w014",
@@ -354,10 +380,6 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC800"
@@ -369,7 +391,13 @@
         "launch an initiative",
         "strategic initiative",
         "business initiative"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w015",
@@ -380,10 +408,6 @@
       "source": "自己紹介 フォーマル版",
       "scriptId": "formal",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "高校英語",
         "TOEIC600",
@@ -399,7 +423,13 @@
         "transparency and accountability",
         "transparent communication",
         "transparent process"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w016",
@@ -410,10 +440,6 @@
       "source": "自己紹介 フォーマル版",
       "scriptId": "formal",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "大学受験",
         "TOEIC800",
@@ -428,7 +454,13 @@
         "substantive progress",
         "substantive role",
         "substantive change"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w017",
@@ -439,10 +471,6 @@
       "source": "自己紹介 フォーマル版",
       "scriptId": "formal",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC900+"
@@ -454,7 +482,13 @@
         "competitive landscape",
         "evolving landscape",
         "navigate the landscape"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w018",
@@ -465,10 +499,6 @@
       "source": "自己紹介 フォーマル版",
       "scriptId": "formal",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC900+"
@@ -480,7 +510,13 @@
         "clinical evidence",
         "conduct clinical validation",
         "clinical trial"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w019",
@@ -491,10 +527,6 @@
       "source": "自己紹介 フォーマル版",
       "scriptId": "formal",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC700"
@@ -506,7 +538,13 @@
         "manage stakeholder expectations",
         "engage stakeholders",
         "key stakeholders"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w020",
@@ -517,10 +555,6 @@
       "source": "自己紹介 フォーマル版",
       "scriptId": "formal",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "ビジネス英語",
         "TOEIC700"
@@ -532,7 +566,13 @@
         "fixed mindset",
         "embrace a growth mindset",
         "foster a growth mindset"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w021",
@@ -543,10 +583,6 @@
       "source": "自己紹介 フォーマル版",
       "scriptId": "formal",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
       "level": [
         "大学受験",
         "TOEIC700",
@@ -559,7 +595,13 @@
         "with diligence",
         "diligent work",
         "technical diligence"
-      ]
+      ],
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
