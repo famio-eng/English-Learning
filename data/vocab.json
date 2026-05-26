@@ -13,10 +13,17 @@
       "nextReview": "2026-05-28",
       "reviewCount": 1,
       "streak": 1,
-      "level": ["ビジネス英語", "TOEIC900+"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
       "otherMeanings": [],
       "usageTips": "医療機器・外科分野の専門用語。技術プレゼンや製品説明で使う。electrosurgical（電気外科の）+ generator（発生装置）と分解して覚える。",
-      "collocations": ["develop an electrosurgical generator", "electrosurgical unit (ESU)", "RF energy output"]
+      "collocations": [
+        "develop an electrosurgical generator",
+        "electrosurgical unit (ESU)",
+        "RF energy output"
+      ]
     },
     {
       "id": "w002",
@@ -31,10 +38,17 @@
       "nextReview": "2026-05-28",
       "reviewCount": 1,
       "streak": 1,
-      "level": ["ビジネス英語", "TOEIC800"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
       "otherMeanings": [],
       "usageTips": "endoscope（内視鏡）の形容詞形 endoscopic + surgery（手術）。minimally invasive surgery と同義的に使われることが多い。",
-      "collocations": ["perform endoscopic surgery", "endoscopic procedure", "endoscopic device"]
+      "collocations": [
+        "perform endoscopic surgery",
+        "endoscopic procedure",
+        "endoscopic device"
+      ]
     },
     {
       "id": "w003",
@@ -45,14 +59,22 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 0.1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 2,
-      "streak": 0,
-      "level": ["ビジネス英語", "TOEIC800"],
+      "interval": 1,
+      "nextReview": "2026-05-27",
+      "reviewCount": 3,
+      "streak": 1,
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
       "otherMeanings": [],
       "usageTips": "医療機器・製薬業界では必須の表現。seek / obtain / gain regulatory approval の形で使う。FDA approval（米国）や CE marking（欧州）が具体例。",
-      "collocations": ["seek regulatory approval", "gain regulatory approval", "regulatory submission", "FDA clearance"]
+      "collocations": [
+        "seek regulatory approval",
+        "gain regulatory approval",
+        "regulatory submission",
+        "FDA clearance"
+      ]
     },
     {
       "id": "w004",
@@ -67,10 +89,17 @@
       "nextReview": "2026-05-28",
       "reviewCount": 1,
       "streak": 1,
-      "level": ["ビジネス英語", "TOEIC600"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC600"
+      ],
       "otherMeanings": [],
       "usageTips": "PMP = Project Management Professional。資格の話をするとき hold / obtain / earn a certification と言う。certificateとcertificationは違う（certificateは証書、certificationは資格取得プロセス）。",
-      "collocations": ["obtain a certification", "hold a PMP certification", "certified project manager"]
+      "collocations": [
+        "obtain a certification",
+        "hold a PMP certification",
+        "certified project manager"
+      ]
     },
     {
       "id": "w005",
@@ -81,14 +110,25 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
-      "level": ["ビジネス英語", "TOEIC700"],
-      "otherMeanings": ["推進力を与える", "進捗を加速する"],
+      "interval": 2.5,
+      "nextReview": "2026-05-29",
+      "reviewCount": 1,
+      "streak": 1,
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
+      "otherMeanings": [
+        "推進力を与える",
+        "進捗を加速する"
+      ],
       "usageTips": "drive A forward / drive forward A の語順どちらも可。ビジネス英語でよく使われるフレーズ。drive the agenda / drive results なども同様の用法。",
-      "collocations": ["drive the project forward", "drive innovation", "drive results", "drive change"]
+      "collocations": [
+        "drive the project forward",
+        "drive innovation",
+        "drive results",
+        "drive change"
+      ]
     },
     {
       "id": "w006",
@@ -99,14 +139,21 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0,
-      "level": ["高校英語", "TOEIC600"],
+      "level": [
+        "高校英語",
+        "TOEIC600"
+      ],
       "otherMeanings": [],
       "usageTips": "自己紹介で経験の浅さを謙虚に伝えるときに便利な表現。be new to ～だけでも通じるが relatively を加えると柔らかくなる。",
-      "collocations": ["relatively new to the field", "new to the role", "new to the team"]
+      "collocations": [
+        "relatively new to the field",
+        "new to the role",
+        "new to the team"
+      ]
     },
     {
       "id": "w007",
@@ -117,14 +164,25 @@
       "source": "自己紹介 ショート版",
       "scriptId": "short",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
-      "level": ["高校英語", "TOEIC600", "ビジネス英語"],
-      "otherMeanings": ["応募する（就職など）"],
+      "interval": 2.5,
+      "nextReview": "2026-05-29",
+      "reviewCount": 1,
+      "streak": 1,
+      "level": [
+        "高校英語",
+        "TOEIC600",
+        "ビジネス英語"
+      ],
+      "otherMeanings": [
+        "応募する（就職など）"
+      ],
       "usageTips": "regulatory application（規制申請）、job application（求人応募）など文脈によって意味が変わる。file an application とも言う。",
-      "collocations": ["submit an application", "file an application", "application process", "regulatory submission"]
+      "collocations": [
+        "submit an application",
+        "file an application",
+        "application process",
+        "regulatory submission"
+      ]
     },
     {
       "id": "w008",
@@ -135,14 +193,26 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0,
-      "level": ["高校英語", "大学受験", "TOEIC600"],
-      "otherMeanings": ["報われる", "やりがいのある"],
+      "level": [
+        "高校英語",
+        "大学受験",
+        "TOEIC600"
+      ],
+      "otherMeanings": [
+        "報われる",
+        "やりがいのある"
+      ],
       "usageTips": "satisfying / fulfilling とほぼ同義。仕事・経験について語るときの定番形容詞。challenging but rewarding のセットフレーズは特によく使う。",
-      "collocations": ["a rewarding experience", "rewarding career", "challenging but rewarding", "find something rewarding"]
+      "collocations": [
+        "a rewarding experience",
+        "rewarding career",
+        "challenging but rewarding",
+        "find something rewarding"
+      ]
     },
     {
       "id": "w009",
@@ -153,14 +223,22 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC800"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
       "otherMeanings": [],
       "usageTips": "医療機器・外科分野の重要用語。invasive（侵襲的な）の反対は non-invasive。MIS（Minimally Invasive Surgery）と略されることも多い。",
-      "collocations": ["minimally invasive surgery", "minimally invasive procedure", "minimally invasive device", "MIS"]
+      "collocations": [
+        "minimally invasive surgery",
+        "minimally invasive procedure",
+        "minimally invasive device",
+        "MIS"
+      ]
     },
     {
       "id": "w010",
@@ -171,14 +249,22 @@
       "source": "自己紹介 カジュアル版",
       "scriptId": "casual",
       "added": "2026-05-25",
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.1,
+      "nextReview": "2026-05-26",
+      "reviewCount": 1,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC900+"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
       "otherMeanings": [],
       "usageTips": "pathway（経路・手順）を規制文脈で使う専門表現。navigate regulatory pathways（規制の手続きを進める）という形でよく使われる。",
-      "collocations": ["navigate regulatory pathways", "510(k) pathway", "PMA pathway", "regulatory strategy"]
+      "collocations": [
+        "navigate regulatory pathways",
+        "510(k) pathway",
+        "PMA pathway",
+        "regulatory strategy"
+      ]
     },
     {
       "id": "w011",
@@ -193,10 +279,18 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC700"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
       "otherMeanings": [],
       "usageTips": "プロジェクト管理の定番表現。milestone は「里程標」が語源。hit a milestone / reach a milestone（マイルストーンを達成する）の形でも使う。",
-      "collocations": ["hit a milestone", "reach a milestone", "key milestone", "project milestone"]
+      "collocations": [
+        "hit a milestone",
+        "reach a milestone",
+        "key milestone",
+        "project milestone"
+      ]
     },
     {
       "id": "w012",
@@ -211,10 +305,18 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ネイティブ日常", "TOEIC800"],
+      "level": [
+        "ネイティブ日常",
+        "TOEIC800"
+      ],
       "otherMeanings": [],
       "usageTips": "慣用句。feat = 偉業・離れ業。That is no small feat. で「それは大したことだ」という意味。ポジティブな文脈で使う。",
-      "collocations": ["no small feat", "quite a feat", "a remarkable feat", "an impressive feat"]
+      "collocations": [
+        "no small feat",
+        "quite a feat",
+        "a remarkable feat",
+        "an impressive feat"
+      ]
     },
     {
       "id": "w013",
@@ -229,10 +331,19 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ネイティブ日常", "ビジネス英語"],
-      "otherMeanings": ["可動部品（文字通りの意味）"],
+      "level": [
+        "ネイティブ日常",
+        "ビジネス英語"
+      ],
+      "otherMeanings": [
+        "可動部品（文字通りの意味）"
+      ],
       "usageTips": "機械の「可動部品」が比喩化されて「複雑に絡み合う要素」の意味になった慣用表現。There are a lot of moving parts.（要素が複雑だ）という形でよく使う。",
-      "collocations": ["many moving parts", "manage all the moving parts", "a lot of moving parts"]
+      "collocations": [
+        "many moving parts",
+        "manage all the moving parts",
+        "a lot of moving parts"
+      ]
     },
     {
       "id": "w014",
@@ -247,10 +358,18 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC800"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
       "otherMeanings": [],
       "usageTips": "initiative は「率先した取り組み」のニュアンス。lead an initiative / launch an initiative（取り組みを主導・開始する）の形でよく使う。",
-      "collocations": ["lead an initiative", "launch an initiative", "strategic initiative", "business initiative"]
+      "collocations": [
+        "lead an initiative",
+        "launch an initiative",
+        "strategic initiative",
+        "business initiative"
+      ]
     },
     {
       "id": "w015",
@@ -265,10 +384,22 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["高校英語", "TOEIC600", "ビジネス英語"],
-      "otherMeanings": ["透明な（物理的）", "明白な"],
+      "level": [
+        "高校英語",
+        "TOEIC600",
+        "ビジネス英語"
+      ],
+      "otherMeanings": [
+        "透明な（物理的）",
+        "明白な"
+      ],
       "usageTips": "ビジネスで「オープンで隠し事がない」という意味で多用される。transparency（透明性）という名詞形も重要。be transparent with someone about something の形で使う。",
-      "collocations": ["be transparent about", "transparency and accountability", "transparent communication", "transparent process"]
+      "collocations": [
+        "be transparent about",
+        "transparency and accountability",
+        "transparent communication",
+        "transparent process"
+      ]
     },
     {
       "id": "w016",
@@ -283,10 +414,21 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["大学受験", "TOEIC800", "ビジネス英語"],
-      "otherMeanings": ["名詞（文法用語）"],
+      "level": [
+        "大学受験",
+        "TOEIC800",
+        "ビジネス英語"
+      ],
+      "otherMeanings": [
+        "名詞（文法用語）"
+      ],
       "usageTips": "formal な語。significant / meaningful より少し格式張った表現。substantive discussion（実質的な議論）、substantive progress（実質的な進展）のように使う。",
-      "collocations": ["substantive discussion", "substantive progress", "substantive role", "substantive change"]
+      "collocations": [
+        "substantive discussion",
+        "substantive progress",
+        "substantive role",
+        "substantive change"
+      ]
     },
     {
       "id": "w017",
@@ -301,10 +443,18 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC900+"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
       "otherMeanings": [],
       "usageTips": "landscape（風景）を比喩的に使う表現。「competitive landscape（競合環境）」「political landscape（政治的状況）」と同様のパターン。",
-      "collocations": ["regulatory landscape", "competitive landscape", "evolving landscape", "navigate the landscape"]
+      "collocations": [
+        "regulatory landscape",
+        "competitive landscape",
+        "evolving landscape",
+        "navigate the landscape"
+      ]
     },
     {
       "id": "w018",
@@ -319,10 +469,18 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC900+"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
       "otherMeanings": [],
       "usageTips": "validate（検証する）の名詞形。臨床試験で安全性・有効性を証明すること。clinical trial（臨床試験）、clinical evidence（臨床的エビデンス）も合わせて覚える。",
-      "collocations": ["clinical validation study", "clinical evidence", "conduct clinical validation", "clinical trial"]
+      "collocations": [
+        "clinical validation study",
+        "clinical evidence",
+        "conduct clinical validation",
+        "clinical trial"
+      ]
     },
     {
       "id": "w019",
@@ -337,10 +495,18 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC700"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
       "otherMeanings": [],
       "usageTips": "stakeholder（利害関係者）はビジネス必須語。manage stakeholder expectations（期待値を管理する）、engage stakeholders（ステークホルダーを巻き込む）も重要。",
-      "collocations": ["stakeholder management", "manage stakeholder expectations", "engage stakeholders", "key stakeholders"]
+      "collocations": [
+        "stakeholder management",
+        "manage stakeholder expectations",
+        "engage stakeholders",
+        "key stakeholders"
+      ]
     },
     {
       "id": "w020",
@@ -355,10 +521,18 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["ビジネス英語", "TOEIC700"],
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
       "otherMeanings": [],
       "usageTips": "Carol Dweckの概念。fixed mindset（固定思考）の対義語。bring a growth mindset（成長志向を持ち込む）/ have a growth mindset（成長志向を持つ）の形で使う。",
-      "collocations": ["growth mindset", "fixed mindset", "embrace a growth mindset", "foster a growth mindset"]
+      "collocations": [
+        "growth mindset",
+        "fixed mindset",
+        "embrace a growth mindset",
+        "foster a growth mindset"
+      ]
     },
     {
       "id": "w021",
@@ -373,10 +547,19 @@
       "nextReview": "2026-05-25",
       "reviewCount": 0,
       "streak": 0,
-      "level": ["大学受験", "TOEIC700", "ビジネス英語"],
+      "level": [
+        "大学受験",
+        "TOEIC700",
+        "ビジネス英語"
+      ],
       "otherMeanings": [],
       "usageTips": "due diligence（デューデリジェンス・詳細調査）というビジネス用語でもよく使われる。diligent（形容詞）も重要。",
-      "collocations": ["due diligence", "with diligence", "diligent work", "technical diligence"]
+      "collocations": [
+        "due diligence",
+        "with diligence",
+        "diligent work",
+        "technical diligence"
+      ]
     }
   ]
 }
