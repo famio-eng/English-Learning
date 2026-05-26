@@ -160,10 +160,10 @@
         "new to the role",
         "new to the team"
       ],
-      "interval": 0.1,
-      "nextReview": "2026-05-26",
-      "reviewCount": 2,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-05-27",
+      "reviewCount": 3,
+      "streak": 1,
       "missCount": 1,
       "lastMissed": "2026-05-26"
     },
@@ -225,10 +225,10 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w009",
@@ -253,10 +253,10 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w010",
@@ -281,10 +281,10 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w011",
@@ -307,12 +307,12 @@
         "key milestone",
         "project milestone"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w012",
@@ -392,12 +392,12 @@
         "strategic initiative",
         "business initiative"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w015",
@@ -424,10 +424,10 @@
         "transparent communication",
         "transparent process"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-05-28",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -455,12 +455,12 @@
         "substantive role",
         "substantive change"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w017",
@@ -483,12 +483,12 @@
         "evolving landscape",
         "navigate the landscape"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w018",
@@ -511,10 +511,10 @@
         "conduct clinical validation",
         "clinical trial"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-05-28",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -539,12 +539,12 @@
         "engage stakeholders",
         "key stakeholders"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w020",
@@ -567,12 +567,12 @@
         "embrace a growth mindset",
         "foster a growth mindset"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w021",
@@ -596,12 +596,12 @@
         "diligent work",
         "technical diligence"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     }
   ]
 }
