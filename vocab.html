@@ -5,68 +5,130 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>単語帳</title>
 <style>
-:root{--bg:#1a1a1a;--bg2:#242424;--bg3:#2e2e2e;--text:#f0f0f0;--text2:#aaa;--text3:#666;--border:#3a3a3a;--accent:#7c6ff7;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;}
-@media(prefers-color-scheme:light){:root{--bg:#f5f5f5;--bg2:#fff;--bg3:#efefef;--text:#111;--text2:#555;--text3:#999;--border:#ddd;--accent:#635fd2;--green:#16a34a;--amber:#d97706;--red:#dc2626;}}
+:root{--bg:#1a1a1a;--bg2:#242424;--bg3:#2e2e2e;--bg4:#383838;--text:#f0f0f0;--text2:#aaa;--text3:#666;--border:#3a3a3a;--accent:#7c6ff7;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--blue:#3b82f6}
+@media(prefers-color-scheme:light){:root{--bg:#f5f5f5;--bg2:#fff;--bg3:#efefef;--bg4:#e4e4e4;--text:#111;--text2:#555;--text3:#999;--border:#ddd;--accent:#635fd2;--green:#16a34a;--amber:#d97706;--red:#dc2626;--blue:#2563eb}}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overflow:hidden}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
-.header{flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
-.app-title{font-size:16px;font-weight:700;color:var(--text)}
-.header-actions{display:flex;gap:6px}
+.header{flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px}
+.topbar{display:flex;align-items:center;justify-content:space-between}
+.app-title{font-size:16px;font-weight:700}
+.header-actions{display:flex;gap:5px}
 .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
-.tab{flex:1;padding:10px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent}
+.tab{flex:1;padding:9px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
-.btn{padding:10px 16px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.content{flex:1;overflow-y:auto;padding:14px;-webkit-overflow-scrolling:touch}
+.btn{padding:9px 14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:5px;justify-content:center;transition:opacity .15s}
+.btn:active{opacity:.75}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.btn-sm{padding:7px 12px;font-size:12px;border-radius:8px}
+.btn-sm{padding:6px 11px;font-size:12px;border-radius:8px}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* Stats */
-.stats-bar{display:flex;gap:8px;margin-bottom:14px}
-.stat-pill{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}
-.stat-num{font-size:18px;font-weight:700;color:var(--accent)}
-.stat-lbl{font-size:10px;color:var(--text2);margin-top:1px}
-/* Card */
-.card-scene{perspective:1000px;margin-bottom:16px;cursor:pointer;user-select:none}
-.card-inner{position:relative;width:100%;min-height:200px;transition:transform .4s;transform-style:preserve-3d}
-.card-scene.flipped .card-inner{transform:rotateY(180deg)}
-.card-face{position:absolute;width:100%;min-height:200px;backface-visibility:hidden;border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-.card-front{background:var(--bg2);border:1px solid var(--border)}
-.card-back{background:var(--accent);transform:rotateY(180deg);color:#fff}
-.card-word{font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px}
-.card-pron{font-size:13px;color:var(--text2);margin-bottom:8px}
-.card-source{font-size:11px;color:var(--text3)}
-.card-hint{font-size:12px;color:var(--text3);margin-top:14px}
-.card-meaning{font-size:20px;font-weight:700;color:#fff;margin-bottom:8px}
-.card-ex{font-size:13px;color:rgba(255,255,255,.8);font-style:italic;line-height:1.5}
-.card-speak{margin-top:12px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer}
-/* Progress bar */
-.prog-wrap{margin-bottom:12px}
-.prog-bar{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+
+/* ===== MODE SELECT ===== */
+.mode-screen{padding:20px 16px}
+.mode-screen h2{font-size:17px;font-weight:700;margin-bottom:4px}
+.mode-screen p{font-size:13px;color:var(--text2);margin-bottom:16px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.mode-card{background:var(--bg2);border:2px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;transition:border-color .15s,background .15s}
+.mode-card:active,.mode-card.selected{border-color:var(--accent);background:rgba(124,111,247,.1)}
+.mode-card-icon{font-size:28px;margin-bottom:6px}
+.mode-card-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.mode-card-sub{font-size:11px;color:var(--text2);line-height:1.4}
+.sub-choices{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.choice-btn{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:13px 16px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color .15s}
+.choice-btn:active,.choice-btn.selected{border-color:var(--accent)}
+.choice-icon{font-size:22px;width:30px;text-align:center}
+.choice-label{font-size:14px;font-weight:700}
+.choice-sub{font-size:12px;color:var(--text2);margin-top:1px}
+.level-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:14px}
+.level-chip{border:2px solid var(--border);border-radius:20px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;background:var(--bg2);transition:all .15s}
+.level-chip.selected{border-color:var(--accent);background:var(--accent);color:#fff}
+
+/* ===== PROGRESS ===== */
+.prog-wrap{margin-bottom:10px}
+.prog-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
 .prog-fill{height:100%;background:var(--accent);transition:width .3s}
 .prog-txt{font-size:11px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between}
-/* Answer buttons */
-.ans-row{display:flex;gap:6px;margin-bottom:12px}
-.ans-btn{flex:1;padding:11px 0;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none}
+.stats-row{display:flex;gap:6px;margin-bottom:10px}
+.stat-pill{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:7px 4px;text-align:center}
+.stat-num{font-size:16px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:10px;color:var(--text2);margin-top:1px}
+
+/* ===== CARD ===== */
+.card-wrap{margin-bottom:12px}
+.card-scene{perspective:1000px;cursor:pointer;user-select:none}
+.card-inner{position:relative;width:100%;min-height:220px;transition:transform .4s;transform-style:preserve-3d}
+.card-scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;min-height:220px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.card-front{background:var(--bg2);border:1px solid var(--border)}
+.card-back{background:linear-gradient(135deg,#635fd2,#7c6ff7);transform:rotateY(180deg);color:#fff}
+.card-direction{font-size:10px;font-weight:600;letter-spacing:.06em;margin-bottom:10px;opacity:.6;text-transform:uppercase}
+.card-word{font-size:22px;font-weight:700;margin-bottom:5px;line-height:1.3}
+.card-pron{font-size:12px;color:var(--text2);margin-bottom:8px}
+.card-badges{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:10px}
+.level-badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;background:rgba(124,111,247,.2);color:var(--accent)}
+.card-hint{font-size:12px;color:var(--text3);margin-top:10px}
+.card-meaning{font-size:19px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3}
+.card-ex{font-size:12px;color:rgba(255,255,255,.82);font-style:italic;line-height:1.6;margin-bottom:10px}
+.card-speak-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.card-detail-toggle{margin-top:10px;font-size:11px;color:rgba(255,255,255,.6);cursor:pointer;border:none;background:none;text-decoration:underline}
+.card-detail-box{margin-top:10px;background:rgba(0,0,0,.2);border-radius:10px;padding:10px 12px;text-align:left;width:100%}
+.card-detail-row{font-size:11px;color:rgba(255,255,255,.85);margin-bottom:5px;line-height:1.5}
+.card-detail-label{font-weight:700;margin-right:4px}
+
+/* ===== ANSWER BUTTONS ===== */
+.ans-row{display:flex;gap:5px;margin-bottom:10px}
+.ans-btn{flex:1;padding:10px 0;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:opacity .15s}
+.ans-btn:active{opacity:.75}
 .btn-again{background:#7f1d1d;color:#fca5a5}
 .btn-hard{background:#78350f;color:#fcd34d}
 .btn-good{background:#14532d;color:#86efac}
 .btn-easy{background:#1e3a5f;color:#7dd3fc}
-/* Word list */
-.word-item{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;cursor:pointer}
+.review-meta{font-size:11px;color:var(--text2);text-align:center;margin-bottom:12px}
+.streak-flame{color:#f59e0b}
+
+/* ===== FINISH ===== */
+.finish{text-align:center;padding:30px 16px}
+.finish-icon{font-size:48px;margin-bottom:8px}
+.finish-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.finish-rate{font-size:15px;color:var(--text2);margin-bottom:16px}
+.finish-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.finish-stat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px}
+.finish-stat-n{font-size:22px;font-weight:700;color:var(--accent)}
+.finish-stat-l{font-size:11px;color:var(--text2);margin-top:2px}
+.finish-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
+.chart-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px}
+
+/* ===== LIST ===== */
+.list-filter-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.filter-chip{font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;font-weight:600;transition:all .15s}
+.filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.list-summary{font-size:12px;color:var(--text2);margin-bottom:10px}
+.word-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;margin-bottom:7px;cursor:pointer}
+.word-item-header{display:flex;align-items:center;gap:8px}
 .word-item-main{flex:1}
-.word-item-word{font-size:15px;font-weight:700;color:var(--text)}
-.word-item-meaning{font-size:13px;color:var(--text2)}
-.due-badge{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
+.word-item-word{font-size:15px;font-weight:700}
+.word-item-meaning{font-size:12px;color:var(--text2);margin-top:2px}
+.word-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.due-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
 .due-now{background:var(--red);color:#fff}
 .due-soon{background:var(--amber);color:#fff}
 .due-later{background:var(--bg3);color:var(--text2)}
-.empty{text-align:center;padding:40px 20px;color:var(--text2)}
-.finish{text-align:center;padding:40px 20px}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg2);border-radius:20px;padding:8px 16px;font-size:13px;white-space:nowrap;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center}
+.status-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;width:60px;margin-top:2px}
+.sb-green{background:var(--green)}
+.sb-amber{background:var(--amber)}
+.sb-red{background:var(--red)}
+.sb-gray{background:var(--bg4)}
+.word-item-levels{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.wl-badge{font-size:9px;padding:1px 6px;border-radius:6px;background:var(--bg3);color:var(--text2);font-weight:600}
+
+/* ===== MISC ===== */
+.section-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin:14px 0 6px}
+.empty{text-align:center;padding:36px 20px;color:var(--text2)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg2);border-radius:20px;padding:8px 18px;font-size:13px;white-space:nowrap;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;text-align:center}
 .toast.show{opacity:1}
 .toast.ok{border:1px solid var(--green);color:var(--green)}
 .toast.err{border:1px solid var(--red);color:var(--red)}
@@ -78,39 +140,70 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div class="topbar">
       <div class="app-title">📚 単語帳</div>
       <div class="header-actions">
-        <button class="btn btn-secondary btn-sm" id="ghSaveBtn" onclick="saveToGitHub()" title="GitHubに進捗を保存" style="display:none">💾</button>
-        <button class="btn btn-secondary btn-sm" onclick="exportProgress()" title="進捗をエクスポート">📤</button>
-        <button class="btn btn-secondary btn-sm" onclick="importProgress()" title="進捗をインポート">📥</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadVocab()" title="単語リストを更新">🔄</button>
+        <button class="btn btn-secondary btn-sm" id="ghSaveBtn" onclick="saveToGitHub()" style="display:none" title="GitHubに保存">💾</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadVocab()" title="再読み込み">🔄</button>
+        <button class="btn btn-secondary btn-sm" id="backBtn" onclick="backToMode()" style="display:none" title="戻る">← 戻る</button>
       </div>
     </div>
   </div>
-  <div class="tabs">
-    <div class="tab active" id="tab-review" onclick="switchTab('review')">復習</div>
+  <div class="tabs" id="tabBar">
+    <div class="tab active" id="tab-study" onclick="switchTab('study')">学習</div>
     <div class="tab" id="tab-list" onclick="switchTab('list')">一覧</div>
+    <div class="tab" id="tab-stats" onclick="switchTab('stats')">統計</div>
   </div>
   <div class="content" id="content">
-    <div class="empty"><span class="spinner"></span><div style="margin-top:12px">単語データを読み込み中...</div></div>
+    <div class="empty"><span class="spinner"></span><div style="margin-top:10px">読み込み中...</div></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-var GH_OWNER  = 'famio-eng';
-var GH_REPO   = 'English-Learning';
-var GH_TOKEN  = (new URLSearchParams(window.location.search)).get('gh') || '';
-var RAW_BASE  = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/';
-var PROGRESS_KEY = 'vocab_progress_v1';
+// ============================================================
+// CONFIG
+// ============================================================
+var GH_OWNER = 'famio-eng';
+var GH_REPO  = 'English-Learning';
+var GH_TOKEN = (new URLSearchParams(window.location.search)).get('gh') || '';
+var RAW_BASE = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/';
+var PROGRESS_KEY = 'vocab_progress_v2';
+var STATS_KEY    = 'vocab_daily_stats';
 
+// ============================================================
+// STATE
+// ============================================================
 var words = [];
-var currentTab = 'review';
-var queue = [];
-var qIdx = 0;
-var flipped = false;
-var sOk = 0, sTotal = 0;
+var currentTab = 'study';
+
+// Study session state
+var studyMode    = '';   // 'script-short' | 'script-casual' | 'script-formal' | 'level-X' | 'all' | 'review'
+var studyDir     = '';   // 'en2ja' | 'ja2en' | 'random'
+var queue        = [];
+var qIdx         = 0;
+var flipped      = false;
+var sOk = 0, sTotal = 0, sStreak = 0, sMaxStreak = 0;
+var sessionWords = [];
+var detailOpen   = false;
+var phaseMode = 'select'; // 'select' | 'dir' | 'card'
+
+// List filter
+var activeFilters = [];
+
 var synth = window.speechSynthesis;
 
-// ===== LOCAL STORAGE =====
+// Level definitions
+var ALL_LEVELS = ['中学英語','高校英語','大学受験','TOEIC600','TOEIC800','TOEIC900+','ネイティブ日常','ビジネス英語'];
+var HARD_LEVELS = ['TOEIC900+','ビジネス英語'];
+
+// Script id → title map
+var SCRIPT_TITLES = {
+  'short':  '自己紹介 ショート版',
+  'casual': '自己紹介 カジュアル版',
+  'formal': '自己紹介 フォーマル版'
+};
+
+// ============================================================
+// LOCAL STORAGE - PROGRESS
+// ============================================================
 function getProgress() {
   try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); }
   catch(e) { return {}; }
@@ -119,102 +212,105 @@ function getProgress() {
 function saveProgressSilent() {
   var p = {};
   words.forEach(function(w) {
-    p[w.id] = {interval: w.interval, nextReview: w.nextReview, reviewCount: w.reviewCount, streak: w.streak};
+    p[w.id] = {
+      interval: w.interval,
+      nextReview: w.nextReview,
+      reviewCount: w.reviewCount,
+      streak: w.streak,
+      missCount: w.missCount || 0,
+      lastMissed: w.lastMissed || ''
+    };
   });
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
 }
 
-// ===== GITHUB SAVE =====
+// ============================================================
+// LOCAL STORAGE - DAILY STATS
+// ============================================================
+function getDailyStats() {
+  try { return JSON.parse(localStorage.getItem(STATS_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+
+function recordDailyStat(ok, total) {
+  if (total === 0) return;
+  var stats = getDailyStats();
+  var today = new Date().toISOString().split('T')[0];
+  if (!stats[today]) stats[today] = {ok: 0, total: 0};
+  stats[today].ok    += ok;
+  stats[today].total += total;
+  // keep only 30 days
+  var keys = Object.keys(stats).sort();
+  while (keys.length > 30) { delete stats[keys.shift()]; keys = Object.keys(stats).sort(); }
+  localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+}
+
+// ============================================================
+// GITHUB
+// ============================================================
 function saveToGitHub() {
-  if (!GH_TOKEN) {
-    showToast('URLに?gh=トークンが必要です', false);
-    return;
-  }
-  // 進捗フィールドを埋め込んだvocab.jsonをGitHubに保存
-  var vocabData = {
-    words: words.map(function(w) {
-      return {
-        id: w.id, word: w.word, pron: w.pron,
-        meaning: w.meaning, example: w.example,
-        source: w.source, added: w.added,
-        interval: w.interval, nextReview: w.nextReview,
-        reviewCount: w.reviewCount, streak: w.streak
-      };
-    })
-  };
+  if (!GH_TOKEN) { showToast('URLに?gh=トークンが必要です', false); return; }
+  var btn = document.getElementById('ghSaveBtn');
+  if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
+  var vocabData = { words: words.map(function(w) {
+    return { id:w.id, word:w.word, pron:w.pron, meaning:w.meaning, example:w.example,
+      source:w.source, scriptId:w.scriptId, added:w.added,
+      level:w.level, otherMeanings:w.otherMeanings, usageTips:w.usageTips, collocations:w.collocations,
+      interval:w.interval, nextReview:w.nextReview, reviewCount:w.reviewCount, streak:w.streak,
+      missCount:w.missCount||0, lastMissed:w.lastMissed||'' };
+  })};
   var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(vocabData, null, 2))));
   var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json';
-  var saveBtn = document.getElementById('ghSaveBtn');
-  if (saveBtn) { saveBtn.textContent = '⏳'; saveBtn.disabled = true; }
-
-  // SHA取得 → PUT
   fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
-    .then(function(r) {
-      if (!r.ok) throw new Error('SHA取得失敗 ' + r.status);
-      return r.json();
-    })
+    .then(function(r) { if (!r.ok) throw new Error('SHA取得失敗'); return r.json(); })
     .then(function(d) {
       return fetch(apiUrl, {
         method: 'PUT',
         headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
         body: JSON.stringify({
           message: '📚 単語帳進捗保存: ' + new Date().toISOString().split('T')[0],
-          content: encoded,
-          sha: d.sha
+          content: encoded, sha: d.sha
         })
       });
     })
     .then(function(r) {
-      if (saveBtn) { saveBtn.textContent = '💾'; saveBtn.disabled = false; }
+      if (btn) { btn.textContent = '💾'; btn.disabled = false; }
       if (r.ok) showToast('✓ GitHubに保存しました', true);
-      else showToast('保存に失敗しました (HTTP ' + r.status + ')', false);
+      else showToast('保存失敗 HTTP ' + r.status, false);
     })
     .catch(function(e) {
-      if (saveBtn) { saveBtn.textContent = '💾'; saveBtn.disabled = false; }
+      if (btn) { btn.textContent = '💾'; btn.disabled = false; }
       showToast('保存エラー: ' + e.message, false);
     });
 }
 
-function exportProgress() {
-  saveProgressSilent();
-  var p = getProgress();
-  var blob = new Blob([JSON.stringify(p, null, 2)], {type: 'application/json'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = 'vocab-progress-' + new Date().toISOString().split('T')[0] + '.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('📤 エクスポートしました', true);
+function saveStatsToGitHub() {
+  if (!GH_TOKEN) return;
+  var stats = getDailyStats();
+  var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(stats, null, 2))));
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/records/vocab-stats.json';
+  // fire-and-forget
+  fetch(apiUrl, {headers:{'Authorization':'Bearer '+GH_TOKEN}})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      return fetch(apiUrl, {
+        method:'PUT',
+        headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+        body: JSON.stringify({
+          message:'📊 vocab stats: '+new Date().toISOString().split('T')[0],
+          content: encoded,
+          sha: d ? d.sha : undefined
+        })
+      });
+    }).catch(function(){});
 }
 
-function importProgress() {
-  var input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.json';
-  input.onchange = function(e) {
-    var file = e.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function(ev) {
-      try {
-        var p = JSON.parse(ev.target.result);
-        localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
-        loadVocab();
-        showToast('✓ インポートしました', true);
-      } catch(err) {
-        showToast('インポートエラー', false);
-      }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
-
-// ===== LOAD =====
+// ============================================================
+// LOAD
+// ============================================================
 function loadVocab() {
   var c = document.getElementById('content');
-  c.innerHTML = '<div class="empty"><span class="spinner"></span><div style="margin-top:12px">読み込み中...</div></div>';
+  c.innerHTML = '<div class="empty"><span class="spinner"></span><div style="margin-top:10px">読み込み中...</div></div>';
   fetch(RAW_BASE + 'data/vocab.json?t=' + Date.now())
     .then(function(r) { return r.json(); })
     .then(function(data) {
@@ -222,204 +318,603 @@ function loadVocab() {
       words = (data.words || []).map(function(w) {
         var p = progress[w.id] || {};
         return {
-          id: w.id,
-          word: w.word,
-          pron: w.pron,
-          meaning: w.meaning,
-          example: w.example,
-          source: w.source,
+          id: w.id, word: w.word, pron: w.pron,
+          meaning: w.meaning, example: w.example,
+          source: w.source, scriptId: w.scriptId || '',
           added: w.added,
-          interval: p.interval !== undefined ? p.interval : (w.interval || 1),
-          nextReview: p.nextReview || w.nextReview || new Date().toISOString().split('T')[0],
-          reviewCount: p.reviewCount !== undefined ? p.reviewCount : (w.reviewCount || 0),
-          streak: p.streak !== undefined ? p.streak : (w.streak || 0)
+          level: w.level || [],
+          otherMeanings: w.otherMeanings || [],
+          usageTips: w.usageTips || '',
+          collocations: w.collocations || [],
+          interval:    p.interval     !== undefined ? p.interval     : (w.interval || 1),
+          nextReview:  p.nextReview   || w.nextReview || new Date().toISOString().split('T')[0],
+          reviewCount: p.reviewCount  !== undefined ? p.reviewCount  : (w.reviewCount || 0),
+          streak:      p.streak       !== undefined ? p.streak       : (w.streak || 0),
+          missCount:   p.missCount    !== undefined ? p.missCount    : (w.missCount || 0),
+          lastMissed:  p.lastMissed   || w.lastMissed || ''
         };
       });
       showToast('✓ ' + words.length + '単語を読み込みました', true);
-      buildQueue();
       renderTab(currentTab);
     })
-    .catch(function(e) {
-      c.innerHTML = '<div class="empty">読み込みに失敗しました。<br><br><button class="btn btn-secondary" onclick="loadVocab()">再試行</button></div>';
+    .catch(function() {
+      c.innerHTML = '<div class="empty">読み込みに失敗しました<br><br><button class="btn btn-secondary" onclick="loadVocab()">再試行</button></div>';
     });
 }
 
-// ===== SRS =====
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  var el = document.getElementById('tab-' + tab);
+  if (el) el.classList.add('active');
+  if (tab === 'study') phaseMode = 'select';
+  document.getElementById('backBtn').style.display = 'none';
+  renderTab(tab);
+}
+
+function renderTab(tab) {
+  if (tab === 'study') renderStudyPhase();
+  else if (tab === 'list') renderList();
+  else if (tab === 'stats') renderStats();
+}
+
+function backToMode() {
+  phaseMode = 'select';
+  document.getElementById('backBtn').style.display = 'none';
+  renderStudyPhase();
+}
+
+// ============================================================
+// SRS
+// ============================================================
 function calcNext(word, q) {
-  var intervals = [1/24, 0.1, 1, 4];
-  var mults = [1, 1.2, 2.5, 4];
-  var cur = word.interval || 1;
-  var ni = q <= 1 ? intervals[q] : cur * mults[q];
-  return Math.max(intervals[q], ni);
+  var base = word.interval || 1;
+  var isHard = (word.level || []).some(function(l){ return HARD_LEVELS.indexOf(l) >= 0; });
+  var hardFactor = isHard ? 0.8 : 1;
+  if (q === 0) return 1/24;
+  if (q === 1) return Math.max(0.1, base * 0.6 * hardFactor);
+  if (q === 2) return Math.max(1,   base * 2.2 * hardFactor);
+  if (q === 3) return Math.max(4,   base * 3.5 * hardFactor);
+  return 1;
 }
 
 function getDue() {
-  var now = new Date().toISOString().split('T')[0];
-  return words.filter(function(w) {
-    return !w.nextReview || w.nextReview <= now;
-  });
+  var today = new Date().toISOString().split('T')[0];
+  return words.filter(function(w) { return !w.nextReview || w.nextReview <= today; });
 }
 
 function applyReview(id, q) {
   var w = words.find(function(x) { return x.id === id; });
   if (!w) return;
+  var ok = q >= 2;
   w.interval = calcNext(w, q);
   var d = new Date();
   d.setTime(d.getTime() + w.interval * 86400000);
   w.nextReview = d.toISOString().split('T')[0];
   w.reviewCount = (w.reviewCount || 0) + 1;
-  if (q >= 2) { sOk++; w.streak = (w.streak || 0) + 1; }
-  else w.streak = 0;
+  if (ok) {
+    w.streak = (w.streak || 0) + 1;
+    sOk++;
+    sStreak++;
+    if (sStreak > sMaxStreak) sMaxStreak = sStreak;
+  } else {
+    w.streak = 0;
+    sStreak = 0;
+    w.missCount = (w.missCount || 0) + 1;
+    w.lastMissed = new Date().toISOString().split('T')[0];
+  }
   sTotal++;
 }
 
-// ===== TABS =====
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-  document.getElementById('tab-' + tab).classList.add('active');
-  if (tab === 'review') buildQueue();
-  renderTab(tab);
-}
-
-function buildQueue() {
-  queue = getDue().sort(function(a, b) {
-    return (a.nextReview || '') < (b.nextReview || '') ? -1 : 1;
+function buildQueue(targetWords, dir) {
+  var today = new Date().toISOString().split('T')[0];
+  // Priority: lastMissed=today first, then by nextReview asc, missCount desc
+  var sorted = targetWords.slice().sort(function(a, b) {
+    var aMissedToday = (a.lastMissed === today) ? 0 : 1;
+    var bMissedToday = (b.lastMissed === today) ? 0 : 1;
+    if (aMissedToday !== bMissedToday) return aMissedToday - bMissedToday;
+    var aDate = a.nextReview || '';
+    var bDate = b.nextReview || '';
+    if (aDate !== bDate) return aDate < bDate ? -1 : 1;
+    return (b.missCount || 0) - (a.missCount || 0);
   });
-  qIdx = 0; flipped = false; sOk = 0; sTotal = 0;
+
+  if (dir === 'random') {
+    queue = sorted.map(function(w) {
+      return { word: w, dir: Math.random() < 0.5 ? 'en2ja' : 'ja2en' };
+    });
+  } else {
+    queue = sorted.map(function(w) { return { word: w, dir: dir }; });
+  }
+  qIdx = 0; flipped = false; sOk = 0; sTotal = 0; sStreak = 0; sMaxStreak = 0;
 }
 
-function renderTab(tab) {
-  if (tab === 'review') renderReview();
-  else renderList();
+// Filter words for mode
+function getWordsForMode(mode) {
+  if (mode === 'all') return words;
+  if (mode === 'review') return getDue();
+  if (mode.indexOf('script-') === 0) {
+    var sid = mode.replace('script-', '');
+    return words.filter(function(w) { return w.scriptId === sid; });
+  }
+  if (mode.indexOf('level-') === 0) {
+    var lv = mode.replace('level-', '');
+    return words.filter(function(w) { return (w.level || []).indexOf(lv) >= 0; });
+  }
+  return words;
 }
 
-// ===== REVIEW =====
-function renderReview() {
-  var c = document.getElementById('content');
+// ============================================================
+// STUDY PHASE: SELECT MODE
+// ============================================================
+function renderStudyPhase() {
+  if (phaseMode === 'select') renderModeSelect();
+  else if (phaseMode === 'dir')    renderDirSelect();
+  else if (phaseMode === 'card')   renderCard();
+}
+
+function renderModeSelect() {
   if (words.length === 0) {
-    c.innerHTML = '<div class="empty">単語データがありません<br><br><button class="btn btn-primary" onclick="loadVocab()">読み込む</button></div>';
+    document.getElementById('content').innerHTML =
+      '<div class="empty">単語データがありません<br><br><button class="btn btn-primary" onclick="loadVocab()">読み込む</button></div>';
     return;
   }
-  if (queue.length === 0 || qIdx >= queue.length) {
-    var rate = sTotal > 0 ? Math.round(sOk / sTotal * 100) : 0;
-    c.innerHTML = '<div class="finish">'
-      + '<div style="font-size:40px;margin-bottom:10px">🎉</div>'
-      + '<div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:6px">復習完了！</div>'
-      + '<div style="font-size:14px;color:var(--text2);margin-bottom:16px">正解率: ' + rate + '%</div>'
-      + '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
-      + '<button class="btn btn-secondary" onclick="restartReview()">もう一度</button>'
-      + (GH_TOKEN
-          ? '<button class="btn btn-primary" onclick="saveToGitHub()">💾 GitHubに保存</button>'
-          : '<button class="btn btn-primary" onclick="exportProgress()">📤 バックアップ</button>')
-      + '</div>'
-      + '<div style="font-size:11px;color:var(--text3);margin-top:12px">進捗はブラウザに自動保存済み</div>'
+  var dueCount = getDue().length;
+  var scripts = ['short','casual','formal'];
+  var scriptCards = scripts.map(function(sid) {
+    var cnt = words.filter(function(w){ return w.scriptId === sid; }).length;
+    var dueCnt = getDue().filter(function(w){ return w.scriptId === sid; }).length;
+    return '<div class="mode-card" onclick="selectMode(\'script-' + sid + '\')">'
+      + '<div class="mode-card-icon">📄</div>'
+      + '<div class="mode-card-title">' + (SCRIPT_TITLES[sid] || sid) + '</div>'
+      + '<div class="mode-card-sub">' + cnt + '単語' + (dueCnt > 0 ? ' · 要復習' + dueCnt + '件' : '') + '</div>'
       + '</div>';
+  }).join('');
+
+  var levels = ['ビジネス英語','TOEIC800','TOEIC900+','ネイティブ日常'];
+  var levelCards = levels.map(function(lv) {
+    var cnt = words.filter(function(w){ return (w.level||[]).indexOf(lv) >= 0; }).length;
+    return '<div class="mode-card" onclick="selectMode(\'level-' + lv + '\')">'
+      + '<div class="mode-card-icon">🏷</div>'
+      + '<div class="mode-card-title">' + lv + '</div>'
+      + '<div class="mode-card-sub">' + cnt + '単語</div>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('content').innerHTML =
+    '<div class="mode-screen">'
+    + '<h2>学習モードを選択</h2>'
+    + '<p>今日の復習待ち: <strong>' + dueCount + '件</strong></p>'
+
+    + '<div class="section-label">📄 スクリプト別</div>'
+    + '<div class="mode-grid">' + scriptCards + '</div>'
+
+    + '<div class="section-label">🏷 難易度別</div>'
+    + '<div class="mode-grid">' + levelCards + '</div>'
+
+    + '<div class="section-label">その他</div>'
+    + '<div class="mode-grid">'
+    + '<div class="mode-card" onclick="selectMode(\'all\')">'
+    + '<div class="mode-card-icon">📚</div>'
+    + '<div class="mode-card-title">全体</div>'
+    + '<div class="mode-card-sub">全' + words.length + '単語</div>'
+    + '</div>'
+    + '<div class="mode-card" onclick="selectMode(\'review\')">'
+    + '<div class="mode-card-icon">🔥</div>'
+    + '<div class="mode-card-title">要復習のみ</div>'
+    + '<div class="mode-card-sub">今日の期限' + dueCount + '件</div>'
+    + '</div>'
+    + '</div>'
+    + '</div>';
+}
+
+function selectMode(mode) {
+  studyMode = mode;
+  var target = getWordsForMode(mode);
+  if (target.length === 0) {
+    showToast('対象単語がありません', false);
     return;
   }
+  phaseMode = 'dir';
+  document.getElementById('backBtn').style.display = '';
+  renderDirSelect();
+}
 
+// ============================================================
+// STUDY PHASE: SELECT DIRECTION
+// ============================================================
+function renderDirSelect() {
+  var modeLabel = getModeLabel(studyMode);
+  var cnt = getWordsForMode(studyMode).length;
+  document.getElementById('content').innerHTML =
+    '<div class="mode-screen">'
+    + '<h2>' + modeLabel + '</h2>'
+    + '<p>' + cnt + '単語 · 学習方向を選んでください</p>'
+    + '<div class="sub-choices">'
+    + '<div class="choice-btn" onclick="startStudy(\'en2ja\')">'
+    + '<div class="choice-icon">🇬🇧</div>'
+    + '<div><div class="choice-label">英 → 日</div><div class="choice-sub">英語を見て意味を答える</div></div>'
+    + '</div>'
+    + '<div class="choice-btn" onclick="startStudy(\'ja2en\')">'
+    + '<div class="choice-icon">🇯🇵</div>'
+    + '<div><div class="choice-label">日 → 英</div><div class="choice-sub">日本語を見て英語を答える</div></div>'
+    + '</div>'
+    + '<div class="choice-btn" onclick="startStudy(\'random\')">'
+    + '<div class="choice-icon">🎲</div>'
+    + '<div><div class="choice-label">ランダム</div><div class="choice-sub">英→日・日→英をミックス</div></div>'
+    + '</div>'
+    + '</div>'
+    + '</div>';
+}
+
+function getModeLabel(mode) {
+  if (mode === 'all') return '📚 全単語';
+  if (mode === 'review') return '🔥 要復習';
+  if (mode.indexOf('script-') === 0) return '📄 ' + (SCRIPT_TITLES[mode.replace('script-','')] || mode);
+  if (mode.indexOf('level-') === 0) return '🏷 ' + mode.replace('level-','');
+  return mode;
+}
+
+function startStudy(dir) {
+  studyDir = dir;
+  var target = getWordsForMode(studyMode);
+  buildQueue(target, dir);
+  phaseMode = 'card';
+  renderCard();
+}
+
+// ============================================================
+// CARD
+// ============================================================
+function renderCard() {
+  var c = document.getElementById('content');
+  if (queue.length === 0 || qIdx >= queue.length) {
+    renderFinish();
+    return;
+  }
+  var item = queue[qIdx];
+  var w = item.word;
+  var dir = item.dir;
   var total = queue.length;
-  var cur = queue[qIdx];
   var pct = Math.round(qIdx / total * 100);
-  var wesc = (cur.word || '').replace(/'/g, "\\'");
+  var rate = sTotal > 0 ? Math.round(sOk / sTotal * 100) : '-';
 
-  var html = '<div class="stats-bar">'
-    + '<div class="stat-pill"><div class="stat-num">' + total + '</div><div class="stat-lbl">復習待ち</div></div>'
-    + '<div class="stat-pill"><div class="stat-num">' + qIdx + '</div><div class="stat-lbl">完了</div></div>'
-    + '<div class="stat-pill"><div class="stat-num">' + (sTotal > 0 ? Math.round(sOk/sTotal*100) : 0) + '%</div><div class="stat-lbl">正解率</div></div>'
+  var progressHtml =
+    '<div class="stats-row">'
+    + '<div class="stat-pill"><div class="stat-num">' + qIdx + '/' + total + '</div><div class="stat-lbl">進捗</div></div>'
+    + '<div class="stat-pill"><div class="stat-num">' + (rate === '-' ? '-' : rate + '%') + '</div><div class="stat-lbl">正解率</div></div>'
+    + '<div class="stat-pill"><div class="stat-num"><span class="streak-flame">🔥</span>' + sStreak + '</div><div class="stat-lbl">連続正解</div></div>'
     + '</div>'
     + '<div class="prog-wrap">'
-    + '<div class="prog-txt"><span>' + qIdx + ' / ' + total + '</span><span>' + pct + '%</span></div>'
     + '<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%"></div></div>'
-    + '</div>'
-    + '<div class="card-scene' + (flipped ? ' flipped' : '') + '" id="card" onclick="flipCard()">'
-    + '<div class="card-inner">'
-    + '<div class="card-face card-front">'
-    + '<div class="card-word">' + (cur.word || '') + '</div>'
-    + '<div class="card-pron">' + (cur.pron || '') + '</div>'
-    + '<div class="card-source">📘 ' + (cur.source || '') + '</div>'
-    + '<div class="card-hint">タップして意味を確認</div>'
-    + '</div>'
-    + '<div class="card-face card-back">'
-    + '<div class="card-meaning">' + (cur.meaning || '') + '</div>'
-    + (cur.example ? '<div class="card-ex">"' + cur.example + '"</div>' : '')
-    + '<button class="card-speak" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音を聞く</button>'
-    + '</div>'
-    + '</div></div>'
-    + '<div class="ans-row" id="ansRow" style="' + (flipped ? '' : 'display:none') + '">'
+    + '</div>';
+
+  var cardHtml = buildCardHtml(w, dir, flipped);
+
+  var ansHtml = '<div class="ans-row" id="ansRow" style="' + (flipped ? '' : 'display:none') + '">'
     + '<button class="ans-btn btn-again" onclick="answer(0)">もう一度</button>'
     + '<button class="ans-btn btn-hard" onclick="answer(1)">難しい</button>'
     + '<button class="ans-btn btn-good" onclick="answer(2)">OK</button>'
     + '<button class="ans-btn btn-easy" onclick="answer(3)">完璧</button>'
-    + '</div>'
-    + '<div style="font-size:12px;color:var(--text2);text-align:center">復習' + (cur.reviewCount||0) + '回 · 連続' + (cur.streak||0) + '回</div>';
+    + '</div>';
 
-  c.innerHTML = html;
+  var metaHtml = '<div class="review-meta">復習' + (w.reviewCount||0) + '回'
+    + (w.streak > 1 ? ' · 🔥連続' + w.streak + '回' : '')
+    + (w.missCount > 0 ? ' · ❌' + w.missCount + '回' : '')
+    + '</div>';
+
+  c.innerHTML = progressHtml + '<div class="card-wrap">' + cardHtml + '</div>' + ansHtml + metaHtml;
+
+  // Auto-speak on front card (en2ja only)
+  if (!flipped && dir === 'en2ja') {
+    setTimeout(function() { speakWord(w.word); }, 300);
+  }
+}
+
+function buildCardHtml(w, dir, flipped) {
+  var wesc = (w.word || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  var levelBadges = (w.level || []).map(function(l){
+    return '<span class="level-badge">' + l + '</span>';
+  }).join('');
+
+  // Front face content depends on direction
+  var frontContent, backContent;
+  if (dir === 'en2ja') {
+    frontContent =
+      '<div class="card-direction">英語 → 意味</div>'
+      + '<div class="card-word">' + escHtml(w.word || '') + '</div>'
+      + '<div class="card-pron">' + escHtml(w.pron || '') + '</div>'
+      + '<div class="card-badges">' + levelBadges + '</div>'
+      + '<div class="card-hint">タップして意味を確認</div>';
+    backContent = buildBackContent_en2ja(w, wesc);
+  } else {
+    frontContent =
+      '<div class="card-direction">日本語 → 英語</div>'
+      + '<div class="card-word" style="font-size:18px">' + escHtml(w.meaning || '') + '</div>'
+      + '<div class="card-hints">'
+      + '<div class="card-hint" style="margin-top:8px">📘 ' + escHtml(w.source || '') + '</div>'
+      + '</div>'
+      + '<div class="card-hint" style="margin-top:8px">タップして英語を確認</div>';
+    backContent = buildBackContent_ja2en(w, wesc, levelBadges);
+  }
+
+  return '<div class="card-scene' + (flipped ? ' flipped' : '') + '" id="card" onclick="flipCard()">'
+    + '<div class="card-inner">'
+    + '<div class="card-face card-front">' + frontContent + '</div>'
+    + '<div class="card-face card-back">' + backContent + '</div>'
+    + '</div></div>';
+}
+
+function buildBackContent_en2ja(w, wesc) {
+  var detailHtml = buildDetailHtml(w);
+  return '<div class="card-meaning">' + escHtml(w.meaning || '') + '</div>'
+    + (w.example ? '<div class="card-ex">"' + escHtml(w.example) + '"</div>' : '')
+    + '<button class="card-speak-btn" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音</button>'
+    + (detailHtml ? '<button class="card-detail-toggle" onclick="event.stopPropagation();toggleDetail()" id="detailToggle">▼ 詳細を見る</button>' : '')
+    + '<div id="cardDetail" style="display:none;width:100%">' + detailHtml + '</div>';
+}
+
+function buildBackContent_ja2en(w, wesc, levelBadges) {
+  var detailHtml = buildDetailHtml(w);
+  return '<div class="card-word" style="color:#fff;font-size:20px">' + escHtml(w.word || '') + '</div>'
+    + '<div class="card-pron" style="color:rgba(255,255,255,.7)">' + escHtml(w.pron || '') + '</div>'
+    + '<div class="card-badges" style="margin-bottom:6px">'
+    + (w.level||[]).map(function(l){ return '<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.2);color:#fff;font-weight:600">' + l + '</span>'; }).join('')
+    + '</div>'
+    + (w.example ? '<div class="card-ex">"' + escHtml(w.example) + '"</div>' : '')
+    + '<button class="card-speak-btn" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音</button>'
+    + (detailHtml ? '<button class="card-detail-toggle" onclick="event.stopPropagation();toggleDetail()" id="detailToggle">▼ 詳細を見る</button>' : '')
+    + '<div id="cardDetail" style="display:none;width:100%">' + detailHtml + '</div>';
+}
+
+function buildDetailHtml(w) {
+  var rows = '';
+  if (w.usageTips) rows += '<div class="card-detail-row"><span class="card-detail-label">💡 コツ:</span>' + escHtml(w.usageTips) + '</div>';
+  if (w.otherMeanings && w.otherMeanings.length > 0) rows += '<div class="card-detail-row"><span class="card-detail-label">📖 他の意味:</span>' + escHtml(w.otherMeanings.join(' / ')) + '</div>';
+  if (w.collocations && w.collocations.length > 0) rows += '<div class="card-detail-row"><span class="card-detail-label">🔗 コロケーション:</span>' + escHtml(w.collocations.join('、')) + '</div>';
+  if (!rows) return '';
+  return '<div class="card-detail-box">' + rows + '</div>';
+}
+
+function toggleDetail() {
+  var el = document.getElementById('cardDetail');
+  var btn = document.getElementById('detailToggle');
+  if (!el) return;
+  var open = el.style.display !== 'none';
+  el.style.display = open ? 'none' : '';
+  if (btn) btn.textContent = open ? '▼ 詳細を見る' : '▲ 閉じる';
 }
 
 function flipCard() {
   flipped = !flipped;
+  var item = queue[qIdx];
+  if (!item) return;
+  var w = item.word;
+  var dir = item.dir;
   var card = document.getElementById('card');
   if (card) card.classList.toggle('flipped', flipped);
   var ans = document.getElementById('ansRow');
   if (ans) ans.style.display = flipped ? '' : 'none';
+  // Speak on flip (for ja2en, auto-speak the english word)
+  if (flipped && dir === 'ja2en') speakWord(w.word);
 }
 
 function answer(q) {
-  applyReview(queue[qIdx].id, q);
+  applyReview(queue[qIdx].word.id, q);
   saveProgressSilent();
   if (q === 0) queue.push(queue.splice(qIdx, 1)[0]);
   else qIdx++;
   flipped = false;
-  renderReview();
+  renderCard();
 }
 
-// ===== LIST =====
+// ============================================================
+// FINISH
+// ============================================================
+function renderFinish() {
+  var rate = sTotal > 0 ? Math.round(sOk / sTotal * 100) : 0;
+  var masteredCount = words.filter(function(w){ return w.streak >= 3 && w.interval >= 4; }).length;
+  var reviewCount = getDue().length;
+
+  recordDailyStat(sOk, sTotal);
+  if (GH_TOKEN) saveStatsToGitHub();
+
+  var chartHtml = buildLineChart();
+
+  document.getElementById('content').innerHTML =
+    '<div class="finish">'
+    + '<div class="finish-icon">🎉</div>'
+    + '<div class="finish-title">セッション完了！</div>'
+    + '<div class="finish-rate">正解率: <strong>' + rate + '%</strong> · 最大連続: 🔥' + sMaxStreak + '</div>'
+    + '<div class="finish-stats">'
+    + '<div class="finish-stat"><div class="finish-stat-n">' + sOk + '/' + sTotal + '</div><div class="finish-stat-l">今回の正解/出題</div></div>'
+    + '<div class="finish-stat"><div class="finish-stat-n">' + masteredCount + '</div><div class="finish-stat-l">習得済み単語</div></div>'
+    + '<div class="finish-stat"><div class="finish-stat-n" style="color:var(--amber)">' + reviewCount + '</div><div class="finish-stat-l">要復習</div></div>'
+    + '<div class="finish-stat"><div class="finish-stat-n" style="color:var(--red)">' + getDue().filter(function(w){return w.missCount>0;}).length + '</div><div class="finish-stat-l">苦手単語</div></div>'
+    + '</div>'
+    + chartHtml
+    + '<div class="finish-btns">'
+    + '<button class="btn btn-secondary" onclick="phaseMode=\'select\';document.getElementById(\'backBtn\').style.display=\'none\';renderStudyPhase()">← モード選択</button>'
+    + '<button class="btn btn-secondary" onclick="startStudy(\'' + studyDir + '\')">もう一度</button>'
+    + (GH_TOKEN ? '<button class="btn btn-primary" onclick="saveToGitHub()">💾 保存</button>' : '')
+    + '</div>'
+    + '<div style="font-size:11px;color:var(--text3)">進捗はブラウザに自動保存済み</div>'
+    + '</div>';
+}
+
+// ============================================================
+// LINE CHART (SVG)
+// ============================================================
+function buildLineChart() {
+  var stats = getDailyStats();
+  var keys = Object.keys(stats).sort().slice(-7);
+  if (keys.length < 1) return '';
+
+  var W = 280, H = 100, PL = 28, PR = 10, PT = 10, PB = 20;
+  var iW = W - PL - PR, iH = H - PT - PB;
+
+  var data = keys.map(function(k) {
+    var s = stats[k];
+    return { date: k, rate: s.total > 0 ? Math.round(s.ok / s.total * 100) : 0 };
+  });
+
+  var n = data.length;
+  var xStep = n > 1 ? iW / (n - 1) : iW;
+
+  function px(i) { return PL + (n > 1 ? i * xStep : iW / 2); }
+  function py(v) { return PT + iH - (v / 100 * iH); }
+
+  var pathD = data.map(function(d, i) { return (i === 0 ? 'M' : 'L') + px(i).toFixed(1) + ',' + py(d.rate).toFixed(1); }).join(' ');
+  var areaD = pathD + ' L' + px(n-1).toFixed(1) + ',' + (PT + iH) + ' L' + PL.toFixed(1) + ',' + (PT + iH) + ' Z';
+
+  // Y-axis labels
+  var yLabels = [0, 50, 100].map(function(v) {
+    return '<text x="' + (PL - 4) + '" y="' + (py(v) + 4) + '" text-anchor="end" font-size="9" fill="var(--text3)">' + v + '</text>';
+  }).join('');
+
+  // X-axis labels (last few dates)
+  var xLabels = data.map(function(d, i) {
+    var label = d.date.slice(5); // MM-DD
+    return '<text x="' + px(i).toFixed(1) + '" y="' + (H - 3) + '" text-anchor="middle" font-size="9" fill="var(--text3)">' + label + '</text>';
+  }).join('');
+
+  // Dots
+  var dots = data.map(function(d, i) {
+    return '<circle cx="' + px(i).toFixed(1) + '" cy="' + py(d.rate).toFixed(1) + '" r="3" fill="var(--accent)"/>';
+  }).join('');
+
+  return '<div class="chart-wrap">'
+    + '<div class="chart-title">📈 過去' + n + '日の正解率</div>'
+    + '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">'
+    + '<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".3"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>'
+    + '<path d="' + areaD + '" fill="url(#g1)"/>'
+    + '<path d="' + pathD + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+    + yLabels + xLabels + dots
+    + '</svg></div>';
+}
+
+// ============================================================
+// LIST TAB
+// ============================================================
 function renderList() {
   var c = document.getElementById('content');
-  if (words.length === 0) {
-    c.innerHTML = '<div class="empty">単語がありません</div>';
-    return;
-  }
-  var now = new Date().toISOString().split('T')[0];
-  var sorted = words.slice().sort(function(a, b) {
+  if (words.length === 0) { c.innerHTML = '<div class="empty">単語がありません</div>'; return; }
+
+  var today = new Date().toISOString().split('T')[0];
+  var filtered = activeFilters.length === 0 ? words : words.filter(function(w) {
+    return activeFilters.some(function(f) { return (w.level || []).indexOf(f) >= 0; });
+  });
+  var sorted = filtered.slice().sort(function(a, b) {
     return (a.nextReview || '') < (b.nextReview || '') ? -1 : 1;
   });
 
-  var html = '<div style="font-size:13px;color:var(--text2);margin-bottom:10px">'
-    + words.length + '単語 · 復習待ち' + getDue().length + '件</div>';
+  // Filter chips
+  var chipsHtml = '<div class="list-filter-bar">'
+    + '<div class="filter-chip' + (activeFilters.length === 0 ? ' active' : '') + '" onclick="setFilter(null)">すべて</div>'
+    + ALL_LEVELS.map(function(lv) {
+      var cnt = words.filter(function(w){ return (w.level||[]).indexOf(lv)>=0; }).length;
+      if (cnt === 0) return '';
+      return '<div class="filter-chip' + (activeFilters.indexOf(lv) >= 0 ? ' active' : '') + '" onclick="toggleFilter(\'' + lv + '\')">' + lv + ' <span style="opacity:.6">(' + cnt + ')</span></div>';
+    }).join('')
+    + '</div>';
 
-  var sources = {};
-  sorted.forEach(function(w) {
-    var src = w.source || 'その他';
-    if (!sources[src]) sources[src] = [];
-    sources[src].push(w);
-  });
+  var summaryHtml = '<div class="list-summary">'
+    + filtered.length + '単語 · 要復習' + filtered.filter(function(w){ return !w.nextReview || w.nextReview <= today; }).length + '件'
+    + '</div>';
 
-  Object.keys(sources).forEach(function(src) {
-    html += '<div style="font-size:12px;font-weight:700;color:var(--text2);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.04em">📄 ' + src + '</div>';
-    sources[src].forEach(function(w) {
-      var wesc = (w.word || '').replace(/'/g, "\\'");
-      var due = w.nextReview || now;
-      var daysLeft = Math.round((new Date(due) - new Date(now)) / 86400000);
-      var dueLabel = daysLeft <= 0 ? '今すぐ' : daysLeft === 1 ? '明日' : daysLeft + '日後';
-      var dueClass = daysLeft <= 0 ? 'due-now' : daysLeft <= 3 ? 'due-soon' : 'due-later';
-      html += '<div class="word-item" onclick="speakWord(\'' + wesc + '\')">'  
-        + '<div class="word-item-main">'
-        + '<div class="word-item-word">' + (w.word || '') + '</div>'
-        + '<div class="word-item-meaning">' + (w.meaning || '') + '</div>'
-        + '</div>'
-        + '<span class="due-badge ' + dueClass + '">' + dueLabel + '</span>'
-        + '</div>';
-    });
-  });
+  var itemsHtml = sorted.map(function(w) {
+    var wesc = (w.word || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    var due = w.nextReview || today;
+    var daysLeft = Math.round((new Date(due) - new Date(today)) / 86400000);
+    var dueLabel = daysLeft <= 0 ? '今すぐ' : daysLeft === 1 ? '明日' : daysLeft + '日後';
+    var dueClass = daysLeft <= 0 ? 'due-now' : daysLeft <= 3 ? 'due-soon' : 'due-later';
+    var lvBadges = (w.level||[]).map(function(l){ return '<span class="wl-badge">' + l + '</span>'; }).join('');
+    // Status bar: streak → green, interval 1-3 → amber, overdue → red
+    var sbGreen = w.streak >= 3 ? '60%' : (w.streak >= 1 ? '30%' : '0%');
+    var sbRed   = daysLeft < 0 ? Math.min(60, Math.abs(daysLeft) * 10) + '%' : '0%';
+    var sbAmber = daysLeft === 0 ? '40%' : '0%';
+    return '<div class="word-item" onclick="speakWord(\'' + wesc + '\')">'
+      + '<div class="word-item-header">'
+      + '<div class="word-item-main">'
+      + '<div class="word-item-word">' + escHtml(w.word||'') + '</div>'
+      + '<div class="word-item-meaning">' + escHtml(w.meaning||'') + '</div>'
+      + '</div>'
+      + '<div class="word-item-right">'
+      + '<span class="due-badge ' + dueClass + '">' + dueLabel + '</span>'
+      + '<div class="status-bar"><div class="sb-green" style="width:' + sbGreen + '"></div><div class="sb-amber" style="width:' + sbAmber + '"></div><div class="sb-red" style="width:' + sbRed + '"></div></div>'
+      + '</div>'
+      + '</div>'
+      + '<div class="word-item-levels">' + lvBadges + '</div>'
+      + '</div>';
+  }).join('');
 
-  c.innerHTML = html;
+  c.innerHTML = chipsHtml + summaryHtml + itemsHtml;
 }
 
-function restartReview() {
-  buildQueue();
-  renderReview();
+function setFilter(lv) {
+  activeFilters = lv ? [lv] : [];
+  renderList();
+}
+
+function toggleFilter(lv) {
+  var idx = activeFilters.indexOf(lv);
+  if (idx >= 0) activeFilters.splice(idx, 1);
+  else activeFilters.push(lv);
+  renderList();
+}
+
+// ============================================================
+// STATS TAB
+// ============================================================
+function renderStats() {
+  var c = document.getElementById('content');
+  var today = new Date().toISOString().split('T')[0];
+  var total = words.length;
+  var mastered = words.filter(function(w){ return w.streak >= 3 && w.interval >= 4; }).length;
+  var learning = words.filter(function(w){ return w.reviewCount > 0 && !(w.streak >= 3 && w.interval >= 4); }).length;
+  var review = getDue().length;
+  var missWords = words.filter(function(w){ return w.missCount > 0; }).sort(function(a,b){ return (b.missCount||0)-(a.missCount||0); }).slice(0,5);
+
+  var chartHtml = buildLineChart();
+
+  var missHtml = missWords.length > 0
+    ? '<div class="section-label">❌ 苦手単語 Top5</div>'
+      + missWords.map(function(w){
+          return '<div class="word-item">'
+            + '<div class="word-item-header">'
+            + '<div class="word-item-main">'
+            + '<div class="word-item-word">' + escHtml(w.word) + '</div>'
+            + '<div class="word-item-meaning">' + escHtml(w.meaning) + '</div>'
+            + '</div>'
+            + '<div class="word-item-right"><span class="due-badge due-now">❌' + w.missCount + '回</span></div>'
+            + '</div>'
+            + '</div>';
+        }).join('')
+    : '';
+
+  c.innerHTML =
+    '<div class="stats-row">'
+    + '<div class="stat-pill"><div class="stat-num" style="color:var(--green)">' + mastered + '</div><div class="stat-lbl">習得済み</div></div>'
+    + '<div class="stat-pill"><div class="stat-num" style="color:var(--amber)">' + learning + '</div><div class="stat-lbl">学習中</div></div>'
+    + '<div class="stat-pill"><div class="stat-num" style="color:var(--red)">' + review + '</div><div class="stat-lbl">要復習</div></div>'
+    + '</div>'
+    + '<div class="prog-wrap">'
+    + '<div class="prog-txt"><span>習得状況</span><span>' + Math.round(mastered/total*100) + '%</span></div>'
+    + '<div class="prog-bar" style="height:8px;border-radius:4px">'
+    + '<div style="height:100%;background:linear-gradient(to right,var(--green) ' + Math.round(mastered/total*100) + '%,var(--amber) ' + Math.round(mastered/total*100) + '% ' + Math.round((mastered+learning)/total*100) + '%,var(--bg3) ' + Math.round((mastered+learning)/total*100) + '%);border-radius:4px"></div>'
+    + '</div></div>'
+    + chartHtml
+    + missHtml;
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function speakWord(text) {
@@ -436,7 +931,9 @@ function showToast(msg, ok) {
   setTimeout(function() { t.classList.remove('show'); }, 2800);
 }
 
-// Boot
+// ============================================================
+// BOOT
+// ============================================================
 if (GH_TOKEN) {
   var b = document.getElementById('ghSaveBtn');
   if (b) b.style.display = '';
