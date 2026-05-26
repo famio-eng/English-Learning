@@ -335,12 +335,12 @@
         "a remarkable feat",
         "an impressive feat"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.6,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w013",
@@ -364,12 +364,12 @@
         "manage all the moving parts",
         "a lot of moving parts"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w014",
