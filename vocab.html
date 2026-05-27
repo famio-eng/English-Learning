@@ -12,108 +12,110 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
 .header{flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px}
 .topbar{display:flex;align-items:center;justify-content:space-between}
-.app-title{font-size:16px;font-weight:700}
-.header-actions{display:flex;gap:5px}
+.app-title{font-size:17px;font-weight:700}
+.header-actions{display:flex;gap:6px}
 .tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
-.tab{flex:1;padding:9px 0;font-size:12px;font-weight:600;text-align:center;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent}
+.tab{flex:1;padding:10px 0;font-size:13px;font-weight:600;text-align:center;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .content{flex:1;overflow-y:auto;padding:14px;-webkit-overflow-scrolling:touch}
-.btn{padding:9px 14px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:5px;justify-content:center;transition:opacity .15s}
+/* --- Buttons --- */
+.btn{padding:10px 16px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:5px;justify-content:center;transition:opacity .15s;min-height:44px}
 .btn:active{opacity:.75}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.btn-sm{padding:6px 11px;font-size:12px;border-radius:8px}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ===== MODE SELECT ===== */
-.mode-screen{padding:20px 16px}
-.mode-screen h2{font-size:17px;font-weight:700;margin-bottom:4px}
-.mode-screen p{font-size:13px;color:var(--text2);margin-bottom:16px}
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-.mode-card{background:var(--bg2);border:2px solid var(--border);border-radius:14px;padding:16px 12px;cursor:pointer;text-align:center;transition:border-color .15s,background .15s}
-.mode-card:active,.mode-card.selected{border-color:var(--accent);background:rgba(124,111,247,.1)}
-.mode-card-icon{font-size:28px;margin-bottom:6px}
+.mode-screen{padding:16px}
+.mode-screen h2{font-size:18px;font-weight:700;margin-bottom:4px}
+.mode-screen p{font-size:14px;color:var(--text2);margin-bottom:14px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.mode-card{background:var(--bg2);border:2px solid var(--border);border-radius:14px;padding:16px 10px;cursor:pointer;text-align:center;transition:border-color .15s,background .15s;min-height:44px}
+.mode-card:active{border-color:var(--accent);background:rgba(124,111,247,.1)}
+.mode-card-icon{font-size:26px;margin-bottom:6px}
 .mode-card-title{font-size:14px;font-weight:700;margin-bottom:3px}
-.mode-card-sub{font-size:11px;color:var(--text2);line-height:1.4}
-.sub-choices{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
-.choice-btn{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:13px 16px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:10px;transition:border-color .15s}
-.choice-btn:active,.choice-btn.selected{border-color:var(--accent)}
-.choice-icon{font-size:22px;width:30px;text-align:center}
-.choice-label{font-size:14px;font-weight:700}
-.choice-sub{font-size:12px;color:var(--text2);margin-top:1px}
-.level-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:14px}
-.level-chip{border:2px solid var(--border);border-radius:20px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;background:var(--bg2);transition:all .15s}
-.level-chip.selected{border-color:var(--accent);background:var(--accent);color:#fff}
+.mode-card-sub{font-size:12px;color:var(--text2);line-height:1.4}
+.sub-choices{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.choice-btn{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;display:flex;align-items:center;gap:12px;transition:border-color .15s;min-height:60px}
+.choice-btn:active{border-color:var(--accent)}
+.choice-icon{font-size:24px;width:32px;text-align:center}
+.choice-label{font-size:15px;font-weight:700}
+.choice-sub{font-size:13px;color:var(--text2);margin-top:2px}
 
 /* ===== PROGRESS ===== */
 .prog-wrap{margin-bottom:10px}
 .prog-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
 .prog-fill{height:100%;background:var(--accent);transition:width .3s}
-.prog-txt{font-size:11px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between}
+.prog-txt{font-size:12px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between}
 .stats-row{display:flex;gap:6px;margin-bottom:10px}
-.stat-pill{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:7px 4px;text-align:center}
-.stat-num{font-size:16px;font-weight:700;color:var(--accent)}
-.stat-lbl{font-size:10px;color:var(--text2);margin-top:1px}
+.stat-pill{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center}
+.stat-num{font-size:17px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:12px;color:var(--text2);margin-top:1px}
 
 /* ===== CARD ===== */
-.card-wrap{margin-bottom:12px}
-.card-scene{perspective:1000px;cursor:pointer;user-select:none}
+.card-wrap{margin-bottom:10px}
+.card-scene{perspective:1000px;cursor:pointer;user-select:none;margin-bottom:10px}
 .card-inner{position:relative;width:100%;min-height:220px;transition:transform .4s;transform-style:preserve-3d}
 .card-scene.flipped .card-inner{transform:rotateY(180deg)}
-.card-face{position:absolute;width:100%;min-height:220px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.card-face{position:absolute;width:100%;min-height:220px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;padding:20px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .card-front{background:var(--bg2);border:1px solid var(--border)}
 .card-back{background:linear-gradient(135deg,#635fd2,#7c6ff7);transform:rotateY(180deg);color:#fff}
-.card-direction{font-size:10px;font-weight:600;letter-spacing:.06em;margin-bottom:10px;opacity:.6;text-transform:uppercase}
-.card-word{font-size:22px;font-weight:700;margin-bottom:5px;line-height:1.3}
-.card-pron{font-size:12px;color:var(--text2);margin-bottom:8px}
-.card-badges{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:10px}
-.level-badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;background:rgba(124,111,247,.2);color:var(--accent)}
-.card-hint{font-size:12px;color:var(--text3);margin-top:10px}
-.card-meaning{font-size:19px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3}
-.card-ex{font-size:12px;color:rgba(255,255,255,.82);font-style:italic;line-height:1.6;margin-bottom:10px}
-.card-speak-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:4px}
-.card-detail-toggle{margin-top:10px;font-size:11px;color:rgba(255,255,255,.6);cursor:pointer;border:none;background:none;text-decoration:underline}
-.card-detail-box{margin-top:10px;background:rgba(0,0,0,.2);border-radius:10px;padding:10px 12px;text-align:left;width:100%}
-.card-detail-row{font-size:11px;color:rgba(255,255,255,.85);margin-bottom:5px;line-height:1.5}
-.card-detail-label{font-weight:700;margin-right:4px}
+.card-direction{font-size:12px;font-weight:600;letter-spacing:.06em;margin-bottom:10px;opacity:.6;text-transform:uppercase}
+.card-word{font-size:28px;font-weight:700;margin-bottom:6px;line-height:1.3}
+.card-pron{font-size:13px;color:var(--text2);margin-bottom:8px}
+.card-badges{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:8px}
+.level-badge{font-size:12px;padding:3px 8px;border-radius:10px;font-weight:600;background:rgba(124,111,247,.2);color:var(--accent)}
+.card-hint{font-size:13px;color:var(--text3);margin-top:8px}
+.card-meaning{font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.35}
+.card-ex{font-size:14px;color:rgba(255,255,255,.85);font-style:italic;line-height:1.6;margin-bottom:10px}
+.card-speak-btn{background:rgba(255,255,255,.22);border:none;color:#fff;padding:8px 18px;border-radius:20px;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:5px;min-height:40px}
 
-/* ===== ANSWER BUTTONS ===== */
-.ans-row{display:flex;gap:5px;margin-bottom:10px}
-.ans-btn{flex:1;padding:10px 0;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:opacity .15s}
+/* ===== DETAIL SECTION (outside card flip) ===== */
+.detail-toggle-btn{display:block;width:100%;margin-top:0;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px;font-size:14px;color:var(--text2);cursor:pointer;text-align:center;font-weight:600;min-height:44px}
+.detail-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-top:8px}
+.detail-panel-row{font-size:14px;color:var(--text);margin-bottom:10px;line-height:1.6}
+.detail-panel-row:last-child{margin-bottom:0}
+.detail-panel-label{font-weight:700;color:var(--text2);display:block;font-size:12px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+
+/* ===== ANSWER BUTTONS (sticky) ===== */
+.ans-sticky{position:sticky;bottom:0;z-index:10;background:var(--bg);padding:10px 0 4px;margin-top:8px}
+.ans-row{display:flex;gap:6px}
+.ans-btn{flex:1;padding:14px 0;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:opacity .15s;min-height:52px}
 .ans-btn:active{opacity:.75}
 .btn-again{background:#7f1d1d;color:#fca5a5}
 .btn-hard{background:#78350f;color:#fcd34d}
 .btn-good{background:#14532d;color:#86efac}
 .btn-easy{background:#1e3a5f;color:#7dd3fc}
-.review-meta{font-size:11px;color:var(--text2);text-align:center;margin-bottom:12px}
+.review-meta{font-size:12px;color:var(--text2);text-align:center;padding:4px 0 2px}
 .streak-flame{color:#f59e0b}
 
 /* ===== FINISH ===== */
-.finish{text-align:center;padding:30px 16px}
+.finish{text-align:center;padding:28px 14px}
 .finish-icon{font-size:48px;margin-bottom:8px}
 .finish-title{font-size:20px;font-weight:700;margin-bottom:4px}
 .finish-rate{font-size:15px;color:var(--text2);margin-bottom:16px}
-.finish-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.finish-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .finish-stat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px}
 .finish-stat-n{font-size:22px;font-weight:700;color:var(--accent)}
-.finish-stat-l{font-size:11px;color:var(--text2);margin-top:2px}
+.finish-stat-l{font-size:12px;color:var(--text2);margin-top:2px}
 .finish-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
 .chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
-.chart-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px}
+.chart-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px}
 
 /* ===== LIST ===== */
 .list-filter-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
-.filter-chip{font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;font-weight:600;transition:all .15s}
+.filter-chip{font-size:12px;padding:6px 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;font-weight:600;transition:all .15s;min-height:34px}
 .filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.list-summary{font-size:12px;color:var(--text2);margin-bottom:10px}
-.word-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;margin-bottom:7px;cursor:pointer}
+.list-summary{font-size:13px;color:var(--text2);margin-bottom:10px}
+.word-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 13px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.word-item:active{border-color:var(--accent)}
 .word-item-header{display:flex;align-items:center;gap:8px}
 .word-item-main{flex:1}
-.word-item-word{font-size:15px;font-weight:700}
-.word-item-meaning{font-size:12px;color:var(--text2);margin-top:2px}
-.word-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
-.due-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
+.word-item-word{font-size:16px;font-weight:700}
+.word-item-meaning{font-size:13px;color:var(--text2);margin-top:2px}
+.word-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.due-badge{font-size:12px;padding:3px 8px;border-radius:8px;font-weight:600}
 .due-now{background:var(--red);color:#fff}
 .due-soon{background:var(--amber);color:#fff}
 .due-later{background:var(--bg3);color:var(--text2)}
@@ -122,16 +124,37 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .sb-amber{background:var(--amber)}
 .sb-red{background:var(--red)}
 .sb-gray{background:var(--bg4)}
-.word-item-levels{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
-.wl-badge{font-size:9px;padding:1px 6px;border-radius:6px;background:var(--bg3);color:var(--text2);font-weight:600}
+.word-item-levels{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.wl-badge{font-size:11px;padding:2px 7px;border-radius:6px;background:var(--bg3);color:var(--text2);font-weight:600}
 
 /* ===== MISC ===== */
-.section-label{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin:14px 0 6px}
-.empty{text-align:center;padding:36px 20px;color:var(--text2)}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg2);border-radius:20px;padding:8px 18px;font-size:13px;white-space:nowrap;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;max-width:92vw;text-align:center}
+.section-label{font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin:14px 0 6px}
+.empty{text-align:center;padding:36px 20px;color:var(--text2);font-size:14px}
+
+/* ===== TOAST (redesigned) ===== */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);border-radius:14px;padding:16px 20px;font-size:15px;font-weight:600;z-index:400;opacity:0;transition:opacity .3s ease;pointer-events:none;width:84%;max-width:360px;text-align:center;box-shadow:0 6px 28px rgba(0,0,0,.35)}
 .toast.show{opacity:1}
-.toast.ok{border:1px solid var(--green);color:var(--green)}
-.toast.err{border:1px solid var(--red);color:var(--red)}
+.toast.ok{background:var(--green);color:#fff}
+.toast.err{background:var(--red);color:#fff}
+
+/* ===== WORD DETAIL MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal-sheet{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-height:86vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:slideUp .28s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 2px}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 18px 12px;border-bottom:1px solid var(--border);gap:10px}
+.modal-title{font-size:19px;font-weight:700;flex:1;line-height:1.3;word-break:break-word}
+.modal-close{background:var(--bg3);border:none;border-radius:50%;width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);flex-shrink:0}
+.modal-body{padding:16px 18px 32px}
+.modal-pron{font-size:14px;color:var(--text2);margin-bottom:6px}
+.modal-meaning{font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.4}
+.modal-example{font-size:14px;color:var(--text2);font-style:italic;line-height:1.65;margin-bottom:14px;padding:10px 12px;background:var(--bg3);border-radius:10px}
+.modal-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.modal-badge{font-size:12px;padding:4px 10px;border-radius:10px;background:rgba(124,111,247,.15);color:var(--accent);font-weight:600}
+.modal-speak-btn{width:100%;padding:13px;border-radius:12px;background:var(--accent);color:#fff;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:18px;min-height:48px}
+.modal-section{margin-bottom:16px}
+.modal-section-label{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.modal-section-body{font-size:14px;color:var(--text);line-height:1.7}
 </style>
 </head>
 <body>
@@ -140,9 +163,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div class="topbar">
       <div class="app-title">📚 単語帳</div>
       <div class="header-actions">
-        <button class="btn btn-secondary btn-sm" id="ghSaveBtn" onclick="saveToGitHub()" style="display:none" title="GitHubに保存">💾</button>
-        <button class="btn btn-secondary btn-sm" onclick="loadVocab()" title="再読み込み">🔄</button>
-        <button class="btn btn-secondary btn-sm" id="backBtn" onclick="backToMode()" style="display:none" title="戻る">← 戻る</button>
+        <button class="btn btn-secondary" id="ghSaveBtn" onclick="saveToGitHub()" style="display:none" title="GitHubに保存">💾</button>
+        <button class="btn btn-secondary" onclick="loadVocab()" title="再読み込み">🔄</button>
+        <button class="btn btn-secondary" id="backBtn" onclick="backToMode()" style="display:none">← 戻る</button>
       </div>
     </div>
   </div>
@@ -156,6 +179,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- Word detail modal -->
+<div class="modal-overlay" id="wordModal" style="display:none" onclick="closeWordDetail()">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle"></div>
+      <button class="modal-close" onclick="closeWordDetail()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <script>
 // ============================================================
@@ -173,36 +208,23 @@ var STATS_KEY    = 'vocab_daily_stats';
 // ============================================================
 var words = [];
 var currentTab = 'study';
-
-// Study session state
-var studyMode    = '';   // 'script-short' | 'script-casual' | 'script-formal' | 'level-X' | 'all' | 'review'
-var studyDir     = '';   // 'en2ja' | 'ja2en' | 'random'
-var queue        = [];
-var qIdx         = 0;
-var flipped      = false;
+var studyMode = '';
+var studyDir  = '';
+var queue     = [];
+var qIdx      = 0;
+var flipped   = false;
 var sOk = 0, sTotal = 0, sStreak = 0, sMaxStreak = 0;
-var sessionWords = [];
-var detailOpen   = false;
-var phaseMode = 'select'; // 'select' | 'dir' | 'card'
-
-// List filter
+var phaseMode = 'select';
 var activeFilters = [];
-
 var synth = window.speechSynthesis;
 
-// Level definitions
+// All defined level categories (determines mode-select display order)
 var ALL_LEVELS = ['中学英語','高校英語','大学受験','TOEIC600','TOEIC800','TOEIC900+','ネイティブ日常','ビジネス英語'];
 var HARD_LEVELS = ['TOEIC900+','ビジネス英語'];
-
-// Script id → title map
-var SCRIPT_TITLES = {
-  'short':  '自己紹介 ショート版',
-  'casual': '自己紹介 カジュアル版',
-  'formal': '自己紹介 フォーマル版'
-};
+var SCRIPT_TITLES = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版'};
 
 // ============================================================
-// LOCAL STORAGE - PROGRESS
+// LOCAL STORAGE
 // ============================================================
 function getProgress() {
   try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); }
@@ -212,21 +234,13 @@ function getProgress() {
 function saveProgressSilent() {
   var p = {};
   words.forEach(function(w) {
-    p[w.id] = {
-      interval: w.interval,
-      nextReview: w.nextReview,
-      reviewCount: w.reviewCount,
-      streak: w.streak,
-      missCount: w.missCount || 0,
-      lastMissed: w.lastMissed || ''
-    };
+    p[w.id] = {interval:w.interval, nextReview:w.nextReview,
+      reviewCount:w.reviewCount, streak:w.streak,
+      missCount:w.missCount||0, lastMissed:w.lastMissed||''};
   });
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
 }
 
-// ============================================================
-// LOCAL STORAGE - DAILY STATS
-// ============================================================
 function getDailyStats() {
   try { return JSON.parse(localStorage.getItem(STATS_KEY) || '{}'); }
   catch(e) { return {}; }
@@ -236,10 +250,8 @@ function recordDailyStat(ok, total) {
   if (total === 0) return;
   var stats = getDailyStats();
   var today = new Date().toISOString().split('T')[0];
-  if (!stats[today]) stats[today] = {ok: 0, total: 0};
-  stats[today].ok    += ok;
-  stats[today].total += total;
-  // keep only 30 days
+  if (!stats[today]) stats[today] = {ok:0, total:0};
+  stats[today].ok += ok; stats[today].total += total;
   var keys = Object.keys(stats).sort();
   while (keys.length > 30) { delete stats[keys.shift()]; keys = Object.keys(stats).sort(); }
   localStorage.setItem(STATS_KEY, JSON.stringify(stats));
@@ -252,33 +264,29 @@ function saveToGitHub() {
   if (!GH_TOKEN) { showToast('URLに?gh=トークンが必要です', false); return; }
   var btn = document.getElementById('ghSaveBtn');
   if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
-  var vocabData = { words: words.map(function(w) {
-    return { id:w.id, word:w.word, pron:w.pron, meaning:w.meaning, example:w.example,
+  var vocabData = {words: words.map(function(w) {
+    return {id:w.id, word:w.word, pron:w.pron, meaning:w.meaning, example:w.example,
       source:w.source, scriptId:w.scriptId, added:w.added,
       level:w.level, otherMeanings:w.otherMeanings, usageTips:w.usageTips, collocations:w.collocations,
       interval:w.interval, nextReview:w.nextReview, reviewCount:w.reviewCount, streak:w.streak,
-      missCount:w.missCount||0, lastMissed:w.lastMissed||'' };
+      missCount:w.missCount||0, lastMissed:w.lastMissed||''};
   })};
   var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(vocabData, null, 2))));
   var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json';
-  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
-    .then(function(r) { if (!r.ok) throw new Error('SHA取得失敗'); return r.json(); })
-    .then(function(d) {
-      return fetch(apiUrl, {
-        method: 'PUT',
-        headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          message: '📚 単語帳進捗保存: ' + new Date().toISOString().split('T')[0],
-          content: encoded, sha: d.sha
-        })
-      });
+  fetch(apiUrl, {headers:{'Authorization':'Bearer '+GH_TOKEN}})
+    .then(function(r){ if (!r.ok) throw new Error('SHA取得失敗'); return r.json(); })
+    .then(function(d){
+      return fetch(apiUrl, {method:'PUT',
+        headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+        body: JSON.stringify({message:'📚 単語帳進捗保存: '+new Date().toISOString().split('T')[0],
+          content:encoded, sha:d.sha})});
     })
-    .then(function(r) {
+    .then(function(r){
       if (btn) { btn.textContent = '💾'; btn.disabled = false; }
       if (r.ok) showToast('✓ GitHubに保存しました', true);
       else showToast('保存失敗 HTTP ' + r.status, false);
     })
-    .catch(function(e) {
+    .catch(function(e){
       if (btn) { btn.textContent = '💾'; btn.disabled = false; }
       showToast('保存エラー: ' + e.message, false);
     });
@@ -289,19 +297,13 @@ function saveStatsToGitHub() {
   var stats = getDailyStats();
   var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(stats, null, 2))));
   var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/records/vocab-stats.json';
-  // fire-and-forget
   fetch(apiUrl, {headers:{'Authorization':'Bearer '+GH_TOKEN}})
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(d){
-      return fetch(apiUrl, {
-        method:'PUT',
+      return fetch(apiUrl, {method:'PUT',
         headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
-        body: JSON.stringify({
-          message:'📊 vocab stats: '+new Date().toISOString().split('T')[0],
-          content: encoded,
-          sha: d ? d.sha : undefined
-        })
-      });
+        body: JSON.stringify({message:'📊 vocab stats: '+new Date().toISOString().split('T')[0],
+          content:encoded, sha:d ? d.sha : undefined})});
     }).catch(function(){});
 }
 
@@ -312,32 +314,26 @@ function loadVocab() {
   var c = document.getElementById('content');
   c.innerHTML = '<div class="empty"><span class="spinner"></span><div style="margin-top:10px">読み込み中...</div></div>';
   fetch(RAW_BASE + 'data/vocab.json?t=' + Date.now())
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
+    .then(function(r){ return r.json(); })
+    .then(function(data){
       var progress = getProgress();
-      words = (data.words || []).map(function(w) {
+      words = (data.words||[]).map(function(w){
         var p = progress[w.id] || {};
-        return {
-          id: w.id, word: w.word, pron: w.pron,
-          meaning: w.meaning, example: w.example,
-          source: w.source, scriptId: w.scriptId || '',
-          added: w.added,
-          level: w.level || [],
-          otherMeanings: w.otherMeanings || [],
-          usageTips: w.usageTips || '',
-          collocations: w.collocations || [],
-          interval:    p.interval     !== undefined ? p.interval     : (w.interval || 1),
-          nextReview:  p.nextReview   || w.nextReview || new Date().toISOString().split('T')[0],
-          reviewCount: p.reviewCount  !== undefined ? p.reviewCount  : (w.reviewCount || 0),
-          streak:      p.streak       !== undefined ? p.streak       : (w.streak || 0),
-          missCount:   p.missCount    !== undefined ? p.missCount    : (w.missCount || 0),
-          lastMissed:  p.lastMissed   || w.lastMissed || ''
-        };
+        return {id:w.id, word:w.word, pron:w.pron, meaning:w.meaning, example:w.example,
+          source:w.source, scriptId:w.scriptId||'', added:w.added,
+          level:w.level||[], otherMeanings:w.otherMeanings||[],
+          usageTips:w.usageTips||'', collocations:w.collocations||[],
+          interval:    p.interval    !== undefined ? p.interval    : (w.interval||1),
+          nextReview:  p.nextReview  || w.nextReview || new Date().toISOString().split('T')[0],
+          reviewCount: p.reviewCount !== undefined ? p.reviewCount : (w.reviewCount||0),
+          streak:      p.streak      !== undefined ? p.streak      : (w.streak||0),
+          missCount:   p.missCount   !== undefined ? p.missCount   : (w.missCount||0),
+          lastMissed:  p.lastMissed  || w.lastMissed || ''};
       });
       showToast('✓ ' + words.length + '単語を読み込みました', true);
       renderTab(currentTab);
     })
-    .catch(function() {
+    .catch(function(){
       c.innerHTML = '<div class="empty">読み込みに失敗しました<br><br><button class="btn btn-secondary" onclick="loadVocab()">再試行</button></div>';
     });
 }
@@ -347,7 +343,7 @@ function loadVocab() {
 // ============================================================
 function switchTab(tab) {
   currentTab = tab;
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
   var el = document.getElementById('tab-' + tab);
   if (el) el.classList.add('active');
   if (tab === 'study') phaseMode = 'select';
@@ -372,77 +368,60 @@ function backToMode() {
 // ============================================================
 function calcNext(word, q) {
   var base = word.interval || 1;
-  var isHard = (word.level || []).some(function(l){ return HARD_LEVELS.indexOf(l) >= 0; });
-  var hardFactor = isHard ? 0.8 : 1;
+  var isHard = (word.level||[]).some(function(l){ return HARD_LEVELS.indexOf(l) >= 0; });
+  var f = isHard ? 0.8 : 1;
   if (q === 0) return 1/24;
-  if (q === 1) return Math.max(0.1, base * 0.6 * hardFactor);
-  if (q === 2) return Math.max(1,   base * 2.2 * hardFactor);
-  if (q === 3) return Math.max(4,   base * 3.5 * hardFactor);
+  if (q === 1) return Math.max(0.1, base * 0.6 * f);
+  if (q === 2) return Math.max(1,   base * 2.2 * f);
+  if (q === 3) return Math.max(4,   base * 3.5 * f);
   return 1;
 }
 
 function getDue() {
   var today = new Date().toISOString().split('T')[0];
-  return words.filter(function(w) { return !w.nextReview || w.nextReview <= today; });
+  return words.filter(function(w){ return !w.nextReview || w.nextReview <= today; });
 }
 
 function applyReview(id, q) {
-  var w = words.find(function(x) { return x.id === id; });
+  var w = words.find(function(x){ return x.id === id; });
   if (!w) return;
-  var ok = q >= 2;
   w.interval = calcNext(w, q);
-  var d = new Date();
-  d.setTime(d.getTime() + w.interval * 86400000);
+  var d = new Date(); d.setTime(d.getTime() + w.interval * 86400000);
   w.nextReview = d.toISOString().split('T')[0];
-  w.reviewCount = (w.reviewCount || 0) + 1;
-  if (ok) {
-    w.streak = (w.streak || 0) + 1;
-    sOk++;
-    sStreak++;
-    if (sStreak > sMaxStreak) sMaxStreak = sStreak;
-  } else {
-    w.streak = 0;
-    sStreak = 0;
-    w.missCount = (w.missCount || 0) + 1;
-    w.lastMissed = new Date().toISOString().split('T')[0];
-  }
+  w.reviewCount = (w.reviewCount||0) + 1;
+  if (q >= 2) { w.streak = (w.streak||0)+1; sOk++; sStreak++; if (sStreak > sMaxStreak) sMaxStreak = sStreak; }
+  else { w.streak = 0; sStreak = 0; w.missCount = (w.missCount||0)+1; w.lastMissed = new Date().toISOString().split('T')[0]; }
   sTotal++;
 }
 
 function buildQueue(targetWords, dir) {
   var today = new Date().toISOString().split('T')[0];
-  // Priority: lastMissed=today first, then by nextReview asc, missCount desc
-  var sorted = targetWords.slice().sort(function(a, b) {
-    var aMissedToday = (a.lastMissed === today) ? 0 : 1;
-    var bMissedToday = (b.lastMissed === today) ? 0 : 1;
-    if (aMissedToday !== bMissedToday) return aMissedToday - bMissedToday;
-    var aDate = a.nextReview || '';
-    var bDate = b.nextReview || '';
-    if (aDate !== bDate) return aDate < bDate ? -1 : 1;
-    return (b.missCount || 0) - (a.missCount || 0);
+  var sorted = targetWords.slice().sort(function(a, b){
+    var am = (a.lastMissed === today) ? 0 : 1;
+    var bm = (b.lastMissed === today) ? 0 : 1;
+    if (am !== bm) return am - bm;
+    var ad = a.nextReview || '', bd = b.nextReview || '';
+    if (ad !== bd) return ad < bd ? -1 : 1;
+    return (b.missCount||0) - (a.missCount||0);
   });
-
   if (dir === 'random') {
-    queue = sorted.map(function(w) {
-      return { word: w, dir: Math.random() < 0.5 ? 'en2ja' : 'ja2en' };
-    });
+    queue = sorted.map(function(w){ return {word:w, dir: Math.random()<0.5 ? 'en2ja' : 'ja2en'}; });
   } else {
-    queue = sorted.map(function(w) { return { word: w, dir: dir }; });
+    queue = sorted.map(function(w){ return {word:w, dir:dir}; });
   }
   qIdx = 0; flipped = false; sOk = 0; sTotal = 0; sStreak = 0; sMaxStreak = 0;
 }
 
-// Filter words for mode
 function getWordsForMode(mode) {
   if (mode === 'all') return words;
   if (mode === 'review') return getDue();
   if (mode.indexOf('script-') === 0) {
-    var sid = mode.replace('script-', '');
-    return words.filter(function(w) { return w.scriptId === sid; });
+    var sid = mode.replace('script-','');
+    return words.filter(function(w){ return w.scriptId === sid; });
   }
   if (mode.indexOf('level-') === 0) {
-    var lv = mode.replace('level-', '');
-    return words.filter(function(w) { return (w.level || []).indexOf(lv) >= 0; });
+    var lv = mode.replace('level-','');
+    return words.filter(function(w){ return (w.level||[]).indexOf(lv) >= 0; });
   }
   return words;
 }
@@ -452,8 +431,8 @@ function getWordsForMode(mode) {
 // ============================================================
 function renderStudyPhase() {
   if (phaseMode === 'select') renderModeSelect();
-  else if (phaseMode === 'dir')    renderDirSelect();
-  else if (phaseMode === 'card')   renderCard();
+  else if (phaseMode === 'dir')  renderDirSelect();
+  else if (phaseMode === 'card') renderCard();
 }
 
 function renderModeSelect() {
@@ -463,105 +442,91 @@ function renderModeSelect() {
     return;
   }
   var dueCount = getDue().length;
-  var scripts = ['short','casual','formal'];
-  var scriptCards = scripts.map(function(sid) {
+
+  // Script cards
+  var scriptCards = ['short','casual','formal'].map(function(sid){
     var cnt = words.filter(function(w){ return w.scriptId === sid; }).length;
     var dueCnt = getDue().filter(function(w){ return w.scriptId === sid; }).length;
-    return '<div class="mode-card" onclick="selectMode(\'script-' + sid + '\')">'
+    return '<div class="mode-card" onclick="selectMode(\'script-'+sid+'\')">'
       + '<div class="mode-card-icon">📄</div>'
-      + '<div class="mode-card-title">' + (SCRIPT_TITLES[sid] || sid) + '</div>'
-      + '<div class="mode-card-sub">' + cnt + '単語' + (dueCnt > 0 ? ' · 要復習' + dueCnt + '件' : '') + '</div>'
+      + '<div class="mode-card-title">'+(SCRIPT_TITLES[sid]||sid)+'</div>'
+      + '<div class="mode-card-sub">'+cnt+'単語'+(dueCnt>0?' · 要復習'+dueCnt+'件':'')+'</div>'
       + '</div>';
   }).join('');
 
-  var levels = ['ビジネス英語','TOEIC800','TOEIC900+','ネイティブ日常'];
-  var levelCards = levels.map(function(lv) {
+  // Level cards — dynamic: show ALL_LEVELS that have at least 1 word
+  var levelCards = ALL_LEVELS.filter(function(lv){
+    return words.some(function(w){ return (w.level||[]).indexOf(lv) >= 0; });
+  }).map(function(lv){
     var cnt = words.filter(function(w){ return (w.level||[]).indexOf(lv) >= 0; }).length;
-    return '<div class="mode-card" onclick="selectMode(\'level-' + lv + '\')">'
+    return '<div class="mode-card" onclick="selectMode(\'level-'+lv+'\')">'
       + '<div class="mode-card-icon">🏷</div>'
-      + '<div class="mode-card-title">' + lv + '</div>'
-      + '<div class="mode-card-sub">' + cnt + '単語</div>'
+      + '<div class="mode-card-title">'+lv+'</div>'
+      + '<div class="mode-card-sub">'+cnt+'単語</div>'
       + '</div>';
   }).join('');
 
   document.getElementById('content').innerHTML =
     '<div class="mode-screen">'
     + '<h2>学習モードを選択</h2>'
-    + '<p>今日の復習待ち: <strong>' + dueCount + '件</strong></p>'
-
+    + '<p>今日の復習待ち: <strong>'+dueCount+'件</strong></p>'
     + '<div class="section-label">📄 スクリプト別</div>'
-    + '<div class="mode-grid">' + scriptCards + '</div>'
-
+    + '<div class="mode-grid">'+scriptCards+'</div>'
     + '<div class="section-label">🏷 難易度別</div>'
-    + '<div class="mode-grid">' + levelCards + '</div>'
-
+    + '<div class="mode-grid">'+levelCards+'</div>'
     + '<div class="section-label">その他</div>'
     + '<div class="mode-grid">'
     + '<div class="mode-card" onclick="selectMode(\'all\')">'
-    + '<div class="mode-card-icon">📚</div>'
-    + '<div class="mode-card-title">全体</div>'
-    + '<div class="mode-card-sub">全' + words.length + '単語</div>'
-    + '</div>'
+    + '<div class="mode-card-icon">📚</div><div class="mode-card-title">全体</div>'
+    + '<div class="mode-card-sub">全'+words.length+'単語</div></div>'
     + '<div class="mode-card" onclick="selectMode(\'review\')">'
-    + '<div class="mode-card-icon">🔥</div>'
-    + '<div class="mode-card-title">要復習のみ</div>'
-    + '<div class="mode-card-sub">今日の期限' + dueCount + '件</div>'
-    + '</div>'
-    + '</div>'
-    + '</div>';
+    + '<div class="mode-card-icon">🔥</div><div class="mode-card-title">要復習のみ</div>'
+    + '<div class="mode-card-sub">今日の期限'+dueCount+'件</div></div>'
+    + '</div></div>';
 }
 
 function selectMode(mode) {
   studyMode = mode;
-  var target = getWordsForMode(mode);
-  if (target.length === 0) {
-    showToast('対象単語がありません', false);
-    return;
-  }
+  if (getWordsForMode(mode).length === 0) { showToast('対象単語がありません', false); return; }
   phaseMode = 'dir';
   document.getElementById('backBtn').style.display = '';
   renderDirSelect();
 }
 
 // ============================================================
-// STUDY PHASE: SELECT DIRECTION
+// STUDY PHASE: DIRECTION SELECT
 // ============================================================
 function renderDirSelect() {
   var modeLabel = getModeLabel(studyMode);
   var cnt = getWordsForMode(studyMode).length;
   document.getElementById('content').innerHTML =
     '<div class="mode-screen">'
-    + '<h2>' + modeLabel + '</h2>'
-    + '<p>' + cnt + '単語 · 学習方向を選んでください</p>'
+    + '<h2>'+modeLabel+'</h2>'
+    + '<p>'+cnt+'単語 · 学習方向を選んでください</p>'
     + '<div class="sub-choices">'
     + '<div class="choice-btn" onclick="startStudy(\'en2ja\')">'
     + '<div class="choice-icon">🇬🇧</div>'
-    + '<div><div class="choice-label">英 → 日</div><div class="choice-sub">英語を見て意味を答える</div></div>'
-    + '</div>'
+    + '<div><div class="choice-label">英 → 日</div><div class="choice-sub">英語を見て意味を答える</div></div></div>'
     + '<div class="choice-btn" onclick="startStudy(\'ja2en\')">'
     + '<div class="choice-icon">🇯🇵</div>'
-    + '<div><div class="choice-label">日 → 英</div><div class="choice-sub">日本語を見て英語を答える</div></div>'
-    + '</div>'
+    + '<div><div class="choice-label">日 → 英</div><div class="choice-sub">日本語を見て英語を答える</div></div></div>'
     + '<div class="choice-btn" onclick="startStudy(\'random\')">'
     + '<div class="choice-icon">🎲</div>'
-    + '<div><div class="choice-label">ランダム</div><div class="choice-sub">英→日・日→英をミックス</div></div>'
-    + '</div>'
-    + '</div>'
-    + '</div>';
+    + '<div><div class="choice-label">ランダム</div><div class="choice-sub">英→日・日→英をミックス</div></div></div>'
+    + '</div></div>';
 }
 
 function getModeLabel(mode) {
   if (mode === 'all') return '📚 全単語';
   if (mode === 'review') return '🔥 要復習';
-  if (mode.indexOf('script-') === 0) return '📄 ' + (SCRIPT_TITLES[mode.replace('script-','')] || mode);
-  if (mode.indexOf('level-') === 0) return '🏷 ' + mode.replace('level-','');
+  if (mode.indexOf('script-') === 0) return '📄 '+(SCRIPT_TITLES[mode.replace('script-','')]||mode);
+  if (mode.indexOf('level-') === 0) return '🏷 '+mode.replace('level-','');
   return mode;
 }
 
 function startStudy(dir) {
   studyDir = dir;
-  var target = getWordsForMode(studyMode);
-  buildQueue(target, dir);
+  buildQueue(getWordsForMode(studyMode), dir);
   phaseMode = 'card';
   renderCard();
 }
@@ -571,10 +536,7 @@ function startStudy(dir) {
 // ============================================================
 function renderCard() {
   var c = document.getElementById('content');
-  if (queue.length === 0 || qIdx >= queue.length) {
-    renderFinish();
-    return;
-  }
+  if (queue.length === 0 || qIdx >= queue.length) { renderFinish(); return; }
   var item = queue[qIdx];
   var w = item.word;
   var dir = item.dir;
@@ -584,99 +546,92 @@ function renderCard() {
 
   var progressHtml =
     '<div class="stats-row">'
-    + '<div class="stat-pill"><div class="stat-num">' + qIdx + '/' + total + '</div><div class="stat-lbl">進捗</div></div>'
-    + '<div class="stat-pill"><div class="stat-num">' + (rate === '-' ? '-' : rate + '%') + '</div><div class="stat-lbl">正解率</div></div>'
-    + '<div class="stat-pill"><div class="stat-num"><span class="streak-flame">🔥</span>' + sStreak + '</div><div class="stat-lbl">連続正解</div></div>'
+    + '<div class="stat-pill"><div class="stat-num">'+qIdx+'/'+total+'</div><div class="stat-lbl">進捗</div></div>'
+    + '<div class="stat-pill"><div class="stat-num">'+(rate==='-'?'-':rate+'%')+'</div><div class="stat-lbl">正解率</div></div>'
+    + '<div class="stat-pill"><div class="stat-num"><span class="streak-flame">🔥</span>'+sStreak+'</div><div class="stat-lbl">連続正解</div></div>'
     + '</div>'
-    + '<div class="prog-wrap">'
-    + '<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%"></div></div>'
-    + '</div>';
+    + '<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div></div>';
 
+  // Card (compact back — no detail inside)
   var cardHtml = buildCardHtml(w, dir, flipped);
 
-  var ansHtml = '<div class="ans-row" id="ansRow" style="' + (flipped ? '' : 'display:none') + '">'
+  // Detail section OUTSIDE the flip card (no overlap with buttons)
+  var detailHtml = buildDetailHtml(w);
+  var detailSection = '<div id="detailSection" style="'+(flipped?'':'display:none')+'">'
+    + (detailHtml
+        ? '<button class="detail-toggle-btn" onclick="toggleDetail()" id="detailToggle">▼ 詳細を見る</button>'
+          + '<div id="cardDetail" style="display:none">'+detailHtml+'</div>'
+        : '')
+    + '</div>';
+
+  var metaHtml = '<div class="review-meta">復習'+(w.reviewCount||0)+'回'
+    + (w.streak > 1 ? ' · 🔥連続'+w.streak+'回' : '')
+    + (w.missCount > 0 ? ' · ❌'+w.missCount+'回' : '')
+    + '</div>';
+
+  // Sticky answer buttons — always visible above fold
+  var ansHtml = '<div class="ans-sticky" id="ansRow" style="'+(flipped?'':'display:none')+'">'
+    + '<div class="ans-row">'
     + '<button class="ans-btn btn-again" onclick="answer(0)">もう一度</button>'
     + '<button class="ans-btn btn-hard" onclick="answer(1)">難しい</button>'
     + '<button class="ans-btn btn-good" onclick="answer(2)">OK</button>'
     + '<button class="ans-btn btn-easy" onclick="answer(3)">完璧</button>'
-    + '</div>';
+    + '</div></div>';
 
-  var metaHtml = '<div class="review-meta">復習' + (w.reviewCount||0) + '回'
-    + (w.streak > 1 ? ' · 🔥連続' + w.streak + '回' : '')
-    + (w.missCount > 0 ? ' · ❌' + w.missCount + '回' : '')
-    + '</div>';
+  c.innerHTML = progressHtml
+    + '<div class="card-wrap">'+cardHtml+detailSection+'</div>'
+    + metaHtml + ansHtml;
 
-  c.innerHTML = progressHtml + '<div class="card-wrap">' + cardHtml + '</div>' + ansHtml + metaHtml;
-
-  // Auto-speak on front card (en2ja only)
   if (!flipped && dir === 'en2ja') {
-    setTimeout(function() { speakWord(w.word); }, 300);
+    setTimeout(function(){ speakWord(w.word); }, 300);
   }
 }
 
-function buildCardHtml(w, dir, flipped) {
-  var wesc = (w.word || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-  var levelBadges = (w.level || []).map(function(l){
-    return '<span class="level-badge">' + l + '</span>';
+function buildCardHtml(w, dir, isFlipped) {
+  var wesc = (w.word||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  var levelBadges = (w.level||[]).map(function(l){
+    return '<span class="level-badge">'+l+'</span>';
   }).join('');
-
-  // Front face content depends on direction
   var frontContent, backContent;
   if (dir === 'en2ja') {
     frontContent =
       '<div class="card-direction">英語 → 意味</div>'
-      + '<div class="card-word">' + escHtml(w.word || '') + '</div>'
-      + '<div class="card-pron">' + escHtml(w.pron || '') + '</div>'
-      + '<div class="card-badges">' + levelBadges + '</div>'
+      + '<div class="card-word">'+escHtml(w.word||'')+'</div>'
+      + '<div class="card-pron">'+escHtml(w.pron||'')+'</div>'
+      + '<div class="card-badges">'+levelBadges+'</div>'
       + '<div class="card-hint">タップして意味を確認</div>';
-    backContent = buildBackContent_en2ja(w, wesc);
+    backContent =
+      '<div class="card-meaning">'+escHtml(w.meaning||'')+'</div>'
+      + (w.example ? '<div class="card-ex">"'+escHtml(w.example)+'"</div>' : '')
+      + '<button class="card-speak-btn" onclick="event.stopPropagation();speakWord(\''+wesc+'\')">🔊 発音</button>';
   } else {
     frontContent =
       '<div class="card-direction">日本語 → 英語</div>'
-      + '<div class="card-word" style="font-size:18px">' + escHtml(w.meaning || '') + '</div>'
-      + '<div class="card-hints">'
-      + '<div class="card-hint" style="margin-top:8px">📘 ' + escHtml(w.source || '') + '</div>'
+      + '<div class="card-word" style="font-size:20px;line-height:1.4">'+escHtml(w.meaning||'')+'</div>'
+      + '<div class="card-hint" style="margin-top:10px">📘 '+escHtml(w.source||'')+'</div>'
+      + '<div class="card-hint">タップして英語を確認</div>';
+    backContent =
+      '<div class="card-word" style="color:#fff;font-size:24px">'+escHtml(w.word||'')+'</div>'
+      + '<div class="card-pron" style="color:rgba(255,255,255,.75);margin-bottom:8px">'+escHtml(w.pron||'')+'</div>'
+      + '<div class="card-badges" style="margin-bottom:8px">'
+      + (w.level||[]).map(function(l){ return '<span style="font-size:12px;padding:3px 9px;border-radius:10px;background:rgba(255,255,255,.22);color:#fff;font-weight:600">'+l+'</span>'; }).join('')
       + '</div>'
-      + '<div class="card-hint" style="margin-top:8px">タップして英語を確認</div>';
-    backContent = buildBackContent_ja2en(w, wesc, levelBadges);
+      + (w.example ? '<div class="card-ex">"'+escHtml(w.example)+'"</div>' : '')
+      + '<button class="card-speak-btn" onclick="event.stopPropagation();speakWord(\''+wesc+'\')">🔊 発音</button>';
   }
-
-  return '<div class="card-scene' + (flipped ? ' flipped' : '') + '" id="card" onclick="flipCard()">'
+  return '<div class="card-scene'+(isFlipped?' flipped':'')+'" id="card" onclick="flipCard()">'
     + '<div class="card-inner">'
-    + '<div class="card-face card-front">' + frontContent + '</div>'
-    + '<div class="card-face card-back">' + backContent + '</div>'
+    + '<div class="card-face card-front">'+frontContent+'</div>'
+    + '<div class="card-face card-back">'+backContent+'</div>'
     + '</div></div>';
-}
-
-function buildBackContent_en2ja(w, wesc) {
-  var detailHtml = buildDetailHtml(w);
-  return '<div class="card-meaning">' + escHtml(w.meaning || '') + '</div>'
-    + (w.example ? '<div class="card-ex">"' + escHtml(w.example) + '"</div>' : '')
-    + '<button class="card-speak-btn" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音</button>'
-    + (detailHtml ? '<button class="card-detail-toggle" onclick="event.stopPropagation();toggleDetail()" id="detailToggle">▼ 詳細を見る</button>' : '')
-    + '<div id="cardDetail" style="display:none;width:100%">' + detailHtml + '</div>';
-}
-
-function buildBackContent_ja2en(w, wesc, levelBadges) {
-  var detailHtml = buildDetailHtml(w);
-  return '<div class="card-word" style="color:#fff;font-size:20px">' + escHtml(w.word || '') + '</div>'
-    + '<div class="card-pron" style="color:rgba(255,255,255,.7)">' + escHtml(w.pron || '') + '</div>'
-    + '<div class="card-badges" style="margin-bottom:6px">'
-    + (w.level||[]).map(function(l){ return '<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.2);color:#fff;font-weight:600">' + l + '</span>'; }).join('')
-    + '</div>'
-    + (w.example ? '<div class="card-ex">"' + escHtml(w.example) + '"</div>' : '')
-    + '<button class="card-speak-btn" onclick="event.stopPropagation();speakWord(\'' + wesc + '\')">🔊 発音</button>'
-    + (detailHtml ? '<button class="card-detail-toggle" onclick="event.stopPropagation();toggleDetail()" id="detailToggle">▼ 詳細を見る</button>' : '')
-    + '<div id="cardDetail" style="display:none;width:100%">' + detailHtml + '</div>';
 }
 
 function buildDetailHtml(w) {
   var rows = '';
-  if (w.usageTips) rows += '<div class="card-detail-row"><span class="card-detail-label">💡 コツ:</span>' + escHtml(w.usageTips) + '</div>';
-  if (w.otherMeanings && w.otherMeanings.length > 0) rows += '<div class="card-detail-row"><span class="card-detail-label">📖 他の意味:</span>' + escHtml(w.otherMeanings.join(' / ')) + '</div>';
-  if (w.collocations && w.collocations.length > 0) rows += '<div class="card-detail-row"><span class="card-detail-label">🔗 コロケーション:</span>' + escHtml(w.collocations.join('、')) + '</div>';
-  if (!rows) return '';
-  return '<div class="card-detail-box">' + rows + '</div>';
+  if (w.usageTips) rows += '<div class="detail-panel-row"><span class="detail-panel-label">💡 使い方のコツ</span>'+escHtml(w.usageTips)+'</div>';
+  if (w.otherMeanings && w.otherMeanings.length > 0) rows += '<div class="detail-panel-row"><span class="detail-panel-label">📖 他の意味</span>'+escHtml(w.otherMeanings.join(' / '))+'</div>';
+  if (w.collocations && w.collocations.length > 0) rows += '<div class="detail-panel-row"><span class="detail-panel-label">🔗 よく使う表現</span>'+escHtml(w.collocations.join('　/　'))+'</div>';
+  return rows ? '<div class="detail-panel">'+rows+'</div>' : '';
 }
 
 function toggleDetail() {
@@ -692,14 +647,13 @@ function flipCard() {
   flipped = !flipped;
   var item = queue[qIdx];
   if (!item) return;
-  var w = item.word;
-  var dir = item.dir;
   var card = document.getElementById('card');
   if (card) card.classList.toggle('flipped', flipped);
   var ans = document.getElementById('ansRow');
   if (ans) ans.style.display = flipped ? '' : 'none';
-  // Speak on flip (for ja2en, auto-speak the english word)
-  if (flipped && dir === 'ja2en') speakWord(w.word);
+  var ds = document.getElementById('detailSection');
+  if (ds) ds.style.display = flipped ? '' : 'none';
+  if (flipped && item.dir === 'ja2en') speakWord(item.word.word);
 }
 
 function answer(q) {
@@ -718,30 +672,26 @@ function renderFinish() {
   var rate = sTotal > 0 ? Math.round(sOk / sTotal * 100) : 0;
   var masteredCount = words.filter(function(w){ return w.streak >= 3 && w.interval >= 4; }).length;
   var reviewCount = getDue().length;
-
   recordDailyStat(sOk, sTotal);
   if (GH_TOKEN) saveStatsToGitHub();
-
-  var chartHtml = buildLineChart();
-
   document.getElementById('content').innerHTML =
     '<div class="finish">'
     + '<div class="finish-icon">🎉</div>'
     + '<div class="finish-title">セッション完了！</div>'
-    + '<div class="finish-rate">正解率: <strong>' + rate + '%</strong> · 最大連続: 🔥' + sMaxStreak + '</div>'
+    + '<div class="finish-rate">正解率: <strong>'+rate+'%</strong> · 最大連続: 🔥'+sMaxStreak+'</div>'
     + '<div class="finish-stats">'
-    + '<div class="finish-stat"><div class="finish-stat-n">' + sOk + '/' + sTotal + '</div><div class="finish-stat-l">今回の正解/出題</div></div>'
-    + '<div class="finish-stat"><div class="finish-stat-n">' + masteredCount + '</div><div class="finish-stat-l">習得済み単語</div></div>'
-    + '<div class="finish-stat"><div class="finish-stat-n" style="color:var(--amber)">' + reviewCount + '</div><div class="finish-stat-l">要復習</div></div>'
-    + '<div class="finish-stat"><div class="finish-stat-n" style="color:var(--red)">' + getDue().filter(function(w){return w.missCount>0;}).length + '</div><div class="finish-stat-l">苦手単語</div></div>'
+    + '<div class="finish-stat"><div class="finish-stat-n">'+sOk+'/'+sTotal+'</div><div class="finish-stat-l">今回の正解/出題</div></div>'
+    + '<div class="finish-stat"><div class="finish-stat-n">'+masteredCount+'</div><div class="finish-stat-l">習得済み単語</div></div>'
+    + '<div class="finish-stat"><div class="finish-stat-n" style="color:var(--amber)">'+reviewCount+'</div><div class="finish-stat-l">要復習</div></div>'
+    + '<div class="finish-stat"><div class="finish-stat-n" style="color:var(--red)">'+getDue().filter(function(w){return w.missCount>0;}).length+'</div><div class="finish-stat-l">苦手単語</div></div>'
     + '</div>'
-    + chartHtml
+    + buildLineChart()
     + '<div class="finish-btns">'
     + '<button class="btn btn-secondary" onclick="phaseMode=\'select\';document.getElementById(\'backBtn\').style.display=\'none\';renderStudyPhase()">← モード選択</button>'
-    + '<button class="btn btn-secondary" onclick="startStudy(\'' + studyDir + '\')">もう一度</button>'
+    + '<button class="btn btn-secondary" onclick="startStudy(\''+studyDir+'\')">もう一度</button>'
     + (GH_TOKEN ? '<button class="btn btn-primary" onclick="saveToGitHub()">💾 保存</button>' : '')
     + '</div>'
-    + '<div style="font-size:11px;color:var(--text3)">進捗はブラウザに自動保存済み</div>'
+    + '<div style="font-size:13px;color:var(--text3)">進捗はブラウザに自動保存済み</div>'
     + '</div>';
 }
 
@@ -752,48 +702,23 @@ function buildLineChart() {
   var stats = getDailyStats();
   var keys = Object.keys(stats).sort().slice(-7);
   if (keys.length < 1) return '';
-
-  var W = 280, H = 100, PL = 28, PR = 10, PT = 10, PB = 20;
-  var iW = W - PL - PR, iH = H - PT - PB;
-
-  var data = keys.map(function(k) {
-    var s = stats[k];
-    return { date: k, rate: s.total > 0 ? Math.round(s.ok / s.total * 100) : 0 };
-  });
-
+  var W=280, H=100, PL=28, PR=10, PT=10, PB=20;
+  var iW=W-PL-PR, iH=H-PT-PB;
+  var data = keys.map(function(k){ var s=stats[k]; return {date:k, rate:s.total>0?Math.round(s.ok/s.total*100):0}; });
   var n = data.length;
-  var xStep = n > 1 ? iW / (n - 1) : iW;
-
-  function px(i) { return PL + (n > 1 ? i * xStep : iW / 2); }
-  function py(v) { return PT + iH - (v / 100 * iH); }
-
-  var pathD = data.map(function(d, i) { return (i === 0 ? 'M' : 'L') + px(i).toFixed(1) + ',' + py(d.rate).toFixed(1); }).join(' ');
-  var areaD = pathD + ' L' + px(n-1).toFixed(1) + ',' + (PT + iH) + ' L' + PL.toFixed(1) + ',' + (PT + iH) + ' Z';
-
-  // Y-axis labels
-  var yLabels = [0, 50, 100].map(function(v) {
-    return '<text x="' + (PL - 4) + '" y="' + (py(v) + 4) + '" text-anchor="end" font-size="9" fill="var(--text3)">' + v + '</text>';
-  }).join('');
-
-  // X-axis labels (last few dates)
-  var xLabels = data.map(function(d, i) {
-    var label = d.date.slice(5); // MM-DD
-    return '<text x="' + px(i).toFixed(1) + '" y="' + (H - 3) + '" text-anchor="middle" font-size="9" fill="var(--text3)">' + label + '</text>';
-  }).join('');
-
-  // Dots
-  var dots = data.map(function(d, i) {
-    return '<circle cx="' + px(i).toFixed(1) + '" cy="' + py(d.rate).toFixed(1) + '" r="3" fill="var(--accent)"/>';
-  }).join('');
-
-  return '<div class="chart-wrap">'
-    + '<div class="chart-title">📈 過去' + n + '日の正解率</div>'
-    + '<svg width="100%" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">'
+  function px(i){ return PL+(n>1?i*(iW/(n-1)):iW/2); }
+  function py(v){ return PT+iH-(v/100*iH); }
+  var pathD = data.map(function(d,i){ return (i===0?'M':'L')+px(i).toFixed(1)+','+py(d.rate).toFixed(1); }).join(' ');
+  var areaD = pathD+' L'+px(n-1).toFixed(1)+','+(PT+iH)+' L'+PL.toFixed(1)+','+(PT+iH)+' Z';
+  var yLbls = [0,50,100].map(function(v){ return '<text x="'+(PL-4)+'" y="'+(py(v)+4)+'" text-anchor="end" font-size="9" fill="var(--text3)">'+v+'</text>'; }).join('');
+  var xLbls = data.map(function(d,i){ return '<text x="'+px(i).toFixed(1)+'" y="'+(H-3)+'" text-anchor="middle" font-size="9" fill="var(--text3)">'+d.date.slice(5)+'</text>'; }).join('');
+  var dots = data.map(function(d,i){ return '<circle cx="'+px(i).toFixed(1)+'" cy="'+py(d.rate).toFixed(1)+'" r="3" fill="var(--accent)"/>'; }).join('');
+  return '<div class="chart-wrap"><div class="chart-title">📈 過去'+n+'日の正解率</div>'
+    + '<svg width="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'
     + '<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".3"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>'
-    + '<path d="' + areaD + '" fill="url(#g1)"/>'
-    + '<path d="' + pathD + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
-    + yLabels + xLabels + dots
-    + '</svg></div>';
+    + '<path d="'+areaD+'" fill="url(#g1)"/>'
+    + '<path d="'+pathD+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+    + yLbls+xLbls+dots+'</svg></div>';
 }
 
 // ============================================================
@@ -802,67 +727,53 @@ function buildLineChart() {
 function renderList() {
   var c = document.getElementById('content');
   if (words.length === 0) { c.innerHTML = '<div class="empty">単語がありません</div>'; return; }
-
   var today = new Date().toISOString().split('T')[0];
-  var filtered = activeFilters.length === 0 ? words : words.filter(function(w) {
-    return activeFilters.some(function(f) { return (w.level || []).indexOf(f) >= 0; });
+  var filtered = activeFilters.length === 0 ? words : words.filter(function(w){
+    return activeFilters.some(function(f){ return (w.level||[]).indexOf(f) >= 0; });
   });
-  var sorted = filtered.slice().sort(function(a, b) {
-    return (a.nextReview || '') < (b.nextReview || '') ? -1 : 1;
-  });
+  var sorted = filtered.slice().sort(function(a,b){ return (a.nextReview||'') < (b.nextReview||'') ? -1 : 1; });
 
-  // Filter chips
   var chipsHtml = '<div class="list-filter-bar">'
-    + '<div class="filter-chip' + (activeFilters.length === 0 ? ' active' : '') + '" onclick="setFilter(null)">すべて</div>'
-    + ALL_LEVELS.map(function(lv) {
-      var cnt = words.filter(function(w){ return (w.level||[]).indexOf(lv)>=0; }).length;
-      if (cnt === 0) return '';
-      return '<div class="filter-chip' + (activeFilters.indexOf(lv) >= 0 ? ' active' : '') + '" onclick="toggleFilter(\'' + lv + '\')">' + lv + ' <span style="opacity:.6">(' + cnt + ')</span></div>';
-    }).join('')
+    + '<div class="filter-chip'+(activeFilters.length===0?' active':'')+'" onclick="setFilter(null)">すべて</div>'
+    + ALL_LEVELS.map(function(lv){
+        var cnt = words.filter(function(w){ return (w.level||[]).indexOf(lv)>=0; }).length;
+        if (cnt===0) return '';
+        return '<div class="filter-chip'+(activeFilters.indexOf(lv)>=0?' active':'')+'" onclick="toggleFilter(\''+lv+'\')">'+lv+' <span style="opacity:.6">('+cnt+')</span></div>';
+      }).join('')
     + '</div>';
 
-  var summaryHtml = '<div class="list-summary">'
-    + filtered.length + '単語 · 要復習' + filtered.filter(function(w){ return !w.nextReview || w.nextReview <= today; }).length + '件'
-    + '</div>';
+  var summaryHtml = '<div class="list-summary">'+filtered.length+'単語 · 要復習'+filtered.filter(function(w){ return !w.nextReview||w.nextReview<=today; }).length+'件</div>';
 
-  var itemsHtml = sorted.map(function(w) {
-    var wesc = (w.word || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  var itemsHtml = sorted.map(function(w){
     var due = w.nextReview || today;
-    var daysLeft = Math.round((new Date(due) - new Date(today)) / 86400000);
-    var dueLabel = daysLeft <= 0 ? '今すぐ' : daysLeft === 1 ? '明日' : daysLeft + '日後';
-    var dueClass = daysLeft <= 0 ? 'due-now' : daysLeft <= 3 ? 'due-soon' : 'due-later';
-    var lvBadges = (w.level||[]).map(function(l){ return '<span class="wl-badge">' + l + '</span>'; }).join('');
-    // Status bar: streak → green, interval 1-3 → amber, overdue → red
-    var sbGreen = w.streak >= 3 ? '60%' : (w.streak >= 1 ? '30%' : '0%');
-    var sbRed   = daysLeft < 0 ? Math.min(60, Math.abs(daysLeft) * 10) + '%' : '0%';
-    var sbAmber = daysLeft === 0 ? '40%' : '0%';
-    return '<div class="word-item" onclick="speakWord(\'' + wesc + '\')">'
+    var daysLeft = Math.round((new Date(due)-new Date(today))/86400000);
+    var dueLabel = daysLeft<=0 ? '今すぐ' : daysLeft===1 ? '明日' : daysLeft+'日後';
+    var dueClass = daysLeft<=0 ? 'due-now' : daysLeft<=3 ? 'due-soon' : 'due-later';
+    var lvBadges = (w.level||[]).map(function(l){ return '<span class="wl-badge">'+l+'</span>'; }).join('');
+    var sbGreen = w.streak>=3 ? '60%' : (w.streak>=1 ? '30%' : '0%');
+    var sbRed   = daysLeft<0 ? Math.min(60,Math.abs(daysLeft)*10)+'%' : '0%';
+    var sbAmber = daysLeft===0 ? '40%' : '0%';
+    return '<div class="word-item" onclick="showWordDetail(\''+w.id+'\')">'
       + '<div class="word-item-header">'
       + '<div class="word-item-main">'
-      + '<div class="word-item-word">' + escHtml(w.word||'') + '</div>'
-      + '<div class="word-item-meaning">' + escHtml(w.meaning||'') + '</div>'
+      + '<div class="word-item-word">'+escHtml(w.word||'')+'</div>'
+      + '<div class="word-item-meaning">'+escHtml(w.meaning||'')+'</div>'
       + '</div>'
       + '<div class="word-item-right">'
-      + '<span class="due-badge ' + dueClass + '">' + dueLabel + '</span>'
-      + '<div class="status-bar"><div class="sb-green" style="width:' + sbGreen + '"></div><div class="sb-amber" style="width:' + sbAmber + '"></div><div class="sb-red" style="width:' + sbRed + '"></div></div>'
-      + '</div>'
-      + '</div>'
-      + '<div class="word-item-levels">' + lvBadges + '</div>'
+      + '<span class="due-badge '+dueClass+'">'+dueLabel+'</span>'
+      + '<div class="status-bar"><div class="sb-green" style="width:'+sbGreen+'"></div><div class="sb-amber" style="width:'+sbAmber+'"></div><div class="sb-red" style="width:'+sbRed+'"></div></div>'
+      + '</div></div>'
+      + '<div class="word-item-levels">'+lvBadges+'</div>'
       + '</div>';
   }).join('');
 
   c.innerHTML = chipsHtml + summaryHtml + itemsHtml;
 }
 
-function setFilter(lv) {
-  activeFilters = lv ? [lv] : [];
-  renderList();
-}
-
+function setFilter(lv) { activeFilters = lv ? [lv] : []; renderList(); }
 function toggleFilter(lv) {
   var idx = activeFilters.indexOf(lv);
-  if (idx >= 0) activeFilters.splice(idx, 1);
-  else activeFilters.push(lv);
+  if (idx >= 0) activeFilters.splice(idx, 1); else activeFilters.push(lv);
   renderList();
 }
 
@@ -871,43 +782,70 @@ function toggleFilter(lv) {
 // ============================================================
 function renderStats() {
   var c = document.getElementById('content');
-  var today = new Date().toISOString().split('T')[0];
   var total = words.length;
-  var mastered = words.filter(function(w){ return w.streak >= 3 && w.interval >= 4; }).length;
-  var learning = words.filter(function(w){ return w.reviewCount > 0 && !(w.streak >= 3 && w.interval >= 4); }).length;
+  if (total === 0) { c.innerHTML = '<div class="empty">単語がありません</div>'; return; }
+  var mastered = words.filter(function(w){ return w.streak>=3 && w.interval>=4; }).length;
+  var learning = words.filter(function(w){ return w.reviewCount>0 && !(w.streak>=3 && w.interval>=4); }).length;
   var review = getDue().length;
-  var missWords = words.filter(function(w){ return w.missCount > 0; }).sort(function(a,b){ return (b.missCount||0)-(a.missCount||0); }).slice(0,5);
-
-  var chartHtml = buildLineChart();
+  var missWords = words.filter(function(w){ return w.missCount>0; })
+    .sort(function(a,b){ return (b.missCount||0)-(a.missCount||0); }).slice(0,5);
 
   var missHtml = missWords.length > 0
     ? '<div class="section-label">❌ 苦手単語 Top5</div>'
       + missWords.map(function(w){
-          return '<div class="word-item">'
+          return '<div class="word-item" onclick="showWordDetail(\''+w.id+'\')">'
             + '<div class="word-item-header">'
             + '<div class="word-item-main">'
-            + '<div class="word-item-word">' + escHtml(w.word) + '</div>'
-            + '<div class="word-item-meaning">' + escHtml(w.meaning) + '</div>'
+            + '<div class="word-item-word">'+escHtml(w.word)+'</div>'
+            + '<div class="word-item-meaning">'+escHtml(w.meaning)+'</div>'
             + '</div>'
-            + '<div class="word-item-right"><span class="due-badge due-now">❌' + w.missCount + '回</span></div>'
-            + '</div>'
-            + '</div>';
+            + '<div class="word-item-right"><span class="due-badge due-now">❌'+w.missCount+'回</span></div>'
+            + '</div></div>';
         }).join('')
     : '';
 
   c.innerHTML =
     '<div class="stats-row">'
-    + '<div class="stat-pill"><div class="stat-num" style="color:var(--green)">' + mastered + '</div><div class="stat-lbl">習得済み</div></div>'
-    + '<div class="stat-pill"><div class="stat-num" style="color:var(--amber)">' + learning + '</div><div class="stat-lbl">学習中</div></div>'
-    + '<div class="stat-pill"><div class="stat-num" style="color:var(--red)">' + review + '</div><div class="stat-lbl">要復習</div></div>'
+    + '<div class="stat-pill"><div class="stat-num" style="color:var(--green)">'+mastered+'</div><div class="stat-lbl">習得済み</div></div>'
+    + '<div class="stat-pill"><div class="stat-num" style="color:var(--amber)">'+learning+'</div><div class="stat-lbl">学習中</div></div>'
+    + '<div class="stat-pill"><div class="stat-num" style="color:var(--red)">'+review+'</div><div class="stat-lbl">要復習</div></div>'
     + '</div>'
     + '<div class="prog-wrap">'
-    + '<div class="prog-txt"><span>習得状況</span><span>' + Math.round(mastered/total*100) + '%</span></div>'
+    + '<div class="prog-txt"><span>習得状況</span><span>'+Math.round(mastered/total*100)+'%</span></div>'
     + '<div class="prog-bar" style="height:8px;border-radius:4px">'
-    + '<div style="height:100%;background:linear-gradient(to right,var(--green) ' + Math.round(mastered/total*100) + '%,var(--amber) ' + Math.round(mastered/total*100) + '% ' + Math.round((mastered+learning)/total*100) + '%,var(--bg3) ' + Math.round((mastered+learning)/total*100) + '%);border-radius:4px"></div>'
+    + '<div style="height:100%;background:linear-gradient(to right,var(--green) '+Math.round(mastered/total*100)+'%,var(--amber) '+Math.round(mastered/total*100)+'% '+Math.round((mastered+learning)/total*100)+'%,var(--bg3) '+Math.round((mastered+learning)/total*100)+'%);border-radius:4px"></div>'
     + '</div></div>'
-    + chartHtml
+    + buildLineChart()
     + missHtml;
+}
+
+// ============================================================
+// WORD DETAIL MODAL
+// ============================================================
+function showWordDetail(id) {
+  var w = words.find(function(x){ return x.id === id; });
+  if (!w) return;
+  var wesc = (w.word||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  var levelBadges = (w.level||[]).map(function(l){
+    return '<span class="modal-badge">'+escHtml(l)+'</span>';
+  }).join('');
+
+  document.getElementById('modalTitle').textContent = w.word || '';
+  document.getElementById('modalBody').innerHTML =
+    '<div class="modal-pron">'+escHtml(w.pron||'')+'</div>'
+    + '<div class="modal-meaning">'+escHtml(w.meaning||'')+'</div>'
+    + (w.example ? '<div class="modal-example">"'+escHtml(w.example)+'"</div>' : '')
+    + '<div class="modal-badges">'+levelBadges+'</div>'
+    + '<button class="modal-speak-btn" onclick="speakWord(\''+wesc+'\')">🔊 発音を聞く</button>'
+    + (w.usageTips ? '<div class="modal-section"><div class="modal-section-label">💡 使い方のコツ</div><div class="modal-section-body">'+escHtml(w.usageTips)+'</div></div>' : '')
+    + (w.otherMeanings && w.otherMeanings.length > 0 ? '<div class="modal-section"><div class="modal-section-label">📖 他の意味</div><div class="modal-section-body">'+escHtml(w.otherMeanings.join(' / '))+'</div></div>' : '')
+    + (w.collocations && w.collocations.length > 0 ? '<div class="modal-section"><div class="modal-section-label">🔗 よく使う表現</div><div class="modal-section-body">'+escHtml(w.collocations.join('　/　'))+'</div></div>' : '');
+
+  document.getElementById('wordModal').style.display = 'flex';
+}
+
+function closeWordDetail() {
+  document.getElementById('wordModal').style.display = 'none';
 }
 
 // ============================================================
@@ -928,7 +866,7 @@ function showToast(msg, ok) {
   var t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + (ok ? 'ok' : 'err');
-  setTimeout(function() { t.classList.remove('show'); }, 2800);
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
 // ============================================================
