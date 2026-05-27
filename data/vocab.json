@@ -20,10 +20,10 @@
         "electrosurgical unit (ESU)",
         "RF energy output"
       ],
-      "interval": 7.7440000000000015,
-      "nextReview": "2026-06-03",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 13.629440000000002,
+      "nextReview": "2026-06-10",
+      "reviewCount": 4,
+      "streak": 4,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -47,10 +47,10 @@
         "endoscopic procedure",
         "endoscopic device"
       ],
-      "interval": 7.7440000000000015,
-      "nextReview": "2026-06-03",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 13.629440000000002,
+      "nextReview": "2026-06-10",
+      "reviewCount": 4,
+      "streak": 4,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -75,12 +75,12 @@
         "regulatory submission",
         "FDA clearance"
       ],
-      "interval": 3.097600000000001,
-      "nextReview": "2026-05-30",
-      "reviewCount": 5,
-      "streak": 3,
-      "missCount": 0,
-      "lastMissed": ""
+      "interval": 1.4868480000000004,
+      "nextReview": "2026-05-29",
+      "reviewCount": 6,
+      "streak": 0,
+      "missCount": 1,
+      "lastMissed": "2026-05-27"
     },
     {
       "id": "w004",
@@ -102,10 +102,10 @@
         "hold a PMP certification",
         "certified project manager"
       ],
-      "interval": 7.7440000000000015,
-      "nextReview": "2026-06-03",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 13.629440000000002,
+      "nextReview": "2026-06-10",
+      "reviewCount": 4,
+      "streak": 4,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -133,12 +133,12 @@
         "drive results",
         "drive change"
       ],
-      "interval": 2.1120000000000005,
-      "nextReview": "2026-05-29",
-      "reviewCount": 3,
-      "streak": 1,
-      "missCount": 1,
-      "lastMissed": "2026-05-26"
+      "interval": 1.0137600000000002,
+      "nextReview": "2026-05-28",
+      "reviewCount": 4,
+      "streak": 0,
+      "missCount": 2,
+      "lastMissed": "2026-05-27"
     },
     {
       "id": "w006",
@@ -160,10 +160,10 @@
         "new to the role",
         "new to the team"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-28",
-      "reviewCount": 3,
-      "streak": 1,
+      "interval": 2.2,
+      "nextReview": "2026-05-30",
+      "reviewCount": 4,
+      "streak": 2,
       "missCount": 1,
       "lastMissed": "2026-05-26"
     },
@@ -191,12 +191,12 @@
         "application process",
         "regulatory submission"
       ],
-      "interval": 2.1120000000000005,
-      "nextReview": "2026-05-29",
-      "reviewCount": 3,
-      "streak": 1,
-      "missCount": 1,
-      "lastMissed": "2026-05-26"
+      "interval": 1.0137600000000002,
+      "nextReview": "2026-05-28",
+      "reviewCount": 4,
+      "streak": 0,
+      "missCount": 2,
+      "lastMissed": "2026-05-27"
     },
     {
       "id": "w008",
