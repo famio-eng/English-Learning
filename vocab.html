@@ -104,6 +104,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .chart-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px}
 
 /* ===== LIST ===== */
+.list-group-header{font-size:13px;font-weight:700;color:var(--text2);padding:10px 4px 4px;border-bottom:1px solid var(--border);margin-bottom:6px;margin-top:14px}
+.list-group-header:first-child{margin-top:0}
 .list-filter-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
 .filter-chip{font-size:12px;padding:6px 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;font-weight:600;transition:all .15s;min-height:34px}
 .filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -744,7 +746,7 @@ function renderList() {
 
   var summaryHtml = '<div class="list-summary">'+filtered.length+'単語 · 要復習'+filtered.filter(function(w){ return !w.nextReview||w.nextReview<=today; }).length+'件</div>';
 
-  var itemsHtml = sorted.map(function(w){
+  function wordItemHtml(w) {
     var due = w.nextReview || today;
     var daysLeft = Math.round((new Date(due)-new Date(today))/86400000);
     var dueLabel = daysLeft<=0 ? '今すぐ' : daysLeft===1 ? '明日' : daysLeft+'日後';
@@ -765,6 +767,26 @@ function renderList() {
       + '</div></div>'
       + '<div class="word-item-levels">'+lvBadges+'</div>'
       + '</div>';
+  }
+
+  // Group by scriptId in SCRIPT_TITLES order, unknown scripts last
+  var scriptOrder = Object.keys(SCRIPT_TITLES);
+  var groups = {};
+  sorted.forEach(function(w){
+    var sid = w.scriptId || '__other__';
+    if (!groups[sid]) groups[sid] = [];
+    groups[sid].push(w);
+  });
+  var groupKeys = scriptOrder.filter(function(k){ return groups[k]; });
+  if (groups['__other__']) groupKeys.push('__other__');
+
+  var itemsHtml = groupKeys.map(function(sid){
+    var label = SCRIPT_TITLES[sid] || (groups[sid][0] && groups[sid][0].source) || sid;
+    var cnt = groups[sid].length;
+    var dueCnt = groups[sid].filter(function(w){ return !w.nextReview||w.nextReview<=today; }).length;
+    var header = '<div class="list-group-header">📄 '+escHtml(label)
+      +' <span style="font-weight:400">('+cnt+'単語'+(dueCnt>0?' · 要復習'+dueCnt+'件':'')+' )</span></div>';
+    return header + groups[sid].map(wordItemHtml).join('');
   }).join('');
 
   c.innerHTML = chipsHtml + summaryHtml + itemsHtml;
