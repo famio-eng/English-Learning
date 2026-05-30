@@ -304,6 +304,96 @@ var SCRIPTS = [
       ]
     }
   }
+  ,
+  {
+    id: 'sop-status-report',
+    title: 'SOP\u5bfe\u5fdc\u8ab2\u984c\u306e\u72b6\u6cc1\u5831\u544a',
+    date: '2026-05-25',
+    tip: 'Declaration of Conformity / exclusion criteria / sustaining phase \u306e\u767a\u97f3\u3092\u6b63\u78ba\u306b\u3002\u5831\u544a\u2192\u8ab2\u984c\u2192\u65b9\u91dd\u306e\u6d41\u308c\u3092\u5d29\u3055\u305a\u8a71\u3059\u3002',
+    raw: "Recently, our project reached an important decision: to move forward with the European Declaration of Conformity process without waiting for full SOP compliance. This was supported by our confirmation that this project meets the exclusion criteria outlined in the SOP. Thank you all for your support in reaching this decision.\n\nAt the same time, Rob has recommended that we proceed in parallel with the SOP compliance work specifically related to risk management. We have already started working with the team to estimate the scope of that effort. We will share the results separately, and I'd like to discuss the details further when Rob visits Japan.\n\nRegarding the additional verification test with increased sample size, also recommended by Rob, we are currently preparing the test protocol with Rob's support.\n\nHowever, there is one concern I'd like to raise. According to our team members, if we proceed with the risk management-related SOP compliance, the approach to sample size may need to be reconsidered. This means we may need to incorporate the SOP requirements into the additional test protocol as well.\n\nFurthermore, since this SOP compliance work may result in changes to design documents, there is a possibility that we will need to go through the European Declaration of Conformity process once more in the future. However, our current thinking is that this could be addressed in the sustaining phase rather than within the current project timeline.\n\nThat covers the current status and key challenges. Please feel free to share any questions or comments.",
+    breathGroups: [
+      "Recently, our project reached an important decision:",
+      "to move forward",
+      "with the European Declaration of Conformity process",
+      "without waiting for full SOP compliance.",
+      "This was supported by our confirmation",
+      "that this project meets the exclusion criteria",
+      "outlined in the SOP.",
+      "Thank you all for your support",
+      "in reaching this decision.",
+      "At the same time,",
+      "Rob has recommended",
+      "that we proceed in parallel",
+      "with the SOP compliance work",
+      "specifically related to risk management.",
+      "We have already started working with the team",
+      "to estimate the scope of that effort.",
+      "We will share the results separately,",
+      "and I'd like to discuss the details further",
+      "when Rob visits Japan.",
+      "Regarding the additional verification test",
+      "with increased sample size,",
+      "also recommended by Rob,",
+      "we are currently preparing the test protocol",
+      "with Rob's support.",
+      "However,",
+      "there is one concern I'd like to raise.",
+      "According to our team members,",
+      "if we proceed with the risk management-related SOP compliance,",
+      "the approach to sample size",
+      "may need to be reconsidered.",
+      "This means we may need to incorporate",
+      "the SOP requirements",
+      "into the additional test protocol as well.",
+      "Furthermore,",
+      "since this SOP compliance work",
+      "may result in changes to design documents,",
+      "there is a possibility",
+      "that we will need to go through",
+      "the European Declaration of Conformity process",
+      "once more in the future.",
+      "However,",
+      "our current thinking is",
+      "that this could be addressed in the sustaining phase",
+      "rather than within the current project timeline.",
+      "That covers the current status and key challenges.",
+      "Please feel free to share any questions or comments."
+    ],
+    vocab: [
+      {word:'Declaration of Conformity', pron:'/\u02ccd\u025bkl\u0259\u02c8re\u026a\u0283\u0259n \u0259v k\u0259n\u02c8f\u0254\u02d0rm\u026ati/', meaning:'\u9069\u5408\u5ba3\u8a00', example:'We are moving forward with the European Declaration of Conformity process.'},
+      {word:'exclusion criteria', pron:'/\u026ak\u02c8sklu\u02d0\u0292\u0259n kra\u026a\u02c8t\u026a\u0259ri\u0259/', meaning:'\u9664\u5916\u57fa\u6e96', example:'This project meets the exclusion criteria outlined in the SOP.'},
+      {word:'proceed in parallel', pron:'/pr\u0259\u02c8si\u02d0d \u026an \u02c8p\u00e6r\u0259lel/', meaning:'\u4e26\u884c\u3057\u3066\u9032\u3081\u308b', example:'We will proceed in parallel with the compliance work.'},
+      {word:'estimate the scope', pron:'/\u02c8\u025bst\u026am\u026at \u00f0\u0259 sko\u028ap/', meaning:'\u30b9\u30b3\u30fc\u30d7\u3092\u898b\u7a4d\u3082\u308b', example:'We have started to estimate the scope of that effort.'},
+      {word:'incorporate', pron:'/\u026an\u02c8k\u0254\u02d0rp\u0259re\u026at/', meaning:'\u53d6\u308a\u8fbc\u3080\u30fb\u7d44\u307f\u8fbc\u3080', example:'We may need to incorporate the SOP requirements into the test protocol.'},
+      {word:'sustaining phase', pron:'/s\u0259\u02c8ste\u026an\u026a\u014b fe\u026az/', meaning:'\u30b5\u30b9\u30c6\u30a4\u30cb\u30f3\u30b0\u30d5\u30a7\u30fc\u30ba', example:'This could be addressed in the sustaining phase.'},
+      {word:'test protocol', pron:'/t\u025bst \u02c8pro\u028at\u0259k\u0252l/', meaning:'\u30c6\u30b9\u30c8\u30d7\u30ed\u30c8\u30b3\u30eb\uff08\u8a66\u9a13\u624b\u9806\u66f8\uff09', example:'We are currently preparing the test protocol.'},
+      {word:'Please feel free to share', pron:'/pli\u02d0z fi\u02d0l fri\u02d0 t\u0259 \u0283\u025br/', meaning:'\u9060\u616e\u306a\u304f\u304a\u805e\u304b\u305b\u304f\u3060\u3055\u3044', example:'Please feel free to share any questions or comments.'}
+    ],
+    analyzed: {
+      sentences: [
+        {en:"Recently, our project reached an important decision: to move forward with the European Declaration of Conformity process without waiting for full SOP compliance.", ja:"\u6700\u8fd1\u3001\u79c1\u305f\u3061\u306e\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306f\u91cd\u8981\u306a\u6c7a\u5b9a\u306b\u81f3\u308a\u307e\u3057\u305f\u3002SOP\u3078\u306e\u5b8c\u5168\u6e96\u62e0\u3092\u5f85\u305f\u305a\u306b\u3001\u6b27\u5dde\u9069\u5408\u5ba3\u8a00\u30d7\u30ed\u30bb\u30b9\u3092\u9032\u3081\u308b\u3068\u3044\u3046\u3082\u306e\u3067\u3059\u3002"},
+        {en:"This was supported by our confirmation that this project meets the exclusion criteria outlined in the SOP.", ja:"\u3053\u308c\u306f\u3001\u672c\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u304cSOP\u306b\u5b9a\u3081\u3089\u308c\u305f\u9664\u5916\u57fa\u6e96\u3092\u6e80\u305f\u3059\u3053\u3068\u306e\u78ba\u8a8d\u306b\u3088\u3063\u3066\u88cf\u4ed8\u3051\u3089\u308c\u307e\u3057\u305f\u3002"},
+        {en:"Thank you all for your support in reaching this decision.", ja:"\u3053\u306e\u6c7a\u5b9a\u306b\u81f3\u308b\u306b\u3042\u305f\u308a\u3001\u7686\u3055\u3093\u306e\u3054\u652f\u63f4\u306b\u611f\u8b1d\u3057\u307e\u3059\u3002"},
+        {en:"At the same time, Rob has recommended that we proceed in parallel with the SOP compliance work specifically related to risk management.", ja:"\u540c\u6642\u306b\u3001Rob\u304b\u3089\u30ea\u30b9\u30af\u30de\u30cd\u30b8\u30e1\u30f3\u30c8\u306b\u95a2\u9023\u3059\u308bSOP\u6e96\u62e0\u4f5c\u696d\u3092\u4e26\u884c\u3057\u3066\u9032\u3081\u308b\u3088\u3046\u63d0\u6848\u304c\u3042\u308a\u307e\u3057\u305f\u3002"},
+        {en:"We have already started working with the team to estimate the scope of that effort.", ja:"\u3059\u3067\u306b\u30c1\u30fc\u30e0\u3068\u3068\u3082\u306b\u305d\u306e\u4f5c\u696d\u7bc4\u56f2\u306e\u898b\u7a4d\u3082\u308a\u3092\u958b\u59cb\u3057\u3066\u3044\u307e\u3059\u3002"},
+        {en:"We will share the results separately, and I'd like to discuss the details further when Rob visits Japan.", ja:"\u7d50\u679c\u306f\u5225\u9014\u5171\u6709\u3057\u3001Rob\u306eJapan\u8a2a\u554f\u6642\u306b\u8a73\u7d30\u3092\u8b70\u8ad6\u3057\u305f\u3044\u3068\u601d\u3044\u307e\u3059\u3002"},
+        {en:"Regarding the additional verification test with increased sample size, also recommended by Rob, we are currently preparing the test protocol with Rob's support.", ja:"Rob\u304b\u3089\u63d0\u6848\u306e\u3042\u3063\u305f\u30b5\u30f3\u30d7\u30eb\u30b5\u30a4\u30ba\u5897\u52a0\u3092\u4f34\u3046\u8ffd\u52a0\u691c\u8a3c\u8a66\u9a13\u306b\u3064\u3044\u3066\u3082\u3001Rob\u306e\u30b5\u30dd\u30fc\u30c8\u306e\u3082\u3068\u30c6\u30b9\u30c8\u30d7\u30ed\u30c8\u30b3\u30eb\u3092\u73fe\u5728\u6e96\u5099\u4e2d\u3067\u3059\u3002"},
+        {en:"However, there is one concern I'd like to raise.", ja:"\u305f\u3060\u3057\u30011\u70b9\u61f8\u5ff5\u4e8b\u9805\u3092\u304a\u4f1d\u3048\u3057\u305f\u3044\u3068\u601d\u3044\u307e\u3059\u3002"},
+        {en:"According to our team members, if we proceed with the risk management-related SOP compliance, the approach to sample size may need to be reconsidered.", ja:"\u30c1\u30fc\u30e0\u30e1\u30f3\u30d0\u30fc\u306b\u3088\u308b\u3068\u3001\u30ea\u30b9\u30af\u30de\u30cd\u30b8\u30e1\u30f3\u30c8\u95a2\u9023\u306eSOP\u6e96\u62e0\u3092\u9032\u3081\u308b\u5834\u5408\u3001\u30b5\u30f3\u30d7\u30eb\u30b5\u30a4\u30ba\u306e\u30a2\u30d7\u30ed\u30fc\u30c1\u3092\u898b\u76f4\u3059\u5fc5\u8981\u304c\u751f\u3058\u308b\u53ef\u80fd\u6027\u304c\u3042\u308a\u307e\u3059\u3002"},
+        {en:"This means we may need to incorporate the SOP requirements into the additional test protocol as well.", ja:"\u3064\u307e\u308a\u3001\u8ffd\u52a0\u30c6\u30b9\u30c8\u30d7\u30ed\u30c8\u30b3\u30eb\u306b\u3082SOP\u8981\u4ef6\u3092\u53d6\u308a\u8fbc\u3080\u5fc5\u8981\u304c\u751f\u3058\u308b\u53ef\u80fd\u6027\u304c\u3042\u308a\u307e\u3059\u3002"},
+        {en:"Furthermore, since this SOP compliance work may result in changes to design documents, there is a possibility that we will need to go through the European Declaration of Conformity process once more in the future.", ja:"\u3055\u3089\u306b\u3001\u3053\u306eSOP\u6e96\u62e0\u4f5c\u696d\u306b\u3088\u308a\u8a2d\u8a08\u6587\u66f8\u306b\u5909\u66f4\u304c\u751f\u3058\u305f\u5834\u5408\u3001\u5c06\u6765\u7684\u306b\u6b27\u5dde\u9069\u5408\u5ba3\u8a00\u30d7\u30ed\u30bb\u30b9\u3092\u518d\u5ea6\u5b9f\u65bd\u3059\u308b\u5fc5\u8981\u304c\u751f\u3058\u308b\u53ef\u80fd\u6027\u304c\u3042\u308a\u307e\u3059\u3002"},
+        {en:"However, our current thinking is that this could be addressed in the sustaining phase rather than within the current project timeline.", ja:"\u305f\u3060\u3057\u73fe\u6642\u70b9\u306e\u8003\u3048\u3067\u306f\u3001\u3053\u308c\u306f\u73fe\u30d7\u30ed\u30b8\u30a7\u30af\u30c8\u306e\u30bf\u30a4\u30e0\u30e9\u30a4\u30f3\u5185\u3067\u306f\u306a\u304f\u3001\u30b5\u30b9\u30c6\u30a4\u30cb\u30f3\u30b0\u30d5\u30a7\u30fc\u30ba\u3067\u5bfe\u5fdc\u3067\u304d\u308b\u3068\u3044\u3046\u898b\u89e3\u3067\u3059\u3002"},
+        {en:"That covers the current status and key challenges.", ja:"\u4ee5\u4e0a\u304c\u73fe\u72b6\u3068\u4e3b\u306a\u8ab2\u984c\u3067\u3059\u3002"},
+        {en:"Please feel free to share any questions or comments.", ja:"\u3054\u8cea\u554f\u3084\u30b3\u30e1\u30f3\u30c8\u304c\u3042\u308c\u3070\u304a\u6c17\u8efd\u306b\u3069\u3046\u305e\u3002"}
+      ],
+      pronunciationTips: [
+        "Declaration of Conformity: dec-la-RA-tion of con-FOR-mi-ty\u3002RA\u3068FOR\u306b\u30a2\u30af\u30bb\u30f3\u30c8\u3002\u4e00\u6c17\u306b\u8a00\u3048\u308b\u3088\u3046\u5206\u5272\u7df4\u7fd2\u3002",
+        "exclusion criteria: ex-CLU-sion cri-TE-ri-a\u3002CLU\u3068TE\u306b\u30a2\u30af\u30bb\u30f3\u30c8\u3002",
+        "sustaining phase: sus-TAIN-ing phase\u3002TAIN\u306b\u30a2\u30af\u30bb\u30f3\u30c8\u3002",
+        "incorporate: in-COR-po-rate\u3002COR\u306b\u30a2\u30af\u30bb\u30f3\u30c8\u3002\u6700\u5f8c\u306f\u300c\u30ec\u30a4\u30c8\u300d\u3067\u306f\u306a\u304f\u300crit\u300d\u3068\u8efd\u304f\u3002"
+      ]
+    }
+  }
 ];
 
 // ============================================================
