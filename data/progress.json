@@ -1,0 +1,20 @@
+{
+  "scriptProgress": {
+    "short": {
+      "readOk": 2,
+      "shadOk": 0,
+      "lastScore": 67,
+      "lastDate": "2026-05-25",
+      "readCleared": true,
+      "shadCleared": false
+    },
+    "sop-status-report": {
+      "readOk": 2,
+      "shadOk": 1,
+      "lastScore": 77,
+      "lastDate": "2026-05-30",
+      "readCleared": true,
+      "shadCleared": true
+    }
+  }
+}
