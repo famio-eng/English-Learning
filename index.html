@@ -61,6 +61,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .script-card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
 .script-card-meta{font-size:12px;color:var(--text2);margin-bottom:5px}
 .script-card-preview{font-size:13px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick-controls{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center}
+.pick-chip{font-size:12px;padding:5px 11px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;font-weight:600;min-height:32px;transition:all .15s}
+.pick-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sc-badge{font-size:10px;padding:2px 7px;border-radius:8px;margin-left:4px;font-weight:700;vertical-align:middle}
+.sc-badge.read{background:#dcfce7;color:#166534}
+.sc-badge.shad{background:#dbeafe;color:#1e40af}
 .sent-block{margin-bottom:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px}
 .sent-en{font-size:15px;line-height:1.8;color:var(--text);margin-bottom:5px}
 .sent-ja{font-size:13px;line-height:1.7;color:var(--text2);padding-top:5px;border-top:1px solid var(--border)}
@@ -413,6 +419,9 @@ var practiceHistory = [];
 var readOk = 0;
 var shadOk = 0;
 var unlocked = ['pick', 'progress'];
+var scriptProgress = {};
+var pickSort = 'asc';
+var pickFilter = 'all';
 var showBreath = false;
 var isRec = false;
 var mediaRec = null;
@@ -423,10 +432,55 @@ var lastSavedRecUrl = ''; // GitHub raw URL after auto-save
 var synth = window.speechSynthesis;
 
 // ============================================================
+// GITHUB PROGRESS (data/progress.json)
+// ============================================================
+var GH_PROGRESS_PATH = 'data/progress.json';
+
+function loadScriptProgress() {
+  if (!GH_TOKEN) return;
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      if (!d || !d.content) return;
+      try {
+        var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
+        scriptProgress = obj.scriptProgress || {};
+        renderTab('pick');
+      } catch(e) {}
+    }).catch(function(){});
+}
+
+function saveScriptProgress() {
+  if (!GH_TOKEN) return;
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      var existing = {};
+      if (d && d.content) {
+        try { existing = JSON.parse(atob(d.content.replace(/\n/g, ''))); } catch(e) {}
+      }
+      existing.scriptProgress = scriptProgress;
+      var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: '📊 progress: ' + new Date().toISOString().split('T')[0],
+          content: encoded,
+          sha: d ? d.sha : undefined
+        })
+      });
+    }).catch(function(){});
+}
+
+// ============================================================
 // INIT
 // ============================================================
 updateLevel();
 switchTab('pick');
+if (GH_TOKEN) loadScriptProgress();
 
 // Warn if no Gemini key in URL
 if (!GEM_KEY) {
@@ -500,16 +554,47 @@ function renderTab(tab) {
 // PICK
 // ============================================================
 function renderPick(c) {
-  var cards = SCRIPTS.map(function(s) {
+  var sortedScripts = SCRIPTS.slice().sort(function(a, b) {
+    return pickSort === 'asc'
+      ? (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)
+      : (a.date > b.date ? -1 : a.date < b.date ? 1 : 0);
+  });
+  var filtered = sortedScripts.filter(function(s) {
+    if (pickFilter === 'all') return true;
+    var sp = scriptProgress[s.id] || {};
+    var cleared = sp.readCleared && sp.shadCleared;
+    return pickFilter === 'cleared' ? cleared : !cleared;
+  });
+
+  var controls = '<div class="pick-controls">'
+    + '<span style="font-size:12px;color:var(--text2);font-weight:600">並び替え:</span>'
+    + '<div class="pick-chip' + (pickSort === 'asc' ? ' active' : '') + '" onclick="pickSort=\'asc\';renderTab(\'pick\')">↑ 登録日昇順</div>'
+    + '<div class="pick-chip' + (pickSort === 'desc' ? ' active' : '') + '" onclick="pickSort=\'desc\';renderTab(\'pick\')">↓ 登録日降順</div>'
+    + '<span style="font-size:12px;color:var(--text2);font-weight:600;margin-left:4px">絞込:</span>'
+    + ['all', 'uncleared', 'cleared'].map(function(f) {
+        var lbl = f === 'all' ? '全て' : f === 'uncleared' ? '未クリア' : 'クリア済';
+        return '<div class="pick-chip' + (pickFilter === f ? ' active' : '') + '" onclick="pickFilter=\'' + f + '\';renderTab(\'pick\')">' + lbl + '</div>';
+      }).join('')
+    + '</div>';
+
+  var cards = filtered.map(function(s) {
     var sel = current && current.id === s.id ? ' selected' : '';
+    var sp = scriptProgress[s.id] || {};
+    var badges = '';
+    if (sp.readCleared) badges += ' <span class="sc-badge read">音読✓</span>';
+    if (sp.shadCleared) badges += ' <span class="sc-badge shad">シャドー✓</span>';
+    var lastInfo = sp.lastDate
+      ? ' · 最終 ' + sp.lastDate + (sp.lastScore !== undefined ? ' (' + sp.lastScore + '点)' : '')
+      : '';
     return '<div class="script-card' + sel + '" onclick="selectScript(\'' + s.id + '\')">'
-      + '<div class="script-card-title">' + s.title + '</div>'
-      + '<div class="script-card-meta">📅 ' + s.date + (s.tip ? ' · 💡 ' + s.tip : '') + '</div>'
-      + '<div class="script-card-preview">' + s.raw.substring(0,80) + '...</div>'
+      + '<div class="script-card-title">' + s.title + badges + '</div>'
+      + '<div class="script-card-meta">📅 ' + s.date + lastInfo + (s.tip ? ' · 💡 ' + s.tip : '') + '</div>'
+      + '<div class="script-card-preview">' + s.raw.substring(0, 80) + '...</div>'
       + '</div>';
-  }).join('');
+  }).join('') || '<div style="text-align:center;padding:24px;color:var(--text2)">該当なし</div>';
+
   var btn = current ? '<button class="btn btn-primary" style="margin-top:4px" onclick="startPractice()">→ 練習スタート</button>' : '';
-  c.innerHTML = '<div style="max-width:600px;margin:0 auto"><div class="sec-title">📂 スクリプトを選択</div>' + cards + btn + '</div>';
+  c.innerHTML = '<div style="max-width:600px;margin:0 auto"><div class="sec-title">📂 スクリプトを選択</div>' + controls + cards + btn + '</div>';
 }
 
 function selectScript(id) {
@@ -895,6 +980,17 @@ function showAIFeedback(r, mode) {
     else shadOk++;
   }
   updateLevel();
+  if (current) {
+    if (!scriptProgress[current.id]) scriptProgress[current.id] = {};
+    var sp = scriptProgress[current.id];
+    sp.lastScore = r.score;
+    sp.lastDate = new Date().toISOString().split('T')[0];
+    if (mode === 'reading' && r.passed) sp.readCleared = true;
+    if (mode === 'shadowing' && r.passed) sp.shadCleared = true;
+    sp.readOk = readOk;
+    sp.shadOk = shadOk;
+    saveScriptProgress();
+  }
 }
 
 // ============================================================

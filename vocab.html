@@ -103,13 +103,30 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px}
 .chart-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px}
 
-/* ===== LIST ===== */
-.list-group-header{font-size:13px;font-weight:700;color:var(--text2);padding:10px 4px 4px;border-bottom:1px solid var(--border);margin-bottom:6px;margin-top:14px}
-.list-group-header:first-child{margin-top:0}
-.list-filter-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
-.filter-chip{font-size:12px;padding:6px 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;font-weight:600;transition:all .15s;min-height:34px}
+/* ===== LIST TABLE ===== */
+.list-filter-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.filter-chip{font-size:12px;padding:5px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;font-weight:600;transition:all .15s;min-height:32px}
 .filter-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.list-summary{font-size:13px;color:var(--text2);margin-bottom:10px}
+.list-summary{font-size:13px;color:var(--text2);margin:6px 0 8px}
+.list-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.list-table{width:100%;border-collapse:collapse}
+.list-table th{font-size:11px;font-weight:700;color:var(--text2);padding:8px 5px;border-bottom:2px solid var(--border);cursor:pointer;text-align:left;white-space:nowrap;user-select:none;-webkit-user-select:none}
+.list-table th.sorted{color:var(--accent)}
+.list-table td{font-size:13px;padding:8px 5px;border-bottom:1px solid var(--border);vertical-align:middle}
+.list-table td.td-word{font-weight:700;font-size:14px;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-table td.td-meaning{color:var(--text2);max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-table td.td-level{white-space:normal;min-width:60px}
+.list-table tr{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.list-table tr:active td,.list-table tr:hover td{background:var(--bg2)}
+.wl-badge-sm{font-size:10px;padding:1px 5px;border-radius:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);display:inline-block;margin:1px 1px 0 0}
+/* ===== SCRIPT SELECTOR (mode select) ===== */
+.script-sel-wrap{margin-top:18px;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px}
+.script-sel-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.script-sel-item{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.script-sel-item:last-child{border-bottom:none}
+.script-sel-item label{font-size:14px;color:var(--text);flex:1;cursor:pointer;line-height:1.3}
+.script-sel-item input[type=checkbox]{width:18px;height:18px;margin-right:10px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.script-sel-btns{display:flex;gap:8px;margin-top:10px}
 .word-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 13px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
 .word-item:active{border-color:var(--accent)}
 .word-item-header{display:flex;align-items:center;gap:8px}
@@ -218,6 +235,10 @@ var flipped   = false;
 var sOk = 0, sTotal = 0, sStreak = 0, sMaxStreak = 0;
 var phaseMode = 'select';
 var activeFilters = [];
+var selectedScripts = null; // null = all scripts
+var listSort = {col: 'nextReview', dir: 'asc'};
+var listScriptFilter = '';
+var listStatusFilter = '';
 var synth = window.speechSynthesis;
 
 // All defined level categories (determines mode-select display order)
@@ -257,6 +278,52 @@ function recordDailyStat(ok, total) {
   var keys = Object.keys(stats).sort();
   while (keys.length > 30) { delete stats[keys.shift()]; keys = Object.keys(stats).sort(); }
   localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+}
+
+// ============================================================
+// GITHUB SHARED PROGRESS (data/progress.json)
+// ============================================================
+var GH_PROGRESS_PATH = 'data/progress.json';
+
+function loadSharedProgress() {
+  if (!GH_TOKEN) return;
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      if (!d || !d.content) return;
+      try {
+        var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
+        if (obj.vocabSelectedScripts !== undefined) {
+          selectedScripts = obj.vocabSelectedScripts;
+          if (currentTab === 'study' && phaseMode === 'select' && words.length > 0) renderModeSelect();
+        }
+      } catch(e) {}
+    }).catch(function(){});
+}
+
+function saveSelectedScripts() {
+  if (!GH_TOKEN) return;
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      var existing = {};
+      if (d && d.content) {
+        try { existing = JSON.parse(atob(d.content.replace(/\n/g, ''))); } catch(e) {}
+      }
+      existing.vocabSelectedScripts = selectedScripts;
+      var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: '📊 vocab settings: ' + new Date().toISOString().split('T')[0],
+          content: encoded,
+          sha: d ? d.sha : undefined
+        })
+      });
+    }).catch(function(){});
 }
 
 // ============================================================
@@ -381,7 +448,16 @@ function calcNext(word, q) {
 
 function getDue() {
   var today = new Date().toISOString().split('T')[0];
-  return words.filter(function(w){ return !w.nextReview || w.nextReview <= today; });
+  var pool = selectedScripts !== null
+    ? words.filter(function(w){ return selectedScripts.indexOf(w.scriptId||'') >= 0; })
+    : words;
+  return pool.filter(function(w){ return !w.nextReview || w.nextReview <= today; });
+}
+
+function getScriptPool() {
+  return selectedScripts !== null
+    ? words.filter(function(w){ return selectedScripts.indexOf(w.scriptId||'') >= 0; })
+    : words;
 }
 
 function applyReview(id, q) {
@@ -415,7 +491,8 @@ function buildQueue(targetWords, dir) {
 }
 
 function getWordsForMode(mode) {
-  if (mode === 'all') return words;
+  var pool = getScriptPool();
+  if (mode === 'all') return pool;
   if (mode === 'review') return getDue();
   if (mode.indexOf('script-') === 0) {
     var sid = mode.replace('script-','');
@@ -423,9 +500,9 @@ function getWordsForMode(mode) {
   }
   if (mode.indexOf('level-') === 0) {
     var lv = mode.replace('level-','');
-    return words.filter(function(w){ return (w.level||[]).indexOf(lv) >= 0; });
+    return pool.filter(function(w){ return (w.level||[]).indexOf(lv) >= 0; });
   }
-  return words;
+  return pool;
 }
 
 // ============================================================
@@ -468,6 +545,27 @@ function renderModeSelect() {
       + '</div>';
   }).join('');
 
+  // Script selector section
+  var allScriptIds = Object.keys(SCRIPT_TITLES).filter(function(sid){
+    return words.some(function(w){ return w.scriptId === sid; });
+  });
+  var scriptSelItems = allScriptIds.map(function(sid) {
+    var checked = selectedScripts === null || selectedScripts.indexOf(sid) >= 0;
+    var cnt = words.filter(function(w){ return w.scriptId === sid; }).length;
+    return '<div class="script-sel-item">'
+      + '<input type="checkbox" id="ssel-'+sid+'" '+(checked?'checked':'')+' onchange="toggleSelectedScript(\''+sid+'\')">'
+      + '<label for="ssel-'+sid+'">'+SCRIPT_TITLES[sid]
+        +' <span style="font-size:12px;color:var(--text2)">('+cnt+'単語)</span></label>'
+      + '</div>';
+  }).join('');
+  var scriptSelHtml = '<div class="script-sel-wrap">'
+    + '<div class="script-sel-title">🎯 復習対象スクリプトを選択</div>'
+    + scriptSelItems
+    + '<div class="script-sel-btns">'
+    + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="setAllScripts(true)">全選択</button>'
+    + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="setAllScripts(false)">全解除</button>'
+    + '</div></div>';
+
   document.getElementById('content').innerHTML =
     '<div class="mode-screen">'
     + '<h2>学習モードを選択</h2>'
@@ -480,11 +578,31 @@ function renderModeSelect() {
     + '<div class="mode-grid">'
     + '<div class="mode-card" onclick="selectMode(\'all\')">'
     + '<div class="mode-card-icon">📚</div><div class="mode-card-title">全体</div>'
-    + '<div class="mode-card-sub">全'+words.length+'単語</div></div>'
+    + '<div class="mode-card-sub">全'+getScriptPool().length+'単語</div></div>'
     + '<div class="mode-card" onclick="selectMode(\'review\')">'
     + '<div class="mode-card-icon">🔥</div><div class="mode-card-title">要復習のみ</div>'
     + '<div class="mode-card-sub">今日の期限'+dueCount+'件</div></div>'
-    + '</div></div>';
+    + '</div>'
+    + scriptSelHtml
+    + '</div>';
+}
+
+function toggleSelectedScript(sid) {
+  var allIds = Object.keys(SCRIPT_TITLES).filter(function(s){
+    return words.some(function(w){ return w.scriptId === s; });
+  });
+  var cur = selectedScripts !== null ? selectedScripts.slice() : allIds.slice();
+  var idx = cur.indexOf(sid);
+  if (idx >= 0) cur.splice(idx, 1); else cur.push(sid);
+  selectedScripts = cur.length === allIds.length ? null : cur;
+  saveSelectedScripts();
+  renderModeSelect();
+}
+
+function setAllScripts(selectAll) {
+  selectedScripts = selectAll ? null : [];
+  saveSelectedScripts();
+  renderModeSelect();
 }
 
 function selectMode(mode) {
@@ -724,72 +842,116 @@ function buildLineChart() {
 }
 
 // ============================================================
-// LIST TAB
+// LIST TAB (table format)
 // ============================================================
 function renderList() {
   var c = document.getElementById('content');
   if (words.length === 0) { c.innerHTML = '<div class="empty">単語がありません</div>'; return; }
   var today = new Date().toISOString().split('T')[0];
-  var filtered = activeFilters.length === 0 ? words : words.filter(function(w){
-    return activeFilters.some(function(f){ return (w.level||[]).indexOf(f) >= 0; });
-  });
-  var sorted = filtered.slice().sort(function(a,b){ return (a.nextReview||'') < (b.nextReview||'') ? -1 : 1; });
 
-  var chipsHtml = '<div class="list-filter-bar">'
-    + '<div class="filter-chip'+(activeFilters.length===0?' active':'')+'" onclick="setFilter(null)">すべて</div>'
-    + ALL_LEVELS.map(function(lv){
-        var cnt = words.filter(function(w){ return (w.level||[]).indexOf(lv)>=0; }).length;
-        if (cnt===0) return '';
-        return '<div class="filter-chip'+(activeFilters.indexOf(lv)>=0?' active':'')+'" onclick="toggleFilter(\''+lv+'\')">'+lv+' <span style="opacity:.6">('+cnt+')</span></div>';
+  // Apply filters
+  var filtered = words.slice();
+  if (activeFilters.length > 0) {
+    filtered = filtered.filter(function(w){
+      return activeFilters.some(function(f){ return (w.level||[]).indexOf(f) >= 0; });
+    });
+  }
+  if (listScriptFilter) {
+    filtered = filtered.filter(function(w){ return w.scriptId === listScriptFilter; });
+  }
+  if (listStatusFilter === 'mastered') {
+    filtered = filtered.filter(function(w){ return w.streak >= 3; });
+  } else if (listStatusFilter === 'learning') {
+    filtered = filtered.filter(function(w){ return w.streak > 0 && w.streak < 3; });
+  } else if (listStatusFilter === 'due') {
+    filtered = filtered.filter(function(w){ return !w.nextReview || w.nextReview <= today; });
+  }
+
+  // Sort
+  var sc = listSort.col, sd = listSort.dir;
+  filtered.sort(function(a, b) {
+    var av = sc==='word' ? (a.word||'') : sc==='streak' ? (a.streak||0) : (a.nextReview||'');
+    var bv = sc==='word' ? (b.word||'') : sc==='streak' ? (b.streak||0) : (b.nextReview||'');
+    if (av < bv) return sd==='asc' ? -1 : 1;
+    if (av > bv) return sd==='asc' ? 1 : -1;
+    return 0;
+  });
+
+  // Level filter row
+  var levelRow = '<div class="list-filter-row">'
+    + '<div class="filter-chip'+(activeFilters.length===0?' active':'')+'" onclick="setFilter(null)">全レベル</div>'
+    + ALL_LEVELS.filter(function(lv){ return words.some(function(w){ return (w.level||[]).indexOf(lv)>=0; }); })
+      .map(function(lv){
+        return '<div class="filter-chip'+(activeFilters.indexOf(lv)>=0?' active':'')+'" onclick="toggleFilter(\''+lv+'\')">'+lv+'</div>';
       }).join('')
     + '</div>';
 
-  var summaryHtml = '<div class="list-summary">'+filtered.length+'単語 · 要復習'+filtered.filter(function(w){ return !w.nextReview||w.nextReview<=today; }).length+'件</div>';
+  // Script filter row
+  var usedScripts = Object.keys(SCRIPT_TITLES).filter(function(sid){
+    return words.some(function(w){ return w.scriptId===sid; });
+  });
+  var scriptRow = '<div class="list-filter-row">'
+    + '<div class="filter-chip'+(listScriptFilter===''?' active':'')+'" onclick="listScriptFilter=\'\';renderList()">📄 全スクリプト</div>'
+    + usedScripts.map(function(sid){
+        return '<div class="filter-chip'+(listScriptFilter===sid?' active':'')+'" onclick="listScriptFilter=\''+sid+'\';renderList()">'+SCRIPT_TITLES[sid]+'</div>';
+      }).join('')
+    + '</div>';
 
-  function wordItemHtml(w) {
+  // Status filter row
+  var statusRow = '<div class="list-filter-row">'
+    + [['','全状態'],['mastered','⭐習得済み'],['learning','📖学習中'],['due','🔥要復習']].map(function(p){
+        return '<div class="filter-chip'+(listStatusFilter===p[0]?' active':'')+'" onclick="listStatusFilter=\''+p[0]+'\';renderList()">'+p[1]+'</div>';
+      }).join('')
+    + '</div>';
+
+  var summaryHtml = '<div class="list-summary">'+filtered.length+' / '+words.length+'単語 · 要復習'
+    + filtered.filter(function(w){ return !w.nextReview||w.nextReview<=today; }).length+'件</div>';
+
+  // Sort header helper
+  function th(col, label) {
+    var active = listSort.col === col;
+    var arrow = active ? (listSort.dir==='asc'?' ▲':' ▼') : ' ▲';
+    return '<th'+(active?' class="sorted"':'')+' onclick="toggleListSort(\''+col+'\')">'
+      +label+'<span style="opacity:'+(active?1:.2)+'">'+arrow+'</span></th>';
+  }
+
+  // Table rows
+  var rows = filtered.map(function(w) {
     var due = w.nextReview || today;
     var daysLeft = Math.round((new Date(due)-new Date(today))/86400000);
     var dueLabel = daysLeft<=0 ? '今すぐ' : daysLeft===1 ? '明日' : daysLeft+'日後';
-    var dueClass = daysLeft<=0 ? 'due-now' : daysLeft<=3 ? 'due-soon' : 'due-later';
-    var lvBadges = (w.level||[]).map(function(l){ return '<span class="wl-badge">'+l+'</span>'; }).join('');
-    var sbGreen = w.streak>=3 ? '60%' : (w.streak>=1 ? '30%' : '0%');
-    var sbRed   = daysLeft<0 ? Math.min(60,Math.abs(daysLeft)*10)+'%' : '0%';
-    var sbAmber = daysLeft===0 ? '40%' : '0%';
-    return '<div class="word-item" onclick="showWordDetail(\''+w.id+'\')">'
-      + '<div class="word-item-header">'
-      + '<div class="word-item-main">'
-      + '<div class="word-item-word">'+escHtml(w.word||'')+'</div>'
-      + '<div class="word-item-meaning">'+escHtml(w.meaning||'')+'</div>'
-      + '</div>'
-      + '<div class="word-item-right">'
-      + '<span class="due-badge '+dueClass+'">'+dueLabel+'</span>'
-      + '<div class="status-bar"><div class="sb-green" style="width:'+sbGreen+'"></div><div class="sb-amber" style="width:'+sbAmber+'"></div><div class="sb-red" style="width:'+sbRed+'"></div></div>'
-      + '</div></div>'
-      + '<div class="word-item-levels">'+lvBadges+'</div>'
-      + '</div>';
-  }
-
-  // Group by scriptId in SCRIPT_TITLES order, unknown scripts last
-  var scriptOrder = Object.keys(SCRIPT_TITLES);
-  var groups = {};
-  sorted.forEach(function(w){
-    var sid = w.scriptId || '__other__';
-    if (!groups[sid]) groups[sid] = [];
-    groups[sid].push(w);
-  });
-  var groupKeys = scriptOrder.filter(function(k){ return groups[k]; });
-  if (groups['__other__']) groupKeys.push('__other__');
-
-  var itemsHtml = groupKeys.map(function(sid){
-    var label = SCRIPT_TITLES[sid] || (groups[sid][0] && groups[sid][0].source) || sid;
-    var cnt = groups[sid].length;
-    var dueCnt = groups[sid].filter(function(w){ return !w.nextReview||w.nextReview<=today; }).length;
-    var header = '<div class="list-group-header">📄 '+escHtml(label)
-      +' <span style="font-weight:400">('+cnt+'単語'+(dueCnt>0?' · 要復習'+dueCnt+'件':'')+' )</span></div>';
-    return header + groups[sid].map(wordItemHtml).join('');
+    var dueColor = daysLeft<=0 ? 'var(--red)' : daysLeft<=3 ? 'var(--amber)' : 'var(--text2)';
+    var status = !w.nextReview || w.nextReview<=today ? '🔥要復習'
+               : w.streak>=3 ? '⭐習得済み'
+               : w.streak>0  ? '📖学習中'
+               : '🆕未学習';
+    var lvBadges = (w.level||[]).slice(0,2).map(function(l){
+      return '<span class="wl-badge-sm">'+escHtml(l)+'</span>';
+    }).join('');
+    return '<tr onclick="showWordDetail(\''+w.id+'\')">'
+      + '<td class="td-word">'+escHtml(w.word||'')+'</td>'
+      + '<td class="td-meaning">'+escHtml(w.meaning||'')+'</td>'
+      + '<td class="td-level">'+lvBadges+'</td>'
+      + '<td style="white-space:nowrap;color:'+dueColor+'">'+dueLabel+'</td>'
+      + '<td style="white-space:nowrap;font-size:12px">'+status+'</td>'
+      + '</tr>';
   }).join('');
 
-  c.innerHTML = chipsHtml + summaryHtml + itemsHtml;
+  c.innerHTML = levelRow + scriptRow + statusRow + summaryHtml
+    + '<div class="list-table-wrap"><table class="list-table">'
+    + '<thead><tr>'
+    + th('word','単語')+'<th>意味</th><th>難易度</th>'
+    + th('nextReview','次回復習')
+    + th('streak','状態')
+    + '</tr></thead>'
+    + '<tbody>'+rows+'</tbody>'
+    + '</table></div>';
+}
+
+function toggleListSort(col) {
+  if (listSort.col === col) listSort.dir = listSort.dir==='asc' ? 'desc' : 'asc';
+  else { listSort.col = col; listSort.dir = 'asc'; }
+  renderList();
 }
 
 function setFilter(lv) { activeFilters = lv ? [lv] : []; renderList(); }
@@ -899,6 +1061,7 @@ if (GH_TOKEN) {
   if (b) b.style.display = '';
 }
 loadVocab();
+if (GH_TOKEN) loadSharedProgress();
 </script>
 </body>
 </html>
