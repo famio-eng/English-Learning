@@ -607,7 +607,18 @@ function selectScript(id) {
     var el = document.getElementById('tab-' + t);
     if (el) el.classList.add('locked');
   });
-  readOk = 0; shadOk = 0;
+  var sp = scriptProgress[id] || {};
+  readOk = sp.readOk || 0;
+  shadOk = sp.shadOk || 0;
+  if (sp.readOk >= 1) {
+    unlock('meaning');
+    unlock('reading');
+  }
+  if (sp.shadOk >= 1) {
+    unlock('meaning');
+    unlock('reading');
+    unlock('shadowing');
+  }
   renderTab('pick');
 }
 
