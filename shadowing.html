@@ -461,14 +461,14 @@ function loadScriptProgress() {
 }
 
 function saveScriptProgress() {
-  if (!GH_TOKEN) return;
+  if (!GH_TOKEN) return Promise.resolve();
   var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
-  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+  return fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
     .then(function(r) { return r.ok ? r.json() : null; })
     .then(function(d) {
       var existing = {};
       if (d && d.content) {
-        try { existing = JSON.parse(atob(d.content.replace(/\n/g, ''))); } catch(e) {}
+        try { existing = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g, ''))))); } catch(e) {}
       }
       existing.scriptProgress = scriptProgress;
       var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
@@ -1048,8 +1048,9 @@ function showAIFeedback(r, mode) {
     if (mode === 'shadowing' && r.passed) sp.shadCleared = true;
     sp.readOk = readOk;
     sp.shadOk = shadOk;
-    saveScriptProgress();
-    if (r.passed) markDailyTask('shadowing');
+    saveScriptProgress().then(function() {
+      if (r.passed) markDailyTask('shadowing');
+    });
   }
 }
 
