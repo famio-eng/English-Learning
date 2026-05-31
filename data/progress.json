@@ -26,7 +26,8 @@
       "memo": "疲れていたのと、アプリの不具合によって進まなかった"
     },
     "2026-05-31": {
-      "shadowing": true
+      "shadowing": true,
+      "vocab": true
     }
   }
 }
