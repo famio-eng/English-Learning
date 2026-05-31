@@ -1336,17 +1336,21 @@ function loadPastEvaluations() {
     return r.json();
   })
   .then(function(files) {
-    if (!Array.isArray(files)) files = [];
-    var jsonFiles = files.filter(function(f) { return f.name.endsWith('.json') && f.name !== 'vocab-stats.json'; });
-    jsonFiles.sort(function(a, b) { return b.name.localeCompare(a.name); }); // newest first
-
-    if (jsonFiles.length === 0) {
-      if (el) el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px">JSONの評価記録がまだありません</div>';
+    if (!Array.isArray(files) || files.length === 0) {
+      if (el) el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px">記録がまだありません</div>';
       return;
     }
 
-    // Fetch all JSON contents in parallel
-    return Promise.all(jsonFiles.map(function(f) {
+    var jsonFiles = files.filter(function(f) {
+      return f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
+    }).sort(function(a, b) { return b.name.localeCompare(a.name); });
+
+    var mdFiles = files.filter(function(f) {
+      return f.name.endsWith('.md');
+    }).sort(function(a, b) { return b.name.localeCompare(a.name); });
+
+    // Fetch JSON contents in parallel; MD files get placeholder objects
+    var jsonPromises = jsonFiles.map(function(f) {
       return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/records/' + f.name, {
         headers: {'Authorization': 'Bearer ' + GH_TOKEN}
       })
@@ -1356,17 +1360,48 @@ function loadPastEvaluations() {
         try {
           var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
           obj._filename = f.name;
+          obj._type = 'json';
           return obj;
         } catch(e) { return null; }
       })
       .catch(function() { return null; });
-    }));
+    });
+
+    var mdPlaceholders = mdFiles.map(function(f) {
+      // Parse date/time from filename: YYYY-MM-DD-HH-MM.md
+      var base = f.name.replace('.md', '');
+      var parts = base.split('-');
+      return {
+        _filename: f.name,
+        _type: 'md',
+        date: parts.slice(0, 3).join('-'),
+        time: (parts[3] || '00') + ':' + (parts[4] || '00'),
+        scriptId: '',
+        scriptTitle: '',
+        mode: '',
+        score: null
+      };
+    });
+
+    return Promise.all(jsonPromises).then(function(jsonRecords) {
+      return jsonRecords.filter(Boolean).concat(mdPlaceholders);
+    });
   })
   .then(function(records) {
     if (!records) return;
-    records = records.filter(Boolean);
+    if (records.length === 0) {
+      if (el) el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px">記録がありません</div>';
+      return;
+    }
 
-    // Group by scriptId
+    // Sort all records newest first by date+time
+    records.sort(function(a, b) {
+      var aKey = (a.date || '') + (a.time || '');
+      var bKey = (b.date || '') + (b.time || '');
+      return bKey.localeCompare(aKey);
+    });
+
+    // Group by scriptId; MD files with no scriptId go into '__other__'
     var groups = {};
     var groupOrder = [];
     records.forEach(function(r) {
@@ -1378,10 +1413,11 @@ function loadPastEvaluations() {
     evalExpandCount = {};
     var html = groupOrder.map(function(sid) {
       var items = groups[sid];
-      var title = SCRIPT_TITLES_IDX[sid] || (items[0].scriptTitle || sid);
+      var title = SCRIPT_TITLES_IDX[sid] || (items.find(function(x){ return x.scriptTitle; }) || {}).scriptTitle || '旧記録';
       evalExpandCount[sid] = 3;
       return '<div class="eval-group" id="evg-' + sid + '">'
-        + '<div class="eval-group-title">📁 ' + escHtml(title) + ' <span style="font-weight:400;font-size:12px">(' + items.length + '件)</span></div>'
+        + '<div class="eval-group-title">📁 ' + escHtml(title)
+        + ' <span style="font-weight:400;font-size:12px">(' + items.length + '件)</span></div>'
         + renderEvalItems(sid, items, 3)
         + '</div>';
     }).join('');
@@ -1398,20 +1434,41 @@ function renderEvalItems(sid, items, showCount) {
   var gb = function(s) { return s >= 85 ? '🥇' : s >= 70 ? '🥈' : '🥉'; };
   var visible = items.slice(0, showCount);
   var html = visible.map(function(r, i) {
-    var uid = sid + '-' + i;
-    var modeLabel = modeMap[r.mode] || r.mode;
-    var passLabel = r.passed ? '<span style="color:var(--green);font-size:11px">✅クリア</span>' : '<span style="color:var(--text3);font-size:11px">練習中</span>';
+    var uid = 'ev-' + sid.replace(/[^a-z0-9]/g, '_') + '-' + i;
+
+    // MD placeholder (no score data)
+    if (r._type === 'md') {
+      return '<div class="eval-item">'
+        + '<div class="eval-item-hd" style="cursor:default">'
+        + '<span class="hmode" style="background:var(--bg3);color:var(--text2)">旧形式</span>'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="font-size:13px;color:var(--text2)">詳細データなし</div>'
+        + '<div style="font-size:11px;color:var(--text3)">' + (r.date || '') + ' ' + (r.time || '') + ' · ' + escHtml(r._filename) + '</div>'
+        + '</div></div></div>';
+    }
+
+    var modeLabel = modeMap[r.mode] || r.mode || '不明';
+    var modeClass = r.mode === 'reading' ? 'hm-r' : r.mode === 'shadowing' ? 'hm-s' : '';
+    var passLabel = r.passed
+      ? '<span style="color:var(--green);font-size:11px">✅クリア</span>'
+      : '<span style="color:var(--text3);font-size:11px">練習中</span>';
+    var scoreHtml = r.score != null
+      ? r.score + '点 ' + gb(r.score) + (r.scoreLabel ? ' · ' + r.scoreLabel : '') + ' ' + passLabel
+      : '(スコアなし)';
+
     var header = '<div class="eval-item-hd" onclick="toggleEvalDetail(\'' + uid + '\')">'
-      + '<span class="hmode ' + (r.mode === 'reading' ? 'hm-r' : 'hm-s') + '">' + modeLabel + '</span>'
+      + '<span class="hmode ' + modeClass + '">' + modeLabel + '</span>'
       + '<div style="flex:1;min-width:0">'
-      + '<div style="font-size:14px;font-weight:700">' + r.score + '点 ' + gb(r.score) + (r.scoreLabel ? ' · ' + r.scoreLabel : '') + ' ' + passLabel + '</div>'
+      + '<div style="font-size:14px;font-weight:700">' + scoreHtml + '</div>'
       + '<div style="font-size:11px;color:var(--text2)">' + (r.date || '') + ' ' + (r.time || '') + '</div>'
       + '</div>'
       + '<span style="font-size:12px;color:var(--text3)" id="eval-arr-' + uid + '">▼</span>'
       + '</div>';
+
     var detail = '<div id="eval-det-' + uid + '" style="display:none;padding:0 12px 12px">';
     if (r.recordingUrl) {
-      detail += '<div style="margin-bottom:8px"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">🎧 録音</div><audio controls style="width:100%;height:36px" src="' + r.recordingUrl + '"></audio></div>';
+      detail += '<div style="margin-bottom:8px"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">🎧 録音</div>'
+        + '<audio controls style="width:100%;height:36px" src="' + r.recordingUrl + '"></audio></div>';
     }
     if (r.strengths && r.strengths.length > 0) {
       detail += '<div style="font-size:12px;color:var(--green);margin-bottom:4px">✅ ' + r.strengths.join('<br>✅ ') + '</div>';
@@ -1425,12 +1482,16 @@ function renderEvalItems(sid, items, showCount) {
     if (r.memo) {
       detail += '<div style="font-size:12px;color:var(--text2);margin-top:4px">📝 ' + escHtml(r.memo) + '</div>';
     }
+    if (!r.recordingUrl && !r.strengths && !r.improvements && !r.nextStepAdvice && !r.memo) {
+      detail += '<div style="font-size:12px;color:var(--text3)">詳細データなし</div>';
+    }
     detail += '</div>';
     return '<div class="eval-item">' + header + detail + '</div>';
   }).join('');
 
   if (items.length > showCount) {
-    html += '<button class="btn btn-secondary btn-sm" style="margin-top:6px;width:100%" onclick="showMoreEvals(\'' + sid + '\',' + items.length + ')">'
+    html += '<button class="btn btn-secondary btn-sm" style="margin-top:6px;width:100%"'
+      + ' onclick="showMoreEvals(\'' + sid + '\',' + items.length + ')">'
       + 'もっと見る（残り' + (items.length - showCount) + '件）</button>';
   }
   return html;
