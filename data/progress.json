@@ -20,5 +20,10 @@
   "vocabSelectedScripts": [
     "short",
     "sop-status-report"
-  ]
+  ],
+  "dailyTasks": {
+    "2026-05-30": {
+      "memo": "疲れていたのと、アプリの不具合によって進まなかった"
+    }
+  }
 }
