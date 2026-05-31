@@ -1,0 +1,27 @@
+{
+  "date": "2026-05-31",
+  "time": "15:44",
+  "scriptId": "sop-status-report",
+  "scriptTitle": "SOP対応課題の状況報告",
+  "mode": "shadowing",
+  "score": 63,
+  "scoreLabel": "まずまず",
+  "passed": false,
+  "strengths": [
+    "「Recently」はクリアで、強勢も適切です。",
+    "「European」は強勢の位置（eu-RO-pe-an）が正しく、明瞭に発音できています。",
+    "「Declaration」は強勢の位置（de-cla-RA-tion）が正しく、はっきりと発音できています。",
+    "「Conformity」は強勢の位置（con-FOR-mi-ty）が正しく、理解しやすいです。",
+    "「process」は強勢の位置（PRO-cess）が正しく、明瞭です。",
+    "全体的に多くの単語が明瞭に発音されており、個々の単語の強勢は概ね適切です。"
+  ],
+  "improvements": [
+    "「LOB (またはLAB)」: 音声では「love」と発音されていますが、文脈から「LOB (Line of Business)」または「LAB (Legal Advisory Board)」のような専門用語の可能性が高いです。もし「LOB」であれば、「LOB: LOB (エル・オー・ビー)」。各音節をはっきりと発音しましょう。",
+    "「result in change」: 「desert and change」のように聞こえます。正しくは「result in change: re-SULT in CHANGE」。特に「result」の「SULT」に強勢を置き、自然なリンキングを意識しましょう。",
+    "「re-integration」: 「re-preparation」のように聞こえます。文脈から「re-integration: re-in-te-GRA-tion」。特に「GRA」に強勢を置いて発音するとより自然です。",
+    "全体的なペースが速く、単語間のつながりがぎこちない部分があります。もう少しゆっくりと、単語と単語を滑らかにつなげるように意識すると、より自然なリズムになります。"
+  ],
+  "nextStepAdvice": "単語と単語のつながり（リンキング）を意識して、文章全体を滑らかに発音する練習をしましょう。特に、母音で終わる単語の後に母音で始まる単語が続く場合（例: 'with the European'）は、音がつながりやすくなります。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-31-15-44-sop-status-report-shadowing.m4a"
+}
