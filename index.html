@@ -56,6 +56,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .sec-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
+.eval-group{margin-bottom:16px}
+.eval-group-title{font-size:13px;font-weight:700;color:var(--text2);padding:6px 0 8px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.eval-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;overflow:hidden}
+.eval-item-hd{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .script-card{padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;cursor:pointer}
 .script-card.selected{border-color:var(--accent)}
 .script-card-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:3px}
@@ -1135,15 +1139,23 @@ function speakText(text) {
 // PROGRESS
 // ============================================================
 function addHist(mode, score, feedback) {
+  var now = new Date();
+  var dateStr = now.toISOString().split('T')[0];
+  var timeStr = now.toTimeString().slice(0, 5);
   practiceHistory.unshift({
     mode: mode, score: score, rate: rate,
+    scriptId: current ? current.id : '',
+    scriptTitle: current ? current.title : '',
     title: current ? current.title : '',
-    date: new Date().toLocaleDateString('ja-JP'),
+    date: dateStr,
+    time: timeStr,
     strengths: feedback ? feedback.strengths : [],
     improvements: feedback ? feedback.improvements : [],
     nextStepAdvice: feedback ? feedback.nextStepAdvice : '',
     scoreLabel: feedback ? feedback.scoreLabel : '',
-    audioUrl: lastRecDataUrl
+    passed: feedback ? !!feedback.passed : false,
+    audioUrl: lastRecDataUrl,
+    savedRecUrl: lastSavedRecUrl
   });
 }
 
@@ -1206,10 +1218,10 @@ function renderProgress(c) {
     + histHTML + recBtn
     + '<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">'
     + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
-    + '<div class="sec-title" style="margin:0">🎙 過去の録音</div>'
-    + '<button class="btn btn-secondary btn-sm" onclick="loadPastRecordings()">読み込む</button>'
+    + '<div class="sec-title" style="margin:0">📋 過去の評価</div>'
+    + '<button class="btn btn-secondary btn-sm" onclick="loadPastEvaluations()">読み込む</button>'
     + '</div>'
-    + '<div id="pastRecArea"><div style="font-size:12px;color:var(--text3)">「読み込む」を押すとGitHubから取得します</div></div>'
+    + '<div id="pastEvalArea"><div style="font-size:12px;color:var(--text3)">「読み込む」を押すとGitHubから取得します</div></div>'
     + '</div>'
     + '</div>';
 }
@@ -1240,119 +1252,202 @@ function closeRecord() { document.getElementById('recOverlay').classList.remove(
 function overlayBg(e) { if (e.target === document.getElementById('recOverlay')) closeRecord(); }
 
 function saveRecord() {
+  if (!GH_TOKEN) { showToast('URLにgh=トークンが必要です', false); return; }
   var memo = document.getElementById('recMemo').value;
-  var now = new Date();
-  var dateStr = now.toISOString().split('T')[0];
-  var timeStr = now.toTimeString().slice(0, 5);
-  var avgScore = practiceHistory.length ? Math.round(practiceHistory.reduce(function(s, h) { return s + h.score; }, 0) / practiceHistory.length) : 0;
   var btn = document.getElementById('recSaveBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner" style="border-color:rgba(255,255,255,.3);border-top-color:#fff"></span> 保存中...';
 
-  var lines = [
-    '# 学習記録 ' + dateStr + ' ' + timeStr,
-    '',
-    '## スクリプト',
-    current ? current.title : '未選択',
-    '',
-    '## 記録',
-    '- 音読クリア: ' + readOk + '回',
-    '- シャドーイングクリア: ' + shadOk + '回',
-    '- 速度: ×' + rate.toFixed(1),
-    '- 平均スコア: ' + avgScore + '点'
-  ];
-  if (memo) lines.push('- メモ: ' + memo);
-  if (lastSavedRecUrl) {
-    lines.push('', '## 録音');
-    lines.push('[🎧 再生](' + lastSavedRecUrl + ')');
-    lines.push('');
-    lines.push('`' + lastSavedRecUrl + '`');
+  var items = practiceHistory.slice().reverse(); // oldest first
+  var saved = 0;
+  var nameCount = {};
+
+  function saveNext() {
+    if (items.length === 0) {
+      btn.disabled = false;
+      btn.textContent = 'GitHubに保存する';
+      showToast('✓ ' + saved + '件保存しました', true);
+      closeRecord();
+      return;
+    }
+    var h = items.shift();
+    var base = (h.date || '') + '-' + (h.time || '00-00').replace(':', '-')
+      + '-' + (h.scriptId || 'unknown') + '-' + h.mode;
+    nameCount[base] = (nameCount[base] || 0) + 1;
+    var suffix = nameCount[base] > 1 ? '-' + nameCount[base] : '';
+    var path = 'records/' + base + suffix + '.json';
+
+    var data = {
+      date: h.date || '',
+      time: h.time || '',
+      scriptId: h.scriptId || '',
+      scriptTitle: h.scriptTitle || h.title || '',
+      mode: h.mode,
+      score: h.score,
+      scoreLabel: h.scoreLabel || '',
+      passed: h.passed || false,
+      strengths: h.strengths || [],
+      improvements: h.improvements || [],
+      nextStepAdvice: h.nextStepAdvice || '',
+      memo: memo || '',
+      recordingUrl: h.savedRecUrl || ''
+    };
+    var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path;
+
+    fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(existing) {
+        var body = {
+          message: '📝 ' + (h.scriptTitle || h.scriptId || '') + ' ' + h.mode + ': ' + h.score + '点',
+          content: encoded
+        };
+        if (existing && existing.sha) body.sha = existing.sha;
+        return fetch(apiUrl, {
+          method: 'PUT',
+          headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+          body: JSON.stringify(body)
+        });
+      })
+      .then(function(r) { if (r && r.ok) saved++; saveNext(); })
+      .catch(function() { saveNext(); });
   }
-  lines.push('', '## セッション詳細');
-  practiceHistory.forEach(function(h) {
-    lines.push('- ' + (h.mode === 'reading' ? '音読' : 'シャドーイング') + ': ' + h.score + '点 ×' + h.rate);
-  });
 
-  var content = lines.join('\n');
-  var path = 'records/' + dateStr + '-' + timeStr.replace(':', '-') + '.md';
-
-  // base64 encode
-  var encoded = btoa(unescape(encodeURIComponent(content)));
-
-  fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
-    method: 'PUT',
-    headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
-    body: JSON.stringify({message: '学習記録: ' + dateStr + (current ? ' ' + current.title : ''), content: encoded})
-  }).then(function(res) {
-    return res.json().then(function(data) { return {ok: res.ok, data: data}; });
-  }).then(function(r) {
-    btn.disabled = false;
-    btn.textContent = 'GitHubに保存する';
-    if (r.ok) { showToast('✓ GitHubに保存しました', true); closeRecord(); }
-    else showToast('保存に失敗: ' + (r.data.message || ''), false);
-  }).catch(function(e) {
-    btn.disabled = false;
-    btn.textContent = 'GitHubに保存する';
-    showToast('エラーが発生しました', false);
-  });
+  saveNext();
 }
 
 // ============================================================
-// PAST RECORDINGS
+// PAST EVALUATIONS
 // ============================================================
-function loadPastRecordings() {
-  if (!GH_TOKEN) {
-    showToast('URLにgh=トークンが必要です', false);
-    return;
-  }
-  var el = document.getElementById('pastRecArea');
+var SCRIPT_TITLES_IDX = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告'};
+var evalExpandCount = {}; // scriptId → shown count
+
+function loadPastEvaluations() {
+  if (!GH_TOKEN) { showToast('URLにgh=トークンが必要です', false); return; }
+  var el = document.getElementById('pastEvalArea');
   if (el) el.innerHTML = '<div style="text-align:center;padding:12px"><span class="spinner"></span><div style="font-size:12px;color:var(--text2);margin-top:6px">読み込み中...</div></div>';
-  fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/recordings', {
+
+  fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/records', {
     headers: {'Authorization': 'Bearer ' + GH_TOKEN}
-  }).then(function(r) {
+  })
+  .then(function(r) {
     if (r.status === 404) return [];
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
-  }).then(function(files) {
-    if (!Array.isArray(files) || files.length === 0) {
-      if (el) el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px">録音がまだありません</div>';
+  })
+  .then(function(files) {
+    if (!Array.isArray(files)) files = [];
+    var jsonFiles = files.filter(function(f) { return f.name.endsWith('.json') && f.name !== 'vocab-stats.json'; });
+    jsonFiles.sort(function(a, b) { return b.name.localeCompare(a.name); }); // newest first
+
+    if (jsonFiles.length === 0) {
+      if (el) el.innerHTML = '<div style="font-size:13px;color:var(--text3);padding:8px">JSONの評価記録がまだありません</div>';
       return;
     }
-    files.sort(function(a, b) { return b.name.localeCompare(a.name); });
-    // スクリプトID・モードの固定対応表
-    var scriptNameMap = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版'};
-    var modeNameMap   = {reading:'音読', shadowing:'シャドーイング'};
 
-    var html = files.slice(0, 20).map(function(f) {
-      var rawUrl = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/recordings/' + f.name;
-      var base = f.name.replace(/\.(m4a|webm|ogg|mp4)$/, '');
-      var parts = base.split('-');
-      // 新形式: YYYY-MM-DD-HH-MM-{scriptId}-{mode}  (7部分)
-      // 旧形式: YYYY-MM-DD-HH-MM-{mode}              (6部分)
-      var scriptId, modeKey;
-      if (parts.length >= 7) {
-        scriptId = parts[5];
-        modeKey  = parts[6];
-      } else {
-        scriptId = '';
-        modeKey  = parts[5] || '';
-      }
-      var dateLabel = (parts[0]||'') + '-' + (parts[1]||'') + '-' + (parts[2]||'')
-        + ' ' + (parts[3]||'') + ':' + (parts[4]||'');
-      var scriptLabel = scriptId ? (scriptNameMap[scriptId] || scriptId) : '';
-      var modeStr = modeNameMap[modeKey] || modeKey;
-      var titleLine = dateLabel
-        + (scriptLabel ? ' · ' + scriptLabel : '')
-        + ' · ' + modeStr;
-      return '<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:6px">'
-        + '<div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px">' + titleLine + '</div>'
-        + '<audio controls style="width:100%;height:36px" src="' + rawUrl + '"></audio>'
+    // Fetch all JSON contents in parallel
+    return Promise.all(jsonFiles.map(function(f) {
+      return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/records/' + f.name, {
+        headers: {'Authorization': 'Bearer ' + GH_TOKEN}
+      })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) {
+        if (!d || !d.content) return null;
+        try {
+          var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
+          obj._filename = f.name;
+          return obj;
+        } catch(e) { return null; }
+      })
+      .catch(function() { return null; });
+    }));
+  })
+  .then(function(records) {
+    if (!records) return;
+    records = records.filter(Boolean);
+
+    // Group by scriptId
+    var groups = {};
+    var groupOrder = [];
+    records.forEach(function(r) {
+      var sid = r.scriptId || '__other__';
+      if (!groups[sid]) { groups[sid] = []; groupOrder.push(sid); }
+      groups[sid].push(r);
+    });
+
+    evalExpandCount = {};
+    var html = groupOrder.map(function(sid) {
+      var items = groups[sid];
+      var title = SCRIPT_TITLES_IDX[sid] || (items[0].scriptTitle || sid);
+      evalExpandCount[sid] = 3;
+      return '<div class="eval-group" id="evg-' + sid + '">'
+        + '<div class="eval-group-title">📁 ' + escHtml(title) + ' <span style="font-weight:400;font-size:12px">(' + items.length + '件)</span></div>'
+        + renderEvalItems(sid, items, 3)
         + '</div>';
     }).join('');
-    if (el) el.innerHTML = html;
-  }).catch(function(e) {
+
+    if (el) el.innerHTML = html || '<div style="font-size:13px;color:var(--text3);padding:8px">記録がありません</div>';
+  })
+  .catch(function(e) {
     if (el) el.innerHTML = '<div style="font-size:12px;color:var(--red);padding:8px">読み込みエラー: ' + e.message + '</div>';
   });
+}
+
+function renderEvalItems(sid, items, showCount) {
+  var modeMap = {reading:'音読', shadowing:'シャドーイング'};
+  var gb = function(s) { return s >= 85 ? '🥇' : s >= 70 ? '🥈' : '🥉'; };
+  var visible = items.slice(0, showCount);
+  var html = visible.map(function(r, i) {
+    var uid = sid + '-' + i;
+    var modeLabel = modeMap[r.mode] || r.mode;
+    var passLabel = r.passed ? '<span style="color:var(--green);font-size:11px">✅クリア</span>' : '<span style="color:var(--text3);font-size:11px">練習中</span>';
+    var header = '<div class="eval-item-hd" onclick="toggleEvalDetail(\'' + uid + '\')">'
+      + '<span class="hmode ' + (r.mode === 'reading' ? 'hm-r' : 'hm-s') + '">' + modeLabel + '</span>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:14px;font-weight:700">' + r.score + '点 ' + gb(r.score) + (r.scoreLabel ? ' · ' + r.scoreLabel : '') + ' ' + passLabel + '</div>'
+      + '<div style="font-size:11px;color:var(--text2)">' + (r.date || '') + ' ' + (r.time || '') + '</div>'
+      + '</div>'
+      + '<span style="font-size:12px;color:var(--text3)" id="eval-arr-' + uid + '">▼</span>'
+      + '</div>';
+    var detail = '<div id="eval-det-' + uid + '" style="display:none;padding:0 12px 12px">';
+    if (r.recordingUrl) {
+      detail += '<div style="margin-bottom:8px"><div style="font-size:11px;color:var(--text2);margin-bottom:3px">🎧 録音</div><audio controls style="width:100%;height:36px" src="' + r.recordingUrl + '"></audio></div>';
+    }
+    if (r.strengths && r.strengths.length > 0) {
+      detail += '<div style="font-size:12px;color:var(--green);margin-bottom:4px">✅ ' + r.strengths.join('<br>✅ ') + '</div>';
+    }
+    if (r.improvements && r.improvements.length > 0) {
+      detail += '<div style="font-size:12px;color:var(--amber);margin-bottom:4px">💡 ' + r.improvements.join('<br>💡 ') + '</div>';
+    }
+    if (r.nextStepAdvice) {
+      detail += '<div style="font-size:12px;color:var(--text2);padding:6px 8px;background:var(--bg3);border-radius:6px">📌 ' + r.nextStepAdvice + '</div>';
+    }
+    if (r.memo) {
+      detail += '<div style="font-size:12px;color:var(--text2);margin-top:4px">📝 ' + escHtml(r.memo) + '</div>';
+    }
+    detail += '</div>';
+    return '<div class="eval-item">' + header + detail + '</div>';
+  }).join('');
+
+  if (items.length > showCount) {
+    html += '<button class="btn btn-secondary btn-sm" style="margin-top:6px;width:100%" onclick="showMoreEvals(\'' + sid + '\',' + items.length + ')">'
+      + 'もっと見る（残り' + (items.length - showCount) + '件）</button>';
+  }
+  return html;
+}
+
+function toggleEvalDetail(uid) {
+  var det = document.getElementById('eval-det-' + uid);
+  var arr = document.getElementById('eval-arr-' + uid);
+  if (!det) return;
+  var open = det.style.display !== 'none';
+  det.style.display = open ? 'none' : '';
+  if (arr) arr.textContent = open ? '▼' : '▲';
+}
+
+function showMoreEvals(sid, total) {
+  evalExpandCount[sid] = total;
+  loadPastEvaluations();
 }
 
 // ============================================================
