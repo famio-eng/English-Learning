@@ -1482,8 +1482,13 @@ function renderEvalItems(sid, items, showCount) {
     if (r.memo) {
       detail += '<div style="font-size:12px;color:var(--text2);margin-top:4px">📝 ' + escHtml(r.memo) + '</div>';
     }
-    if (!r.recordingUrl && !r.strengths && !r.improvements && !r.nextStepAdvice && !r.memo) {
-      detail += '<div style="font-size:12px;color:var(--text3)">詳細データなし</div>';
+    var hasAI = (r.strengths && r.strengths.length > 0) || (r.improvements && r.improvements.length > 0) || r.nextStepAdvice;
+    if (!hasAI) {
+      if (!r.recordingUrl && !r.memo) {
+        detail += '<div style="font-size:12px;color:var(--text3)">詳細データなし</div>';
+      } else {
+        detail += '<div style="font-size:12px;color:var(--text3);margin-top:4px">AIフィードバックなし</div>';
+      }
     }
     detail += '</div>';
     return '<div class="eval-item">' + header + detail + '</div>';
