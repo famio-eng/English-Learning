@@ -430,6 +430,7 @@ function loadVocab() {
           lastMissed:  p.lastMissed  || w.lastMissed || ''};
       });
       showToast('✓ ' + words.length + '単語を読み込みました', true);
+      if (GH_TOKEN && getDue().length === 0) markDailyTask('vocab');
       renderTab(currentTab);
     })
     .catch(function(){
@@ -824,7 +825,7 @@ function renderFinish() {
   var reviewCount = getDue().length;
   recordDailyStat(sOk, sTotal);
   if (GH_TOKEN) saveStatsToGitHub();
-  if (GH_TOKEN) markDailyTask('vocab');
+  if (GH_TOKEN && studyMode === 'review') markDailyTask('vocab');
   document.getElementById('content').innerHTML =
     '<div class="finish">'
     + '<div class="finish-icon">🎉</div>'

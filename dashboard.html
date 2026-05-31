@@ -31,6 +31,7 @@ a { color: inherit; text-decoration: none; }
 /* Task items */
 .task-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
 .task-item:last-child { border: none; }
+.task-item-muted { opacity: 0.5; }
 .task-check { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
 .task-check.manual { cursor: pointer; }
 .task-check.checked { background: var(--accent); border-color: var(--accent); }
@@ -316,6 +317,7 @@ var MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','
 var todayStr = new Date().toISOString().split('T')[0];
 var dailyTaskState = {};   // today's task completion  {key: bool}
 var dailyTaskData  = {};   // all days {dateStr: {key: bool, memo: str}}
+var vocabDueCount  = null; // null=未取得, 0+=件数
 
 // ============================================================
 // INIT
@@ -329,6 +331,7 @@ var dailyTaskData  = {};   // all days {dateStr: {key: bool, memo: str}}
   renderWeekAchievement();
   updateQuickLinks();
   updatePhase(now);
+  loadVocabDueCount();
   if (GH_TOKEN) {
     loadDashboardData(now);
     loadDailyTasks();
@@ -351,6 +354,7 @@ function renderTodayCard(day) {
   // Checkboxes
   var tasksHtml = tasksDef.map(function(task) {
     var done = !!dailyTaskState[task.key];
+    var isVocabNoReview = task.key === 'vocab' && vocabDueCount === 0;
     var checkCls = done
       ? (task.auto ? 'task-check checked-auto' : 'task-check checked')
       : 'task-check' + (task.auto ? '' : ' manual');
@@ -361,9 +365,16 @@ function renderTodayCard(day) {
       ? '<i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3"></i>'
       : '';
     var onclick = task.auto ? '' : ' onclick="toggleTask(\'' + task.key + '\')"';
-    return '<div class="task-item">'
+    var label = task.label;
+    if (task.key === 'vocab' && vocabDueCount !== null) {
+      label = vocabDueCount === 0
+        ? '単語復習（今日は復習なし）'
+        : '単語復習（残り' + vocabDueCount + '件）';
+    }
+    var itemCls = 'task-item' + (isVocabNoReview ? ' task-item-muted' : '');
+    return '<div class="' + itemCls + '">'
       + '<div class="' + checkCls + '"' + onclick + '>' + checkIcon + '</div>'
-      + '<span class="' + textCls + '">' + escHtml(task.label) + '</span>'
+      + '<span class="' + textCls + '">' + escHtml(label) + '</span>'
       + '<span class="' + badgeCls + '">' + badgeTxt + '</span>'
       + '</div>';
   }).join('');
@@ -621,6 +632,24 @@ function apiGet(path) {
   return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
     headers: {'Authorization': 'Bearer ' + GH_TOKEN}
   }).then(function(r) { return r.ok ? r.json() : null; });
+}
+
+function loadVocabDueCount() {
+  var today = new Date().toISOString().split('T')[0];
+  var rawUrl = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/data/vocab.json';
+  fetch(rawUrl + '?t=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var progress = {};
+      try { progress = JSON.parse(localStorage.getItem('vocab_progress_v2') || '{}'); } catch(e) {}
+      vocabDueCount = (data.words || []).filter(function(w) {
+        var nr = (progress[w.id] && progress[w.id].nextReview) || w.nextReview || today;
+        return nr <= today;
+      }).length;
+      renderTodayCard(new Date().getDay());
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    })
+    .catch(function() {});
 }
 
 function decodeB64(b64) {
