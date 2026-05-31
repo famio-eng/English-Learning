@@ -1,0 +1,24 @@
+{
+  "date": "2026-05-31",
+  "time": "16:08",
+  "scriptId": "sop-status-report",
+  "scriptTitle": "SOP対応課題の状況報告",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 65,
+  "scoreLabel": "平均的",
+  "passed": false,
+  "strengths": [
+    "「European」や「Declaration」、「Conformity」のような長い単語の音節ごとの発音と強勢が正確でした。",
+    "「project」や「decision」の単語内の強勢も正しく置かれていました。",
+    "全体的に明瞭で、聞き取りやすかったです。"
+  ],
+  "improvements": [
+    "our: 「アワー」のように、もう少しはっきりと発音しましょう。",
+    "reached an: 「reached」と「an」のように、子音で終わる単語と母音で始まる単語を滑らかにつなげて発音する練習をしましょう。",
+    "文全体の区切りが少し多いため、フレーズごとに息継ぎを意識し、より滑らかな流れで話すことを意識しましょう。"
+  ],
+  "nextStepAdvice": "単語を一つずつ区切るのではなく、フレーズとして滑らかに発音する「リンキング（音の連結）」を意識して練習しましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-31-16-07-sop-status-report-shadowing.m4a"
+}
