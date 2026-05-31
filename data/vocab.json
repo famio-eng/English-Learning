@@ -20,10 +20,10 @@
         "electrosurgical unit (ESU)",
         "RF energy output"
       ],
-      "interval": 13.629440000000002,
-      "nextReview": "2026-06-10",
-      "reviewCount": 4,
-      "streak": 4,
+      "interval": 23.987814400000005,
+      "nextReview": "2026-06-24",
+      "reviewCount": 5,
+      "streak": 5,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -47,10 +47,10 @@
         "endoscopic procedure",
         "endoscopic device"
       ],
-      "interval": 13.629440000000002,
-      "nextReview": "2026-06-10",
-      "reviewCount": 4,
-      "streak": 4,
+      "interval": 23.987814400000005,
+      "nextReview": "2026-06-24",
+      "reviewCount": 5,
+      "streak": 5,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -75,10 +75,10 @@
         "regulatory submission",
         "FDA clearance"
       ],
-      "interval": 1.4868480000000004,
-      "nextReview": "2026-05-29",
-      "reviewCount": 6,
-      "streak": 0,
+      "interval": 2.616852480000001,
+      "nextReview": "2026-06-03",
+      "reviewCount": 7,
+      "streak": 1,
       "missCount": 1,
       "lastMissed": "2026-05-27"
     },
@@ -102,10 +102,10 @@
         "hold a PMP certification",
         "certified project manager"
       ],
-      "interval": 13.629440000000002,
-      "nextReview": "2026-06-10",
-      "reviewCount": 4,
-      "streak": 4,
+      "interval": 23.987814400000005,
+      "nextReview": "2026-06-24",
+      "reviewCount": 5,
+      "streak": 5,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -133,10 +133,10 @@
         "drive results",
         "drive change"
       ],
-      "interval": 1.0137600000000002,
-      "nextReview": "2026-05-28",
-      "reviewCount": 4,
-      "streak": 0,
+      "interval": 1.7842176000000007,
+      "nextReview": "2026-06-02",
+      "reviewCount": 5,
+      "streak": 1,
       "missCount": 2,
       "lastMissed": "2026-05-27"
     },
@@ -160,10 +160,10 @@
         "new to the role",
         "new to the team"
       ],
-      "interval": 2.2,
-      "nextReview": "2026-05-30",
-      "reviewCount": 4,
-      "streak": 2,
+      "interval": 4.840000000000001,
+      "nextReview": "2026-06-05",
+      "reviewCount": 5,
+      "streak": 3,
       "missCount": 1,
       "lastMissed": "2026-05-26"
     },
@@ -191,10 +191,10 @@
         "application process",
         "regulatory submission"
       ],
-      "interval": 1.0137600000000002,
-      "nextReview": "2026-05-28",
-      "reviewCount": 4,
-      "streak": 0,
+      "interval": 1.7842176000000007,
+      "nextReview": "2026-06-02",
+      "reviewCount": 5,
+      "streak": 1,
       "missCount": 2,
       "lastMissed": "2026-05-27"
     },
@@ -624,11 +624,11 @@
         "issue a Declaration of Conformity",
         "European Declaration of Conformity"
       ],
-      "interval": 0.48,
+      "interval": 0.2304,
       "nextReview": "2026-05-31",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 2,
       "lastMissed": "2026-05-31"
     },
     {
@@ -652,10 +652,10 @@
         "meet the exclusion criteria",
         "outlined in the SOP"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-31",
-      "reviewCount": 1,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-06-01",
+      "reviewCount": 2,
+      "streak": 1,
       "missCount": 1,
       "lastMissed": "2026-05-31"
     },
@@ -678,10 +678,10 @@
         "proceed in parallel with",
         "work in parallel"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-02",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-03",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -704,10 +704,10 @@
         "estimate the scope of work",
         "scope of effort"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-02",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-03",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -733,11 +733,11 @@
         "incorporate requirements",
         "incorporate changes into"
       ],
-      "interval": 0.48,
+      "interval": 0.2304,
       "nextReview": "2026-05-31",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 2,
       "lastMissed": "2026-05-31"
     },
     {
@@ -759,10 +759,10 @@
         "addressed in the sustaining phase",
         "post-launch sustaining"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-02",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-03",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -785,10 +785,10 @@
         "prepare the test protocol",
         "review the test protocol"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-02",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-03",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -811,10 +811,10 @@
         "Please feel free to ask",
         "Please feel free to contact me"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-31",
-      "reviewCount": 1,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-06-01",
+      "reviewCount": 2,
+      "streak": 1,
       "missCount": 1,
       "lastMissed": "2026-05-31"
     }
