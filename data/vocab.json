@@ -733,10 +733,10 @@
         "incorporate requirements",
         "incorporate changes into"
       ],
-      "interval": 0.11059200000000001,
-      "nextReview": "2026-05-31",
-      "reviewCount": 3,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-06-01",
+      "reviewCount": 4,
+      "streak": 1,
       "missCount": 3,
       "lastMissed": "2026-05-31"
     },
