@@ -16,5 +16,10 @@
       "readCleared": true,
       "shadCleared": true
     }
-  }
+  },
+  "vocabSelectedScripts": [
+    "short",
+    "formal",
+    "sop-status-report"
+  ]
 }
