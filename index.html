@@ -865,6 +865,10 @@ function autoSaveRecording(mode) {
     }).then(function(r) {
       if (r.ok) {
         lastSavedRecUrl = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/recordings/' + fname;
+        // backfill savedRecUrl into the most recent history item (race-condition fix)
+        if (practiceHistory.length > 0 && !practiceHistory[0].savedRecUrl) {
+          practiceHistory[0].savedRecUrl = lastSavedRecUrl;
+        }
         showToast('🎙 録音を保存しました', true);
       }
     }).catch(function() {}); // サイレント失敗（評価に影響させない）
@@ -1026,7 +1030,6 @@ function doSpeak() {
     if (pf) pf.style.width = '100%';
     clearInterval(iv);
     setSt('', '終了');
-    if (isRec) stopRec();
     if (repeat) setTimeout(doSpeak, 800);
   };
   u.onerror = function() { playing = false; paused = false; updateBtn(); clearInterval(iv); };
@@ -1283,6 +1286,7 @@ function saveRecord() {
       scriptId: h.scriptId || '',
       scriptTitle: h.scriptTitle || h.title || '',
       mode: h.mode,
+      rate: h.rate || null,
       score: h.score,
       scoreLabel: h.scoreLabel || '',
       passed: h.passed || false,
@@ -1358,7 +1362,8 @@ function loadPastEvaluations() {
       .then(function(d) {
         if (!d || !d.content) return null;
         try {
-          var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
+          var raw = atob(d.content.replace(/\n/g, ''));
+          var obj = JSON.parse(decodeURIComponent(escape(raw)));
           obj._filename = f.name;
           obj._type = 'json';
           return obj;
@@ -1486,6 +1491,14 @@ function renderEvalItems(sid, items, showCount) {
     if (!hasAI) {
       if (!r.recordingUrl && !r.memo) {
         detail += '<div style="font-size:12px;color:var(--text3)">詳細データなし</div>';
+      } else if (r.recordingUrl) {
+        var reEvalBtnId = 'reeval-' + uid;
+        detail += '<div style="margin-top:6px;display:flex;align-items:center;gap:8px">'
+          + '<span style="font-size:12px;color:var(--text3)">AIフィードバックなし</span>'
+          + '<button id="' + reEvalBtnId + '" class="btn btn-secondary btn-sm"'
+          + ' onclick="reEvalRecord(\'' + escHtml(r._filename) + '\',\'' + escHtml(r.scriptId||'') + '\',\'' + escHtml(r.mode||'') + '\',\'' + escHtml(r.recordingUrl) + '\',\'' + reEvalBtnId + '\')">'
+          + '🔄 再評価</button>'
+          + '</div>';
       } else {
         detail += '<div style="font-size:12px;color:var(--text3);margin-top:4px">AIフィードバックなし</div>';
       }
@@ -1514,6 +1527,79 @@ function toggleEvalDetail(uid) {
 function showMoreEvals(sid, total) {
   evalExpandCount[sid] = total;
   loadPastEvaluations();
+}
+
+function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
+  if (!GH_TOKEN) { showToast('URLにgh=トークンが必要です', false); return; }
+  if (!GEM_KEY) { showToast('URLにk=Geminiキーが必要です', false); return; }
+  var btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.textContent = '評価中...'; }
+
+  var scriptObj = null;
+  for (var i = 0; i < SCRIPTS.length; i++) {
+    if (SCRIPTS[i].id === scriptId) { scriptObj = SCRIPTS[i]; break; }
+  }
+  var scriptText = scriptObj ? scriptObj.raw.substring(0, 300) : '';
+
+  fetch(recordingUrl)
+    .then(function(r) { return r.blob(); })
+    .then(function(blob) {
+      return new Promise(function(resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function() { resolve({b64: reader.result.split(',')[1], mtype: blob.type || 'audio/mp4'}); };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    })
+    .then(function(audio) {
+      var payload = {
+        contents: [{parts: [
+          {text: 'You are an English pronunciation coach for a Japanese business professional.\nEvaluate this audio recording. Mode: ' + recMode + '.\nTarget script: "' + scriptText + '"\n\nScore based on:\n- Pronunciation accuracy\n- Natural rhythm and stress\n- Fluency and pacing\n- Clarity\n\nReturn ONLY valid JSON, no markdown:\n{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n- score: 0-100 based on actual performance\n- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n- Write ALL values in Japanese\n- Reference specific words from the script in feedback\n- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress). Example: "European: eu-RO-pe-an。ROに強勢。"\n- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n- Never write comparisons like "AではなくA" where both sides are identical'},
+          {inline_data: {mime_type: audio.mtype, data: audio.b64}}
+        ]}],
+        generationConfig: {temperature: 0.3}
+      };
+      return fetch(GEM_URL + '?key=' + GEM_KEY, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.error) throw new Error('Gemini: ' + data.error.message);
+      var txt = ((data.candidates || [])[0] || {content:{parts:[{text:''}]}}).content.parts[0].text || '';
+      var clean = txt.replace(/```json|```/g, '').trim();
+      var result;
+      try { result = JSON.parse(clean); }
+      catch(e) { result = {strengths:['練習継続中'], improvements:['引き続き練習しましょう'], nextStepAdvice:'もう少し練習してから進みましょう', scoreLabel:''}; }
+
+      var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/records/' + filename;
+      return fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+        .then(function(r) { return r.json(); })
+        .then(function(existing) {
+          var raw = atob(existing.content.replace(/\n/g, ''));
+          var obj = JSON.parse(decodeURIComponent(escape(raw)));
+          obj.strengths = result.strengths || [];
+          obj.improvements = result.improvements || [];
+          obj.nextStepAdvice = result.nextStepAdvice || '';
+          if (result.scoreLabel) obj.scoreLabel = result.scoreLabel;
+          var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
+          return fetch(apiUrl, {
+            method: 'PUT',
+            headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+            body: JSON.stringify({message: '🤖 再評価: ' + filename, content: encoded, sha: existing.sha})
+          });
+        });
+    })
+    .then(function(r) {
+      if (r && r.ok) { showToast('✓ 再評価完了', true); loadPastEvaluations(); }
+      else { showToast('保存エラー', false); if (btn) { btn.disabled = false; btn.textContent = '🔄 再評価'; } }
+    })
+    .catch(function(e) {
+      showToast('エラー: ' + (e.message || '不明'), false);
+      if (btn) { btn.disabled = false; btn.textContent = '🔄 再評価'; }
+    });
 }
 
 // ============================================================
