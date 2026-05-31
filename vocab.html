@@ -180,7 +180,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 <div class="app">
   <div class="header">
     <div class="topbar">
-      <div class="app-title">📚 単語帳</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <a id="backToDash" href="./dashboard.html" style="display:flex;align-items:center;gap:4px;font-size:13px;color:var(--text2);text-decoration:none">
+          <i data-lucide="arrow-left" style="width:14px;height:14px"></i> ダッシュボード
+        </a>
+        <div class="app-title">単語帳</div>
+      </div>
       <div class="header-actions">
         <button class="btn btn-secondary" id="ghSaveBtn" onclick="saveToGitHub()" style="display:none" title="GitHubに保存">💾</button>
         <button class="btn btn-secondary" onclick="loadVocab()" title="再読み込み">🔄</button>
@@ -1060,8 +1065,21 @@ if (GH_TOKEN) {
   var b = document.getElementById('ghSaveBtn');
   if (b) b.style.display = '';
 }
+
+// ダッシュボードリンクにパラメータ付与
+(function() {
+  var a = document.getElementById('backToDash');
+  if (a) {
+    var params = [];
+    if (GH_TOKEN) params.push('gh=' + GH_TOKEN);
+    if (params.length) a.href = './dashboard.html?' + params.join('&');
+  }
+})();
+
 loadVocab();
 if (GH_TOKEN) loadSharedProgress();
 </script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>if(typeof lucide !== 'undefined') lucide.createIcons();</script>
 </body>
 </html>
