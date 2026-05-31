@@ -1,0 +1,26 @@
+{
+  "date": "2026-05-31",
+  "time": "16:05",
+  "scriptId": "sop-status-report",
+  "scriptTitle": "SOP対応課題の状況報告",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 58,
+  "scoreLabel": "平均的",
+  "passed": false,
+  "strengths": [
+    "「our project」は明瞭に発音されていました。",
+    "「decision」は正しい強勢と発音でした。",
+    "「without waiting」は自然な流れで発音されていました。"
+  ],
+  "improvements": [
+    "Recently: RE-cent-ly。最初のREに強勢を置き、よりはっきりと発音しましょう。",
+    "European: eu-RO-pe-an。ROに強勢を置き、ROの部分を強調してください。",
+    "Declaration: de-cla-RA-tion。RAに強勢を置き、RAの部分を強調してください。また、'r'の音をより明確に発音しましょう。",
+    "Conformity: con-FOR-mi-ty。FORに強勢を置き、FORの部分を強調してください。また、'r'の音をより明確に発音しましょう。",
+    "process (名詞): PRO-cess。最初のPROに強勢を置き、PROの部分を強調してください。"
+  ],
+  "nextStepAdvice": "多音節の単語の強勢（ストレス）の位置を意識して発音練習をしましょう。特に、「European」、「Declaration」、「Conformity」のような長い単語に注意してください。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-31-16-05-sop-status-report-shadowing.m4a"
+}
