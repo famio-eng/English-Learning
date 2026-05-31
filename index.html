@@ -1415,15 +1415,14 @@ function loadPastEvaluations() {
       groups[sid].push(r);
     });
 
-    evalExpandCount = {};
     var html = groupOrder.map(function(sid) {
       var items = groups[sid];
       var title = SCRIPT_TITLES_IDX[sid] || (items.find(function(x){ return x.scriptTitle; }) || {}).scriptTitle || '旧記録';
-      evalExpandCount[sid] = 3;
+      if (evalExpandCount[sid] === undefined) evalExpandCount[sid] = 3;
       return '<div class="eval-group" id="evg-' + sid + '">'
         + '<div class="eval-group-title">📁 ' + escHtml(title)
         + ' <span style="font-weight:400;font-size:12px">(' + items.length + '件)</span></div>'
-        + renderEvalItems(sid, items, 3)
+        + renderEvalItems(sid, items, evalExpandCount[sid])
         + '</div>';
     }).join('');
 
