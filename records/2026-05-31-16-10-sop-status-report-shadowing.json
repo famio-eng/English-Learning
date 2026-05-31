@@ -1,0 +1,24 @@
+{
+  "date": "2026-05-31",
+  "time": "16:10",
+  "scriptId": "sop-status-report",
+  "scriptTitle": "SOP対応課題の状況報告",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 95,
+  "scoreLabel": "素晴らしい",
+  "passed": true,
+  "strengths": [
+    "「European」「Declaration」「Conformity」など、難しい単語の強勢と発音が非常に正確でした。",
+    "全体的に流暢で、自然なペースとリズムを保っていました。",
+    "非常に明瞭な発音で、すべての単語が聞き取りやすかったです。"
+  ],
+  "improvements": [
+    "specifically: spe-CI-fi-cal-ly。CIに強勢を置き、'c'の音をよりクリアに発音しましょう。",
+    "management: MA-nage-ment。MAの母音をよりはっきりと発音し、強勢を強調しましょう。",
+    "approach: ap-PROACH。語尾の'ch'の音をよりシャープに発音しましょう。"
+  ],
+  "nextStepAdvice": "多音節語の主強勢を意識し、語尾の子音をはっきりと発音することに集中しましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-31-16-10-sop-status-report-shadowing.m4a"
+}
