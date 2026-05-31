@@ -556,11 +556,13 @@ function renderModeSelect() {
   // Script cards
   var scriptCards = ['short','casual','formal','sop-status-report'].map(function(sid){
     var cnt = words.filter(function(w){ return w.scriptId === sid; }).length;
+    if (cnt === 0) return '';
     var dueCnt = getDue().filter(function(w){ return w.scriptId === sid; }).length;
+    var sub = cnt + '件' + (dueCnt > 0 ? '（要復習 ' + dueCnt + '件）' : '');
     return '<div class="mode-card" onclick="selectMode(\'script-'+sid+'\')">'
       + '<div class="mode-card-icon">📄</div>'
       + '<div class="mode-card-title">'+(SCRIPT_TITLES[sid]||sid)+'</div>'
-      + '<div class="mode-card-sub">'+cnt+'単語'+(dueCnt>0?' · 要復習'+dueCnt+'件':'')+'</div>'
+      + '<div class="mode-card-sub">'+sub+'</div>'
       + '</div>';
   }).join('');
 
@@ -609,10 +611,10 @@ function renderModeSelect() {
     + '<div class="mode-grid">'
     + '<div class="mode-card" onclick="selectMode(\'all\')">'
     + '<div class="mode-card-icon">📚</div><div class="mode-card-title">全体</div>'
-    + '<div class="mode-card-sub">全'+getScriptPool().length+'単語</div></div>'
+    + '<div class="mode-card-sub">全'+getScriptPool().length+'件</div></div>'
     + '<div class="mode-card" onclick="selectMode(\'review\')">'
     + '<div class="mode-card-icon">🔥</div><div class="mode-card-title">要復習のみ</div>'
-    + '<div class="mode-card-sub">今日の期限'+dueCount+'件</div></div>'
+    + '<div class="mode-card-sub">今日の復習キュー '+dueCount+'件</div></div>'
     + '</div>'
     + scriptSelHtml
     + '</div>';
@@ -695,13 +697,18 @@ function renderCard() {
   var pct = Math.round(qIdx / total * 100);
   var rate = sTotal > 0 ? Math.round(sOk / sTotal * 100) : '-';
 
+  var remaining = total - qIdx;
   var progressHtml =
     '<div class="stats-row">'
-    + '<div class="stat-pill"><div class="stat-num">'+qIdx+'/'+total+'</div><div class="stat-lbl">進捗</div></div>'
     + '<div class="stat-pill"><div class="stat-num">'+(rate==='-'?'-':rate+'%')+'</div><div class="stat-lbl">正解率</div></div>'
     + '<div class="stat-pill"><div class="stat-num"><span class="streak-flame">🔥</span>'+sStreak+'</div><div class="stat-lbl">連続正解</div></div>'
     + '</div>'
-    + '<div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div></div>';
+    + '<div class="prog-wrap">'
+    + '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px">'
+    + '<span>'+total+'件中 '+qIdx+'件完了</span><span>残り '+remaining+'件</span>'
+    + '</div>'
+    + '<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div>'
+    + '</div>';
 
   // Card (compact back — no detail inside)
   var cardHtml = buildCardHtml(w, dir, flipped);
