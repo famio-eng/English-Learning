@@ -368,7 +368,8 @@ function renderTodayCard(day) {
     var label = task.label;
     if (task.key === 'vocab' && vocabDueCount !== null) {
       if (done) {
-        label = '単語復習（完了 ✓）';
+        var cnt = dailyTaskState.vocabDoneCount;
+        label = cnt > 0 ? '単語復習（' + cnt + '件完了 ✓）' : '単語復習（完了 ✓）';
       } else if (vocabDueCount === 0) {
         label = '単語復習（今日は復習なし）';
       } else {

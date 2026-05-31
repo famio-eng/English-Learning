@@ -285,7 +285,7 @@ function recordDailyStat(ok, total) {
   localStorage.setItem(STATS_KEY, JSON.stringify(stats));
 }
 
-function markDailyTask(taskKey) {
+function markDailyTask(taskKey, doneCount) {
   if (!GH_TOKEN) return;
   var today = new Date().toISOString().split('T')[0];
   var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
@@ -300,6 +300,9 @@ function markDailyTask(taskKey) {
       if (!obj.dailyTasks[today]) obj.dailyTasks[today] = {};
       if (obj.dailyTasks[today][taskKey]) return;
       obj.dailyTasks[today][taskKey] = true;
+      if (taskKey === 'vocab' && doneCount !== undefined) {
+        obj.dailyTasks[today].vocabDoneCount = doneCount;
+      }
       var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
       return fetch(apiUrl, {
         method: 'PUT',
@@ -430,7 +433,7 @@ function loadVocab() {
           lastMissed:  p.lastMissed  || w.lastMissed || ''};
       });
       showToast('✓ ' + words.length + '単語を読み込みました', true);
-      if (GH_TOKEN && getDue().length === 0) markDailyTask('vocab');
+      if (GH_TOKEN && getDue().length === 0) markDailyTask('vocab', 0);
       renderTab(currentTab);
     })
     .catch(function(){
@@ -832,7 +835,7 @@ function renderFinish() {
   var reviewCount = getDue().length;
   recordDailyStat(sOk, sTotal);
   if (GH_TOKEN) saveStatsToGitHub();
-  if (GH_TOKEN && studyMode === 'review') markDailyTask('vocab');
+  if (GH_TOKEN && studyMode === 'review') markDailyTask('vocab', queue.length);
   document.getElementById('content').innerHTML =
     '<div class="finish">'
     + '<div class="finish-icon">🎉</div>'
