@@ -5,11 +5,26 @@
   "scriptTitle": "自己紹介 ショート版",
   "mode": "reading",
   "score": 67,
-  "scoreLabel": null,
+  "scoreLabel": "改善の余地あり",
   "passed": true,
-  "strengths": null,
-  "improvements": null,
-  "nextStepAdvice": null,
+  "strengths": [
+    "「Hi, I'm Fami.」の導入は明瞭で聞き取りやすいです。",
+    "「company」や「years」といった基本的な単語は安定して発音できています。",
+    "「electrosurgical generator」のような長い専門用語も、途切れることなく最後まで読もうとする意欲が見られます。"
+  ],
+  "improvements": [
+    "with: wiTH (THは有声音の「ズ」に近い音)。舌を軽く噛んで発音しましょう。",
+    "relatively: RE-la-tiv-ly。特にRとLの区別、そしてVの音を意識しましょう。REに強勢。",
+    "development: de-VE-lop-ment。Vの音と、VEに強勢を置くことを意識しましょう。",
+    "project: PRO-ject (名詞の場合)。PRの音のつながりをスムーズに、PROに強勢。",
+    "electrosurgical: e-lec-tro-SUR-gi-cal。LとRの区別、そしてSURに強勢を置き、giは弱く発音しましょう。",
+    "generator: GE-ne-ra-tor。Gの音をはっきりと、GEに強勢。",
+    "endoscopic: en-do-SCO-pic。SCOに強勢を置き、pの音をしっかり発音しましょう。",
+    "surgery: SUR-ge-ry。Sの音をクリアに、SURに強勢。",
+    "文全体の抑揚が平坦になりがちです。重要な単語（例: new, leading, electrosurgical, exciting）を強調し、そうでない単語は軽く発音することで、より自然なリズムが生まれます。",
+    "単語と単語のつながりが少し途切れることがあります。「for about ten years」や「into this role」のように、前置詞と名詞、動詞と前置詞などを滑らかにつなげて発音すると、より流暢に聞こえます。"
+  ],
+  "nextStepAdvice": "「R」と「L」の音の区別、特に「relatively」や「electrosurgical」のような単語で意識して練習しましょう。",
   "memo": "",
   "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-25-16-38-reading.m4a"
 }
