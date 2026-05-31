@@ -7,49 +7,52 @@
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
 :root {
-  --bg: #1a1a1a;
-  --card: #242424;
-  --card2: #2a2a2a;
-  --border: #3a3a3a;
-  --accent: #7c6ff7;
-  --green: #22c55e;
-  --amber: #f59e0b;
-  --blue: #38bdf8;
-  --text: #f0f0f0;
-  --text2: #aaaaaa;
-  --text3: #666666;
+  --bg: #1a1a1a; --card: #242424; --card2: #2a2a2a; --border: #3a3a3a;
+  --accent: #7c6ff7; --green: #22c55e; --amber: #f59e0b; --blue: #38bdf8;
+  --text: #f0f0f0; --text2: #aaaaaa; --text3: #666666;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  font-size: 14px;
-  min-height: 100%;
-  overflow-y: auto;
-}
+html, body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; font-size: 14px; min-height: 100%; overflow-y: auto; }
 a { color: inherit; text-decoration: none; }
-.container { max-width: 540px; margin: 0 auto; padding: 0 14px 40px; }
-
+.container { max-width: 540px; margin: 0 auto; padding: 0 14px 48px; }
 /* Header */
 .header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 14px; }
 .app-name { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
 .app-sub { font-size: 13px; color: var(--text2); margin-top: 2px; font-weight: 600; }
 .streak-badge { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
-
 /* Cards */
 .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; box-shadow: 0 4px 24px rgba(0,0,0,.3); }
 .card-title { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
 .section { margin-bottom: 12px; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
 /* Today card */
-.today-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 10px; line-height: 1.4; }
-.task-list { list-style: none; margin-bottom: 14px; }
-.task-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text2); padding: 4px 0; font-weight: 600; }
-.task-list li::before { content: '✓'; color: var(--accent); font-weight: 800; flex-shrink: 0; }
-.today-btns { display: flex; flex-direction: column; gap: 8px; }
-
+.today-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 12px; line-height: 1.4; }
+.today-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+/* Task items */
+.task-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.task-item:last-child { border: none; }
+.task-check { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.task-check.manual { cursor: pointer; }
+.task-check.checked { background: var(--accent); border-color: var(--accent); }
+.task-check.checked-auto { background: var(--green); border-color: var(--green); }
+.task-text { flex: 1; font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.4; }
+.task-text.done { color: var(--text2); text-decoration: line-through; }
+.task-badge { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 5px; flex-shrink: 0; }
+.task-must { background: rgba(124,111,247,.2); color: var(--accent); }
+.task-opt { background: rgba(170,170,170,.1); color: var(--text2); }
+/* Week achievement */
+.week-achv { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.week-label { font-size: 11px; font-weight: 700; color: var(--text2); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+.week-legend { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+.week-days { display: flex; gap: 3px; }
+.week-day { flex: 1; text-align: center; }
+.week-day-name { font-size: 11px; color: var(--text2); font-weight: 700; margin-bottom: 3px; }
+.week-day-icon { font-size: 17px; font-weight: 700; line-height: 1; }
+/* Badges */
+.badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px; }
+.badge-recovery { background: rgba(34,197,94,.15); color: var(--green); border: 1px solid rgba(34,197,94,.3); }
+.badge-streak { background: rgba(245,158,11,.15); color: var(--amber); border: 1px solid rgba(245,158,11,.3); }
 /* Buttons */
 .btn { padding: 13px 16px; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; transition: opacity .15s; width: 100%; min-height: 48px; }
 .btn:active { opacity: .75; }
@@ -58,46 +61,53 @@ a { color: inherit; text-decoration: none; }
 .btn-green { background: var(--green); color: #fff; }
 .btn-blue { background: var(--blue); color: #0f172a; }
 .btn-amber { background: var(--amber); color: #0f172a; }
-
-/* Donut chart */
+/* Donut */
 .donut-wrap { display: flex; flex-direction: column; align-items: center; }
 .donut-label { font-size: 12px; font-weight: 700; color: var(--text2); margin-top: 6px; text-align: center; }
-
 /* Stat big */
 .stat-big { font-size: 44px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
 .stat-unit { font-size: 16px; font-weight: 700; color: var(--text2); }
 .stat-sub { font-size: 12px; font-weight: 600; color: var(--text2); margin-top: 6px; }
-
-/* Phase progress */
+/* Phase */
 .phase-name { font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
 .phase-desc { font-size: 13px; color: var(--text2); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
 .prog-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
 .prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--blue)); border-radius: 4px; transition: width .6s; }
 .prog-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); font-weight: 600; }
-
 /* Quick links */
 .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .quick-btn { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: border-color .15s; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,.3); }
 .quick-btn:active { border-color: var(--accent); opacity: .8; }
 .quick-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
 .quick-label { font-size: 13px; font-weight: 800; color: var(--text); }
-
-/* Recent records */
+/* Recent */
 .rec-item { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); }
 .rec-item:last-child { border: none; padding-bottom: 0; }
 .rec-mode { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; color: #fff; flex-shrink: 0; }
-.rm-r { background: var(--green); }
-.rm-s { background: var(--accent); }
+.rm-r { background: var(--green); } .rm-s { background: var(--accent); }
 .rec-info { flex: 1; min-width: 0; }
 .rec-script { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rec-date { font-size: 12px; color: var(--text2); font-weight: 600; margin-top: 2px; }
 .rec-score { font-size: 18px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
 .see-all { display: block; text-align: center; font-size: 13px; font-weight: 700; color: var(--accent); margin-top: 12px; }
-
-/* No-token notice */
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.hidden { display: none; }
+.modal { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 22px; max-width: 340px; width: 100%; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+.modal-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+.modal-sub { font-size: 13px; color: var(--text2); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+.modal-textarea { width: 100%; background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; color: var(--text); font-size: 14px; font-family: inherit; resize: none; outline: none; min-height: 80px; }
+.modal-btns { display: flex; gap: 8px; margin-top: 12px; }
+.modal-btn { flex: 1; padding: 11px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: opacity .15s; }
+.modal-btn:active { opacity: .75; }
+.modal-btn-primary { background: var(--accent); color: #fff; }
+.modal-btn-secondary { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+/* Toast */
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 10px 20px; font-size: 14px; font-weight: 700; white-space: nowrap; z-index: 200; opacity: 0; transition: opacity .25s; pointer-events: none; max-width: 90vw; text-align: center; }
+.toast.show { opacity: 1; }
+.toast.ok { border-color: var(--green); color: var(--green); }
+/* Misc */
 .no-token { font-size: 13px; color: var(--text2); font-weight: 600; padding: 8px 0; }
-
-/* Spinner */
 .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
@@ -118,8 +128,10 @@ a { color: inherit; text-decoration: none; }
   <div class="section card" id="todayCard">
     <div class="card-title" style="color:#a89ff7">TODAY</div>
     <div class="today-title" id="todayTitle">読み込み中...</div>
-    <ul class="task-list" id="todayTasks"></ul>
+    <div id="todayTasks"></div>
+    <div id="badgeArea"></div>
     <div class="today-btns" id="todayBtns"></div>
+    <div class="week-achv" id="weekAchv"></div>
   </div>
 
   <!-- Progress 2x2 -->
@@ -170,7 +182,7 @@ a { color: inherit; text-decoration: none; }
 
   <!-- Phase card -->
   <div class="section card" id="phaseCard">
-    <div class="card-title">📅 現在のフェーズ</div>
+    <div class="card-title">現在のフェーズ</div>
     <div class="phase-name">Phase 1 — 基盤づくり</div>
     <div class="phase-desc" id="phasePeriod">〜7月末（2026-07-31まで）</div>
     <div class="prog-bar"><div class="prog-fill" id="phaseBar" style="width:0%"></div></div>
@@ -206,7 +218,7 @@ a { color: inherit; text-decoration: none; }
       </a>
       <a id="ql-rec" href="./shadowing.html" class="quick-btn">
         <div class="quick-icon" style="background:rgba(245,158,11,.15)">
-          <i data-lucide="archive" style="width:22px;height:22px;color:var(--amber)"></i>
+          <i data-lucide="bar-chart-2" style="width:22px;height:22px;color:var(--amber)"></i>
         </div>
         <div class="quick-label">記録を見る</div>
       </a>
@@ -215,12 +227,28 @@ a { color: inherit; text-decoration: none; }
 
   <!-- Recent records -->
   <div class="section card" id="recentCard">
-    <div class="card-title">📋 直近の練習記録</div>
+    <div class="card-title">直近の練習記録</div>
     <div id="recentList"><div class="spinner"></div></div>
     <a id="seeAllLink" href="./shadowing.html" class="see-all" style="display:none">すべて見る →</a>
   </div>
 
 </div>
+
+<!-- Yesterday modal -->
+<div class="modal-overlay hidden" id="yesterdayModal">
+  <div class="modal">
+    <div class="modal-title">昨日はどうでしたか？</div>
+    <div class="modal-sub">昨日（<span id="yesterdayDate"></span>）に未完了のタスクがありました。一言メモを残しておきますか？</div>
+    <textarea class="modal-textarea" id="yesterdayMemo" placeholder="例: 会議が長引いて時間が取れなかった" rows="3"></textarea>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-secondary" onclick="closeYesterdayModal(false)">スキップ</button>
+      <button class="modal-btn modal-btn-primary" onclick="closeYesterdayModal(true)">保存して閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="dashToast"></div>
 
 <script>
 // ============================================================
@@ -240,55 +268,54 @@ function makeLink(base) {
   return base + (params.length ? '?' + params.join('&') : '');
 }
 
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 // ============================================================
-// DAILY PLAN
+// DAILY PLAN (buttons) + DAILY TASKS (checkboxes with priority)
 // ============================================================
 var DAILY_PLAN = {
-  0: {
-    title: '🗓 今日やること — シャドーイング＋単語復習',
-    tasks: ['シャドーイング 0.7倍速 3回通し', '単語復習（SM-2）'],
-    buttons: [
-      {label: 'シャドーイング', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'},
-      {label: '単語帳', target: './vocab.html', cls: 'btn-secondary', icon: 'book-open'}
-    ]
-  },
-  1: {
-    title: '🗓 今日やること — シャドーイング練習',
-    tasks: ['速度を段階的に上げながら録音', 'AI評価を受ける'],
-    buttons: [{label: 'シャドーイングを始める', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'}]
-  },
-  2: {
-    title: '🗓 今日やること — シャドーイング練習',
-    tasks: ['速度を段階的に上げながら録音', 'AI評価を受ける'],
-    buttons: [{label: 'シャドーイングを始める', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'}]
-  },
-  3: {
-    title: '🗓 今日やること — Pimsleur式対話練習',
-    tasks: ['日本語提示→3秒以内に英語で答える', 'フィードバックを確認する'],
-    buttons: [{label: '学習用チャットを開く', target: CLAUDE_CHAT, cls: 'btn-blue', icon: 'message-circle', noParam: true}]
-  },
-  4: {
-    title: '🗓 今日やること — Pimsleur式対話練習',
-    tasks: ['日本語提示→3秒以内に英語で答える', 'フィードバックを確認する'],
-    buttons: [{label: '学習用チャットを開く', target: CLAUDE_CHAT, cls: 'btn-blue', icon: 'message-circle', noParam: true}]
-  },
-  5: {
-    title: '🗓 今日やること — 単語復習',
-    tasks: ['SM-2に従った単語復習', 'Core Vocabulary優先'],
-    buttons: [{label: '単語帳を開く', target: './vocab.html', cls: 'btn-green', icon: 'book-open'}]
-  },
-  6: {
-    title: '🗓 今日やること — 振り返り＋スクリプト作成＋初回練習',
-    tasks: ['振り返り→スクリプト作成→初回練習', '単語初回学習'],
-    buttons: [
-      {label: '学習用チャットを開く', target: CLAUDE_CHAT, cls: 'btn-blue', icon: 'message-circle', noParam: true},
-      {label: 'シャドーイングを始める', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'}
-    ]
-  }
+  0: { title: '今日やること — シャドーイング＋単語復習',
+       buttons: [{label:'シャドーイング', target:'./shadowing.html', cls:'btn-primary', icon:'mic'},
+                 {label:'単語帳', target:'./vocab.html', cls:'btn-secondary', icon:'book-open'}] },
+  1: { title: '今日やること — シャドーイング練習',
+       buttons: [{label:'シャドーイングを始める', target:'./shadowing.html', cls:'btn-primary', icon:'mic'}] },
+  2: { title: '今日やること — シャドーイング練習',
+       buttons: [{label:'シャドーイングを始める', target:'./shadowing.html', cls:'btn-primary', icon:'mic'}] },
+  3: { title: '今日やること — Pimsleur式対話練習',
+       buttons: [{label:'学習用チャットを開く', target:CLAUDE_CHAT, cls:'btn-blue', icon:'message-circle', noParam:true}] },
+  4: { title: '今日やること — Pimsleur式対話練習',
+       buttons: [{label:'学習用チャットを開く', target:CLAUDE_CHAT, cls:'btn-blue', icon:'message-circle', noParam:true}] },
+  5: { title: '今日やること — 単語復習',
+       buttons: [{label:'単語帳を開く', target:'./vocab.html', cls:'btn-green', icon:'book-open'}] },
+  6: { title: '今日やること — 振り返り＋スクリプト作成＋初回練習',
+       buttons: [{label:'学習用チャットを開く', target:CLAUDE_CHAT, cls:'btn-blue', icon:'message-circle', noParam:true},
+                 {label:'シャドーイングを始める', target:'./shadowing.html', cls:'btn-primary', icon:'mic'}] }
 };
 
-var DAY_JA = ['日', '月', '火', '水', '木', '金', '土'];
+// key, label, priority('must'|'optional'), auto(true=自動反映, false=手動チェック)
+var DAILY_TASKS_DEF = {
+  0: [{key:'shadowing', label:'シャドーイング 0.7倍速 3回通し', priority:'must',     auto:true},
+      {key:'vocab',     label:'単語復習（SM-2）',                priority:'must',     auto:true}],
+  1: [{key:'shadowing', label:'速度を上げながら録音・AI評価',    priority:'must',     auto:true}],
+  2: [{key:'shadowing', label:'速度を上げながら録音・AI評価',    priority:'must',     auto:true}],
+  3: [{key:'dialogue',  label:'Pimsleur式対話練習（Claude）',    priority:'optional', auto:false}],
+  4: [{key:'dialogue',  label:'Pimsleur式対話練習（Claude）',    priority:'optional', auto:false}],
+  5: [{key:'vocab',     label:'SM-2に従った単語復習',             priority:'must',     auto:true}],
+  6: [{key:'dialogue',  label:'振り返り→スクリプト作成（Claude）', priority:'optional', auto:false},
+      {key:'shadowing', label:'初回シャドーイング練習',            priority:'must',     auto:true}]
+};
+
+var DAY_JA   = ['日','月','火','水','木','金','土'];
 var MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+// ============================================================
+// STATE
+// ============================================================
+var todayStr = new Date().toISOString().split('T')[0];
+var dailyTaskState = {};   // today's task completion  {key: bool}
+var dailyTaskData  = {};   // all days {dateStr: {key: bool, memo: str}}
 
 // ============================================================
 // INIT
@@ -296,21 +323,18 @@ var MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','
 (function init() {
   var now = new Date();
   var day = now.getDay();
-
-  // Date label
   document.getElementById('dateLabel').textContent =
     now.getFullYear() + '年' + MONTH_JA[now.getMonth()] + now.getDate() + '日（' + DAY_JA[day] + '）';
-
   renderTodayCard(day);
+  renderWeekAchievement();
   updateQuickLinks();
   updatePhase(now);
-
   if (GH_TOKEN) {
     loadDashboardData(now);
+    loadDailyTasks();
   } else {
     setNoToken();
   }
-
   if (typeof lucide !== 'undefined') lucide.createIcons();
 })();
 
@@ -319,22 +343,242 @@ var MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','
 // ============================================================
 function renderTodayCard(day) {
   var plan = DAILY_PLAN[day];
+  var tasksDef = DAILY_TASKS_DEF[day] || [];
   if (!plan) return;
+
   document.getElementById('todayTitle').textContent = plan.title;
 
-  var tasksHtml = plan.tasks.map(function(t) {
-    return '<li>' + escHtml(t) + '</li>';
+  // Checkboxes
+  var tasksHtml = tasksDef.map(function(task) {
+    var done = !!dailyTaskState[task.key];
+    var checkCls = done
+      ? (task.auto ? 'task-check checked-auto' : 'task-check checked')
+      : 'task-check' + (task.auto ? '' : ' manual');
+    var textCls  = done ? 'task-text done' : 'task-text';
+    var badgeCls = task.priority === 'must' ? 'task-badge task-must' : 'task-badge task-opt';
+    var badgeTxt = task.priority === 'must' ? '必須' : 'できれば';
+    var checkIcon = done
+      ? '<i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3"></i>'
+      : '';
+    var onclick = task.auto ? '' : ' onclick="toggleTask(\'' + task.key + '\')"';
+    return '<div class="task-item">'
+      + '<div class="' + checkCls + '"' + onclick + '>' + checkIcon + '</div>'
+      + '<span class="' + textCls + '">' + escHtml(task.label) + '</span>'
+      + '<span class="' + badgeCls + '">' + badgeTxt + '</span>'
+      + '</div>';
   }).join('');
   document.getElementById('todayTasks').innerHTML = tasksHtml;
 
+  // Buttons
   var btnsHtml = plan.buttons.map(function(b) {
-    var href = b.noParam ? b.target : makeLink(b.target);
+    var href  = b.noParam ? b.target : makeLink(b.target);
     var extra = b.noParam ? ' target="_blank" rel="noopener"' : '';
     return '<a href="' + href + '"' + extra + ' class="btn ' + b.cls + '">'
       + '<i data-lucide="' + b.icon + '" style="width:18px;height:18px"></i>'
       + escHtml(b.label) + '</a>';
   }).join('');
   document.getElementById('todayBtns').innerHTML = btnsHtml;
+
+  renderBadges();
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function toggleTask(key) {
+  var done = !!dailyTaskState[key];
+  saveDailyTask(key, !done);
+}
+
+// ============================================================
+// WEEK ACHIEVEMENT
+// ============================================================
+function renderWeekAchievement() {
+  var el = document.getElementById('weekAchv');
+  if (!el) return;
+  var now = new Date();
+  var weekStart = getWeekStart(now);
+  var html = '';
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(weekStart);
+    d.setDate(d.getDate() + i);
+    var ds  = d.toISOString().split('T')[0];
+    var idx = d.getDay();
+    var tasks   = ds === todayStr ? dailyTaskState : (dailyTaskData[ds] || {});
+    var mustDef = (DAILY_TASKS_DEF[idx] || []).filter(function(t) { return t.priority === 'must'; });
+    var icon, color;
+    if (mustDef.length === 0) {
+      icon = '—'; color = 'var(--text3)';
+    } else if (d > now && ds !== todayStr) {
+      icon = '○'; color = 'var(--text3)';
+    } else {
+      var allDone = mustDef.every(function(t) { return tasks[t.key]; });
+      var anyDone = mustDef.some(function(t) { return tasks[t.key]; });
+      if (allDone)      { icon = '✓'; color = 'var(--green)'; }
+      else if (anyDone) { icon = '△'; color = 'var(--amber)'; }
+      else              { icon = '☐'; color = 'var(--text3)'; }
+    }
+    html += '<div class="week-day">'
+      + '<div class="week-day-name">' + DAY_JA[idx] + '</div>'
+      + '<div class="week-day-icon" style="color:' + color + '">' + icon + '</div>'
+      + '</div>';
+  }
+  el.innerHTML = '<div class="week-label">今週の達成状況</div>'
+    + '<div class="week-legend">✓ 全達成 &nbsp;△ 部分達成 &nbsp;☐ 未実施</div>'
+    + '<div class="week-days">' + html + '</div>';
+}
+
+// ============================================================
+// BADGES
+// ============================================================
+function renderBadges() {
+  var el = document.getElementById('badgeArea');
+  if (!el) return;
+  var badge = checkBadge();
+  if (!badge) { el.innerHTML = ''; return; }
+  var html;
+  if (badge === 'recovery') {
+    html = '<div class="badge-row"><span class="badge badge-recovery">'
+      + '<i data-lucide="zap" style="width:13px;height:13px"></i> リカバリー達成！</span></div>';
+  } else {
+    html = '<div class="badge-row"><span class="badge badge-streak">'
+      + '<i data-lucide="flame" style="width:13px;height:13px"></i> 3日連続達成中！</span></div>';
+  }
+  el.innerHTML = html;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function checkBadge() {
+  var now = new Date();
+  var todayDef = (DAILY_TASKS_DEF[now.getDay()] || []).filter(function(t) { return t.priority === 'must'; });
+  var todayAllDone = todayDef.length > 0 && todayDef.every(function(t) { return dailyTaskState[t.key]; });
+
+  if (todayAllDone) {
+    var yest = new Date(now); yest.setDate(yest.getDate() - 1);
+    var yStr = yest.toISOString().split('T')[0];
+    var yDef = (DAILY_TASKS_DEF[yest.getDay()] || []).filter(function(t) { return t.priority === 'must'; });
+    var yTasks = dailyTaskData[yStr] || {};
+    if (yDef.length > 0 && yDef.some(function(t) { return !yTasks[t.key]; })) return 'recovery';
+  }
+
+  var streakCount = 0;
+  for (var i = 0; i < 3; i++) {
+    var d = new Date(now); d.setDate(d.getDate() - i);
+    var ds = d.toISOString().split('T')[0];
+    var def = (DAILY_TASKS_DEF[d.getDay()] || []).filter(function(t) { return t.priority === 'must'; });
+    var tasks = ds === todayStr ? dailyTaskState : (dailyTaskData[ds] || {});
+    if (def.length > 0 && def.every(function(t) { return tasks[t.key]; })) streakCount++;
+    else break;
+  }
+  if (streakCount >= 3) return 'streak';
+  return null;
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showDashToast(msg, type) {
+  var el = document.getElementById('dashToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(showDashToast._t);
+  showDashToast._t = setTimeout(function() { el.className = 'toast'; }, 3000);
+}
+
+function checkTaskCompletion() {
+  var day = new Date().getDay();
+  var def = DAILY_TASKS_DEF[day] || [];
+  var mustDef = def.filter(function(t) { return t.priority === 'must'; });
+  var mustDone = mustDef.length > 0 && mustDef.every(function(t) { return dailyTaskState[t.key]; });
+  var allDone  = def.length  > 0 && def.every(function(t)  { return dailyTaskState[t.key]; });
+  if (allDone)       showDashToast('今日のタスク全完了！', 'ok');
+  else if (mustDone) showDashToast('今日の必須タスク完了！', 'ok');
+}
+
+// ============================================================
+// YESTERDAY MODAL
+// ============================================================
+function checkYesterdayModal(progressObj) {
+  var yest = new Date(); yest.setDate(yest.getDate() - 1);
+  var yStr = yest.toISOString().split('T')[0];
+  var yTasks = (progressObj.dailyTasks || {})[yStr] || {};
+  var yDef = (DAILY_TASKS_DEF[yest.getDay()] || []).filter(function(t) { return t.priority === 'must'; });
+  var anyIncomplete = yDef.length > 0 && yDef.some(function(t) { return !yTasks[t.key]; });
+  var lastShown = localStorage.getItem('yesterday-modal-shown');
+  if (anyIncomplete && lastShown !== todayStr) {
+    document.getElementById('yesterdayDate').textContent = yStr;
+    document.getElementById('yesterdayModal').classList.remove('hidden');
+  }
+}
+
+function closeYesterdayModal(saveMemo) {
+  localStorage.setItem('yesterday-modal-shown', todayStr);
+  if (saveMemo) {
+    var memo = document.getElementById('yesterdayMemo').value.trim();
+    if (memo && GH_TOKEN) {
+      var yest = new Date(); yest.setDate(yest.getDate() - 1);
+      var yStr = yest.toISOString().split('T')[0];
+      apiGet('data/progress.json').then(function(d) {
+        if (!d) return;
+        try {
+          var obj = JSON.parse(decodeB64(d.content));
+          if (!obj.dailyTasks) obj.dailyTasks = {};
+          if (!obj.dailyTasks[yStr]) obj.dailyTasks[yStr] = {};
+          obj.dailyTasks[yStr].memo = memo;
+          var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
+          fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/progress.json', {
+            method: 'PUT',
+            headers: {'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+            body: JSON.stringify({message: '📝 昨日のメモ: ' + yStr, content: encoded, sha: d.sha})
+          });
+        } catch(e) {}
+      });
+    }
+  }
+  document.getElementById('yesterdayModal').classList.add('hidden');
+}
+
+// ============================================================
+// LOAD & SAVE DAILY TASKS
+// ============================================================
+function loadDailyTasks() {
+  apiGet('data/progress.json').then(function(d) {
+    if (!d || !d.content) return;
+    try {
+      var obj = JSON.parse(decodeB64(d.content));
+      dailyTaskData  = obj.dailyTasks || {};
+      dailyTaskState = dailyTaskData[todayStr] || {};
+      checkYesterdayModal(obj);
+    } catch(e) {}
+    renderTodayCard(new Date().getDay());
+    renderWeekAchievement();
+    renderBadges();
+  }).catch(function() {});
+}
+
+function saveDailyTask(key, value) {
+  dailyTaskState[key] = value;
+  renderTodayCard(new Date().getDay());
+  renderWeekAchievement();
+  renderBadges();
+  checkTaskCompletion();
+  if (!GH_TOKEN) return;
+  clearTimeout(saveDailyTask._t);
+  saveDailyTask._t = setTimeout(function() {
+    apiGet('data/progress.json').then(function(d) {
+      if (!d) return;
+      try {
+        var obj = JSON.parse(decodeB64(d.content));
+        if (!obj.dailyTasks) obj.dailyTasks = {};
+        obj.dailyTasks[todayStr] = Object.assign({}, dailyTaskState);
+        var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
+        fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/progress.json', {
+          method: 'PUT',
+          headers: {'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+          body: JSON.stringify({message:'✅ タスク更新: '+key, content:encoded, sha:d.sha})
+        });
+      } catch(e) {}
+    });
+  }, 1000);
 }
 
 // ============================================================
@@ -342,11 +586,10 @@ function renderTodayCard(day) {
 // ============================================================
 function updateQuickLinks() {
   var shadLink = makeLink('./shadowing.html');
+  var sep = shadLink.indexOf('?') >= 0 ? '&' : '?';
   document.getElementById('ql-shad').href  = shadLink;
   document.getElementById('ql-vocab').href = makeLink('./vocab.html');
-  // progress link: append #progress (params already in shadLink)
-  var sep = shadLink.indexOf('?') >= 0 ? '&' : '?';
-  document.getElementById('ql-rec').href   = shadLink + sep + '_tab=progress#progress';
+  document.getElementById('ql-rec').href   = shadLink + sep + '_tab=progress';
   document.getElementById('seeAllLink').href = shadLink;
 }
 
@@ -354,12 +597,11 @@ function updateQuickLinks() {
 // PHASE PROGRESS
 // ============================================================
 function updatePhase(now) {
-  var start = new Date('2026-05-24');
-  var end   = new Date('2026-07-31');
-  var total = (end - start) / 86400000;
+  var start = new Date('2026-05-24'), end = new Date('2026-07-31');
+  var total   = (end - start) / 86400000;
   var elapsed = Math.max(0, Math.min(total, (now - start) / 86400000));
   var remain  = Math.max(0, Math.ceil((end - now) / 86400000));
-  var pct = Math.round((elapsed / total) * 100);
+  var pct     = Math.round((elapsed / total) * 100);
   document.getElementById('phaseBar').style.width = pct + '%';
   document.getElementById('phaseRemain').textContent = '残り ' + remain + '日（' + pct + '%）';
 }
@@ -382,11 +624,8 @@ function apiGet(path) {
 }
 
 function decodeB64(b64) {
-  try {
-    return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
-  } catch(e) {
-    return atob(b64.replace(/\n/g, ''));
-  }
+  try { return decodeURIComponent(escape(atob(b64.replace(/\n/g,'')))); }
+  catch(e) { return atob(b64.replace(/\n/g,'')); }
 }
 
 // ============================================================
@@ -411,21 +650,15 @@ function calcStreak(datesSet, now) {
   var d = new Date(now);
   for (var i = 0; i < 365; i++) {
     var key = d.toISOString().split('T')[0];
-    if (datesSet[key]) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    } else if (i === 0) {
-      // today not yet practiced — allow checking yesterday
-      d.setDate(d.getDate() - 1);
-    } else {
-      break;
-    }
+    if (datesSet[key]) { streak++; d.setDate(d.getDate() - 1); }
+    else if (i === 0)  { d.setDate(d.getDate() - 1); }
+    else               { break; }
   }
   return streak;
 }
 
 function setDonut(arcId, txtId, val, max) {
-  var circ = 251.2; // 2 * PI * 40
+  var circ = 251.2;
   var dash = max > 0 ? (val / max) * circ : 0;
   var arc = document.getElementById(arcId);
   var txt = document.getElementById(txtId);
@@ -433,138 +666,107 @@ function setDonut(arcId, txtId, val, max) {
   if (txt) txt.textContent = val + '/' + max;
 }
 
-// Build a small SVG line chart for recent scores
 function buildScoreChart(scores) {
-  if (!scores || scores.length === 0) {
-    return '<span style="font-size:13px;color:var(--text2);font-weight:600">データなし</span>';
-  }
-  var avg = Math.round(scores.reduce(function(s, v) { return s + v; }, 0) / scores.length);
-  var W = 110, H = 60, PT = 6, PB = 6, PL = 4, PR = 4;
-  var iW = W - PL - PR;
-  var iH = H - PT - PB;
-  var n = scores.length;
-  function px(i) { return PL + (n > 1 ? i * (iW / (n - 1)) : iW / 2); }
-  function py(v) { return PT + iH - ((v / 100) * iH); }
-  var pathD = scores.map(function(v, i) { return (i === 0 ? 'M' : 'L') + px(i).toFixed(1) + ',' + py(v).toFixed(1); }).join(' ');
-  var dots = scores.map(function(v, i) {
-    return '<circle cx="' + px(i).toFixed(1) + '" cy="' + py(v).toFixed(1) + '" r="2.5" fill="var(--accent)"/>';
-  }).join('');
+  if (!scores || !scores.length) return '<span style="font-size:13px;color:var(--text2);font-weight:600">データなし</span>';
+  var avg = Math.round(scores.reduce(function(s,v){return s+v;},0) / scores.length);
+  var W=110,H=60,PT=6,PB=6,PL=4,PR=4;
+  var iW=W-PL-PR, iH=H-PT-PB, n=scores.length;
+  function px(i){return PL+(n>1?i*(iW/(n-1)):iW/2);}
+  function py(v){return PT+iH-((v/100)*iH);}
+  var pathD=scores.map(function(v,i){return(i===0?'M':'L')+px(i).toFixed(1)+','+py(v).toFixed(1);}).join(' ');
+  var dots=scores.map(function(v,i){return '<circle cx="'+px(i).toFixed(1)+'" cy="'+py(v).toFixed(1)+'" r="2.5" fill="var(--accent)"/>';}).join('');
   return '<div style="text-align:center">'
-    + '<div style="font-size:32px;font-weight:800;color:var(--accent);line-height:1">' + avg + '</div>'
-    + '<div style="font-size:12px;color:var(--text2);margin:3px 0 6px">直近' + n + '回の平均</div>'
-    + '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">'
-    + '<path d="' + pathD + '" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity=".7"/>'
-    + dots
-    + '</svg></div>';
+    +'<div style="font-size:32px;font-weight:800;color:var(--accent);line-height:1">'+avg+'</div>'
+    +'<div style="font-size:12px;color:var(--text2);margin:3px 0 6px">直近'+n+'回の平均</div>'
+    +'<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">'
+    +'<path d="'+pathD+'" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity=".7"/>'
+    +dots+'</svg></div>';
 }
 
 // ============================================================
-// LOAD DASHBOARD DATA
+// LOAD DASHBOARD DATA (recordings + records)
 // ============================================================
 var SCRIPT_NAMES = {
-  'short':             '自己紹介 ショート版',
-  'casual':            '自己紹介 カジュアル版',
-  'formal':            '自己紹介 フォーマル版',
-  'sop-status-report': 'SOP対応課題の状況報告'
+  'short':'自己紹介 ショート版', 'casual':'自己紹介 カジュアル版',
+  'formal':'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告'
 };
 
 function loadDashboardData(now) {
-  var weekStart  = getWeekStart(now);
-  var monthStr   = now.toISOString().slice(0, 7); // YYYY-MM
-
+  var weekStart = getWeekStart(now);
+  var monthStr  = now.toISOString().slice(0,7);
   Promise.all([
-    apiGet('recordings').catch(function() { return null; }),
-    apiGet('records').catch(function() { return null; })
+    apiGet('recordings').catch(function(){return null;}),
+    apiGet('records').catch(function(){return null;})
   ]).then(function(results) {
     var recFiles  = Array.isArray(results[0]) ? results[0] : [];
     var recJsons  = Array.isArray(results[1]) ? results[1] : [];
-
-    // Parse all recordings
-    var recordings = [];
-    recFiles.forEach(function(f) {
-      var r = parseRecording(f.name || '');
-      if (r) recordings.push(r);
-    });
+    var recordings = recFiles.map(function(f){return parseRecording(f.name||'');}).filter(Boolean);
 
     // Streak
     var datesSet = {};
-    recordings.forEach(function(r) { datesSet[r.date] = true; });
-    var streak = calcStreak(datesSet, now);
-    document.getElementById('streakBadge').textContent = '🔥 ' + streak + '日';
+    recordings.forEach(function(r){datesSet[r.date]=true;});
+    document.getElementById('streakBadge').textContent = '🔥 ' + calcStreak(datesSet, now) + '日';
 
-    // This week shadowing days
+    // Donut: shadowing days this week
     var shadDays = {};
-    recordings.forEach(function(r) {
-      if (r.mode === 'shadowing' && r.date >= weekStart) shadDays[r.date] = true;
-    });
-    setDonut('shadArc', 'shadTxt', Object.keys(shadDays).length, 7);
+    recordings.forEach(function(r){if(r.mode==='shadowing'&&r.date>=weekStart)shadDays[r.date]=true;});
+    setDonut('shadArc','shadTxt',Object.keys(shadDays).length,7);
 
-    // This week practice days (vocab approximation — all modes)
+    // Donut: all practice days this week (vocab approximation)
     var pracDays = {};
-    recordings.forEach(function(r) {
-      if (r.date >= weekStart) pracDays[r.date] = true;
-    });
-    setDonut('vocabArc', 'vocabTxt', Object.keys(pracDays).length, 7);
+    recordings.forEach(function(r){if(r.date>=weekStart)pracDays[r.date]=true;});
+    setDonut('vocabArc','vocabTxt',Object.keys(pracDays).length,7);
 
     // Monthly count
-    var monthCount = recordings.filter(function(r) { return r.date.slice(0, 7) === monthStr; }).length;
-    document.getElementById('monthNum').textContent = monthCount;
+    document.getElementById('monthNum').textContent =
+      recordings.filter(function(r){return r.date.slice(0,7)===monthStr;}).length;
 
-    // Load recent records (newest 3 JSON files)
-    var jsonFiles = recJsons.filter(function(f) {
+    // Recent records (newest 3 JSON files)
+    var jsonFiles = recJsons.filter(function(f){
       return f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
-    }).sort(function(a, b) { return b.name.localeCompare(a.name); }).slice(0, 3);
+    }).sort(function(a,b){return b.name.localeCompare(a.name);}).slice(0,3);
 
-    if (jsonFiles.length === 0) {
+    if (!jsonFiles.length) {
       document.getElementById('recentList').innerHTML = '<div class="no-token">記録がまだありません</div>';
       return;
     }
-
-    Promise.all(jsonFiles.map(function(f) {
-      return apiGet('records/' + f.name).then(function(d) {
-        if (!d || !d.content) return null;
-        try { return JSON.parse(decodeB64(d.content)); } catch(e) { return null; }
-      }).catch(function() { return null; });
-    })).then(function(recs) {
+    Promise.all(jsonFiles.map(function(f){
+      return apiGet('records/'+f.name).then(function(d){
+        if(!d||!d.content)return null;
+        try{return JSON.parse(decodeB64(d.content));}catch(e){return null;}
+      }).catch(function(){return null;});
+    })).then(function(recs){
       recs = recs.filter(Boolean);
       renderRecentRecords(recs);
       document.getElementById('seeAllLink').style.display = 'block';
-
-      // Score chart from recent records
-      var scores = recs.filter(function(r) { return r.score != null; })
-        .slice(0, 7).map(function(r) { return r.score; });
+      var scores = recs.filter(function(r){return r.score!=null;}).map(function(r){return r.score;});
       document.getElementById('scoreContent').innerHTML = buildScoreChart(scores);
     });
-  }).catch(function() {
+  }).catch(function(){
     document.getElementById('recentList').innerHTML = '<div class="no-token">読み込みエラー</div>';
   });
 }
 
 function renderRecentRecords(recs) {
-  if (!recs || !recs.length) {
+  if (!recs||!recs.length) {
     document.getElementById('recentList').innerHTML = '<div class="no-token">記録がありません</div>';
     return;
   }
   var html = recs.map(function(r) {
-    var modeLabel = r.mode === 'reading' ? '音読' : r.mode === 'shadowing' ? 'シャドー' : (r.mode || '—');
-    var modeCls   = r.mode === 'reading' ? 'rm-r' : 'rm-s';
-    var title = SCRIPT_NAMES[r.scriptId] || r.scriptTitle || r.scriptId || '—';
-    if (title.length > 14) title = title.slice(0, 13) + '…';
-    var score = r.score != null ? r.score + '点' : '—';
+    var modeLabel = r.mode==='reading'?'音読':r.mode==='shadowing'?'シャドー':(r.mode||'—');
+    var modeCls   = r.mode==='reading'?'rm-r':'rm-s';
+    var title = SCRIPT_NAMES[r.scriptId]||r.scriptTitle||r.scriptId||'—';
+    if (title.length>14) title=title.slice(0,13)+'…';
     return '<div class="rec-item">'
-      + '<span class="rec-mode ' + modeCls + '">' + modeLabel + '</span>'
-      + '<div class="rec-info">'
-      + '<div class="rec-script">' + escHtml(title) + '</div>'
-      + '<div class="rec-date">' + escHtml((r.date || '') + (r.time ? ' ' + r.time : '')) + '</div>'
-      + '</div>'
-      + '<div class="rec-score">' + escHtml(score) + '</div>'
-      + '</div>';
+      +'<span class="rec-mode '+modeCls+'">'+modeLabel+'</span>'
+      +'<div class="rec-info">'
+      +'<div class="rec-script">'+escHtml(title)+'</div>'
+      +'<div class="rec-date">'+escHtml((r.date||'')+(r.time?' '+r.time:''))+'</div>'
+      +'</div>'
+      +'<div class="rec-score">'+(r.score!=null?r.score+'点':'—')+'</div>'
+      +'</div>';
   }).join('');
   document.getElementById('recentList').innerHTML = html;
-}
-
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>

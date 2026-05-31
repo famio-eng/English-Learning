@@ -484,6 +484,31 @@ function saveScriptProgress() {
     }).catch(function(){});
 }
 
+function markDailyTask(taskKey) {
+  if (!GH_TOKEN) return;
+  var today = new Date().toISOString().split('T')[0];
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      if (!d || !d.content) return;
+      var raw = atob(d.content.replace(/\n/g,''));
+      var obj;
+      try { obj = JSON.parse(decodeURIComponent(escape(raw))); } catch(e) { obj = {}; }
+      if (!obj.dailyTasks) obj.dailyTasks = {};
+      if (!obj.dailyTasks[today]) obj.dailyTasks[today] = {};
+      if (obj.dailyTasks[today][taskKey]) return;
+      obj.dailyTasks[today][taskKey] = true;
+      var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+        body: JSON.stringify({message:'✅ タスク完了: '+taskKey, content:encoded, sha:d.sha})
+      });
+    })
+    .catch(function() {});
+}
+
 // ============================================================
 // INIT
 // ============================================================
@@ -1024,6 +1049,7 @@ function showAIFeedback(r, mode) {
     sp.readOk = readOk;
     sp.shadOk = shadOk;
     saveScriptProgress();
+    if (r.passed) markDailyTask('shadowing');
   }
 }
 
