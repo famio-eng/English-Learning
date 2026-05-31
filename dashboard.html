@@ -2,184 +2,209 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Learning</title>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
-:root{--bg:#1a1a1a;--card:#242424;--card2:#2a2a2a;--border:#3a3a3a;--accent:#7c6ff7;--green:#22c55e;--amber:#f59e0b;--blue:#38bdf8;--text:#f0f0f0;--text2:#aaaaaa;--text3:#555555}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif}
-body{overflow-y:auto;padding-bottom:32px}
-a{color:inherit;text-decoration:none}
-.container{max-width:540px;margin:0 auto;padding:0 14px}
+:root {
+  --bg: #1a1a1a;
+  --card: #242424;
+  --card2: #2a2a2a;
+  --border: #3a3a3a;
+  --accent: #7c6ff7;
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --blue: #38bdf8;
+  --text: #f0f0f0;
+  --text2: #aaaaaa;
+  --text3: #666666;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  min-height: 100%;
+  overflow-y: auto;
+}
+a { color: inherit; text-decoration: none; }
+.container { max-width: 540px; margin: 0 auto; padding: 0 14px 40px; }
 
 /* Header */
-.app-header{display:flex;align-items:center;justify-content:space-between;padding:18px 0 12px}
-.app-name{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.02em}
-.app-sub{font-size:13px;color:var(--text2);margin-top:2px;font-weight:700}
-.streak-badge{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:14px;font-weight:800;padding:6px 14px;border-radius:20px;white-space:nowrap;box-shadow:0 2px 8px rgba(239,68,68,.35)}
+.header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 14px; }
+.app-name { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
+.app-sub { font-size: 13px; color: var(--text2); margin-top: 2px; font-weight: 600; }
+.streak-badge { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
 
 /* Cards */
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 4px 24px rgba(0,0,0,.3);margin-bottom:12px}
-.card-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.05em}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.grid-2 .card{margin-bottom:0}
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px; box-shadow: 0 4px 24px rgba(0,0,0,.3); }
+.card-title { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.section { margin-bottom: 12px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 /* Today card */
-.today-card{background:linear-gradient(135deg,#2d2b55,#1e2a3a);border-color:#4a3f8f}
-.today-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.4}
-.today-task{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text2);padding:5px 0;font-weight:700}
-.today-task svg{color:var(--accent);flex-shrink:0}
-.today-btns{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.today-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 10px; line-height: 1.4; }
+.task-list { list-style: none; margin-bottom: 14px; }
+.task-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text2); padding: 4px 0; font-weight: 600; }
+.task-list li::before { content: '✓'; color: var(--accent); font-weight: 800; flex-shrink: 0; }
+.today-btns { display: flex; flex-direction: column; gap: 8px; }
 
 /* Buttons */
-.btn{padding:13px 16px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px;justify-content:center;transition:opacity .15s;width:100%;min-height:48px}
-.btn:active{opacity:.75}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
-.btn-green{background:var(--green);color:#fff}
-.btn-blue{background:var(--blue);color:#0f172a}
-.btn-amber{background:var(--amber);color:#0f172a}
+.btn { padding: 13px 16px; border-radius: 10px; font-size: 15px; font-weight: 800; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; transition: opacity .15s; width: 100%; min-height: 48px; }
+.btn:active { opacity: .75; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-secondary { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-blue { background: var(--blue); color: #0f172a; }
+.btn-amber { background: var(--amber); color: #0f172a; }
 
 /* Donut chart */
-.donut-wrap{display:flex;flex-direction:column;align-items:center}
-.donut-label{font-size:13px;font-weight:700;color:var(--text2);margin-top:6px;text-align:center}
+.donut-wrap { display: flex; flex-direction: column; align-items: center; }
+.donut-label { font-size: 12px; font-weight: 700; color: var(--text2); margin-top: 6px; text-align: center; }
 
 /* Stat big */
-.stat-big{font-size:44px;font-weight:800;line-height:1;margin-bottom:4px}
-.stat-unit{font-size:16px;font-weight:700;color:var(--text2)}
-.stat-sub{font-size:13px;font-weight:700;color:var(--text2);margin-top:6px}
+.stat-big { font-size: 44px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.stat-unit { font-size: 16px; font-weight: 700; color: var(--text2); }
+.stat-sub { font-size: 12px; font-weight: 600; color: var(--text2); margin-top: 6px; }
 
 /* Phase progress */
-.phase-name{font-size:18px;font-weight:800;color:var(--accent);margin-bottom:4px}
-.phase-desc{font-size:14px;color:var(--text2);font-weight:700;margin-bottom:14px;line-height:1.5}
-.prog-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:6px}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:4px;transition:width .6s}
-.prog-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--text2);font-weight:700}
+.phase-name { font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+.phase-desc { font-size: 13px; color: var(--text2); font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
+.prog-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--blue)); border-radius: 4px; transition: width .6s; }
+.prog-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); font-weight: 600; }
 
 /* Quick links */
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.quick-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:border-color .15s;text-align:center}
-.quick-btn:active{border-color:var(--accent)}
-.quick-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
-.quick-label{font-size:14px;font-weight:800;color:var(--text)}
+.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.quick-btn { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: border-color .15s; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,.3); }
+.quick-btn:active { border-color: var(--accent); opacity: .8; }
+.quick-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.quick-label { font-size: 13px; font-weight: 800; color: var(--text); }
 
 /* Recent records */
-.rec-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
-.rec-item:last-child{border:none;padding-bottom:0}
-.rec-mode{font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;color:#fff;flex-shrink:0}
-.rm-r{background:var(--green)}.rm-s{background:var(--accent)}
-.rec-info{flex:1;min-width:0}
-.rec-script{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rec-date{font-size:12px;color:var(--text2);font-weight:700;margin-top:2px}
-.rec-score{font-size:18px;font-weight:800;color:var(--accent);flex-shrink:0}
-.see-all{display:block;text-align:center;font-size:14px;font-weight:700;color:var(--accent);margin-top:12px}
+.rec-item { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.rec-item:last-child { border: none; padding-bottom: 0; }
+.rec-mode { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px; color: #fff; flex-shrink: 0; }
+.rm-r { background: var(--green); }
+.rm-s { background: var(--accent); }
+.rec-info { flex: 1; min-width: 0; }
+.rec-script { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rec-date { font-size: 12px; color: var(--text2); font-weight: 600; margin-top: 2px; }
+.rec-score { font-size: 18px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
+.see-all { display: block; text-align: center; font-size: 13px; font-weight: 700; color: var(--accent); margin-top: 12px; }
 
 /* No-token notice */
-.no-token{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:13px;color:var(--text2);font-weight:700;text-align:center}
+.no-token { font-size: 13px; color: var(--text2); font-weight: 600; padding: 8px 0; }
 
 /* Spinner */
-.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
-@keyframes spin{to{transform:rotate(360deg)}}
+.spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 <div class="container">
 
   <!-- Header -->
-  <div class="app-header">
+  <div class="header">
     <div>
       <div class="app-name">English Learning</div>
-      <div class="app-sub" id="dateLabel">—</div>
+      <div class="app-sub" id="dateLabel">読み込み中...</div>
     </div>
     <div class="streak-badge" id="streakBadge">🔥 0日</div>
   </div>
 
   <!-- Today card -->
-  <div class="card today-card" id="todayCard">
+  <div class="section card" id="todayCard">
     <div class="card-title" style="color:#a89ff7">TODAY</div>
     <div class="today-title" id="todayTitle">読み込み中...</div>
-    <div id="todayTasks"></div>
+    <ul class="task-list" id="todayTasks"></ul>
     <div class="today-btns" id="todayBtns"></div>
   </div>
 
-  <!-- Progress 2×2 -->
-  <div class="grid-2">
-    <div class="card" id="shadCard">
-      <div class="card-title">シャドーイング</div>
-      <div class="donut-wrap">
-        <svg id="shadSvg" width="90" height="90" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border)" stroke-width="10"/>
-          <circle id="shadArc" cx="50" cy="50" r="38" fill="none" stroke="var(--accent)" stroke-width="10"
-            stroke-dasharray="0 238.76" stroke-linecap="round" transform="rotate(-90 50 50)" style="transition:stroke-dasharray .5s"/>
-          <text id="shadTxt" x="50" y="55" text-anchor="middle" font-size="16" font-weight="800" fill="var(--text)">0/7</text>
-        </svg>
-        <div class="donut-label">今週の日数</div>
+  <!-- Progress 2x2 -->
+  <div class="section">
+    <div class="grid-2">
+      <div class="card" id="shadCard">
+        <div class="card-title">シャドーイング</div>
+        <div class="donut-wrap">
+          <svg width="90" height="90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border)" stroke-width="8"/>
+            <circle id="shadArc" cx="50" cy="50" r="40" fill="none" stroke="var(--accent)" stroke-width="8"
+              stroke-dasharray="0 251.2" stroke-dashoffset="-62.8" stroke-linecap="round"
+              style="transition:stroke-dasharray .5s"/>
+            <text id="shadTxt" x="50" y="54" text-anchor="middle" font-size="16" font-weight="800" fill="var(--text)">0/7</text>
+          </svg>
+          <div class="donut-label">今週の日数</div>
+        </div>
       </div>
-    </div>
-    <div class="card" id="vocabCard">
-      <div class="card-title">単語復習</div>
-      <div class="donut-wrap">
-        <svg id="vocabSvg" width="90" height="90" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border)" stroke-width="10"/>
-          <circle id="vocabArc" cx="50" cy="50" r="38" fill="none" stroke="var(--green)" stroke-width="10"
-            stroke-dasharray="0 238.76" stroke-linecap="round" transform="rotate(-90 50 50)" style="transition:stroke-dasharray .5s"/>
-          <text id="vocabTxt" x="50" y="55" text-anchor="middle" font-size="16" font-weight="800" fill="var(--text)">0/7</text>
-        </svg>
-        <div class="donut-label">今週の日数</div>
+      <div class="card" id="vocabCard">
+        <div class="card-title">単語復習</div>
+        <div class="donut-wrap">
+          <svg width="90" height="90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border)" stroke-width="8"/>
+            <circle id="vocabArc" cx="50" cy="50" r="40" fill="none" stroke="var(--green)" stroke-width="8"
+              stroke-dasharray="0 251.2" stroke-dashoffset="-62.8" stroke-linecap="round"
+              style="transition:stroke-dasharray .5s"/>
+            <text id="vocabTxt" x="50" y="54" text-anchor="middle" font-size="16" font-weight="800" fill="var(--text)">0/7</text>
+          </svg>
+          <div class="donut-label">今週の日数</div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-title">今月の練習</div>
-      <div style="text-align:center;padding:6px 0">
-        <span class="stat-big" id="monthCount" style="color:var(--blue)">—</span>
-        <span class="stat-unit">回</span>
+      <div class="card" id="monthCard">
+        <div class="card-title">今月の練習</div>
+        <div style="text-align:center;padding:4px 0">
+          <span class="stat-big" id="monthNum" style="color:var(--blue)">—</span>
+          <span class="stat-unit">回</span>
+        </div>
+        <div class="stat-sub" style="text-align:center">録音データより</div>
       </div>
-      <div class="stat-sub" id="monthSub" style="text-align:center">録音データより</div>
-    </div>
-    <div class="card">
-      <div class="card-title">直近の平均スコア</div>
-      <div id="scoreChart" style="display:flex;align-items:center;justify-content:center;height:80px">
-        <span style="font-size:13px;color:var(--text2);font-weight:700">データなし</span>
+      <div class="card" id="scoreCard">
+        <div class="card-title">直近の平均スコア</div>
+        <div id="scoreContent" style="display:flex;align-items:center;justify-content:center;min-height:70px">
+          <span style="font-size:13px;color:var(--text2);font-weight:600">データなし</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Phase progress -->
-  <div class="card" id="phaseCard">
-    <div class="card-title">現在のフェーズ</div>
+  <!-- Phase card -->
+  <div class="section card" id="phaseCard">
+    <div class="card-title">📅 現在のフェーズ</div>
     <div class="phase-name">Phase 1 — 基盤づくり</div>
-    <div class="phase-desc">スピーキングの瞬発力と基本ビジネス表現の定着</div>
-    <div class="prog-bar"><div class="prog-fill" id="phaseFill" style="width:0%"></div></div>
+    <div class="phase-desc" id="phasePeriod">〜7月末（2026-07-31まで）</div>
+    <div class="prog-bar"><div class="prog-fill" id="phaseBar" style="width:0%"></div></div>
     <div class="prog-meta">
-      <span id="phaseStart">2026-05-24</span>
+      <span>2026-05-24 〜 2026-07-31</span>
       <span id="phaseRemain" style="color:var(--accent)">計算中...</span>
+    </div>
+    <div style="margin-top:12px;padding:10px 12px;background:var(--card2);border-radius:10px;border-left:3px solid var(--accent);font-size:13px;color:var(--text);font-weight:600;line-height:1.5">
+      スピーキングの瞬発力と基本ビジネス表現の定着
     </div>
   </div>
 
   <!-- Quick links -->
-  <div style="margin-bottom:12px">
-    <div class="card-title" style="padding:0 2px 10px;font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em">クイックリンク</div>
+  <div class="section" id="quickLinks">
     <div class="quick-grid">
-      <a id="ql-shad" href="#" class="quick-btn">
+      <a id="ql-shad" href="./shadowing.html" class="quick-btn">
         <div class="quick-icon" style="background:rgba(124,111,247,.15)">
           <i data-lucide="mic" style="width:22px;height:22px;color:var(--accent)"></i>
         </div>
         <div class="quick-label">シャドーイング</div>
       </a>
-      <a id="ql-vocab" href="#" class="quick-btn">
+      <a id="ql-vocab" href="./vocab.html" class="quick-btn">
         <div class="quick-icon" style="background:rgba(34,197,94,.15)">
           <i data-lucide="book-open" style="width:22px;height:22px;color:var(--green)"></i>
         </div>
         <div class="quick-label">単語帳</div>
       </a>
-      <a href="https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6" target="_blank" class="quick-btn">
+      <a href="https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6" target="_blank" rel="noopener" class="quick-btn">
         <div class="quick-icon" style="background:rgba(56,189,248,.15)">
           <i data-lucide="message-circle" style="width:22px;height:22px;color:var(--blue)"></i>
         </div>
         <div class="quick-label">学習チャット</div>
       </a>
-      <a id="ql-rec" href="#" class="quick-btn">
+      <a id="ql-rec" href="./shadowing.html" class="quick-btn">
         <div class="quick-icon" style="background:rgba(245,158,11,.15)">
           <i data-lucide="archive" style="width:22px;height:22px;color:var(--amber)"></i>
         </div>
@@ -189,17 +214,17 @@ a{color:inherit;text-decoration:none}
   </div>
 
   <!-- Recent records -->
-  <div class="card">
-    <div class="card-title">直近の練習記録</div>
+  <div class="section card" id="recentCard">
+    <div class="card-title">📋 直近の練習記録</div>
     <div id="recentList"><div class="spinner"></div></div>
-    <a id="seeAllLink" href="#" class="see-all" style="display:none">すべて見る →</a>
+    <a id="seeAllLink" href="./shadowing.html" class="see-all" style="display:none">すべて見る →</a>
   </div>
 
-</div><!-- /container -->
+</div>
 
 <script>
 // ============================================================
-// CONFIG — tokens from URL params only
+// CONFIG — tokens from URL params only (never hardcoded)
 // ============================================================
 var _p = new URLSearchParams(window.location.search);
 var GH_TOKEN = _p.get('gh') || '';
@@ -208,8 +233,7 @@ var GH_OWNER = 'famio-eng';
 var GH_REPO  = 'English-Learning';
 var CLAUDE_CHAT = 'https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6';
 
-function makeLink(base, noParam) {
-  if (noParam) return base;
+function makeLink(base) {
   var params = [];
   if (GEM_KEY)  params.push('k='  + GEM_KEY);
   if (GH_TOKEN) params.push('gh=' + GH_TOKEN);
@@ -219,49 +243,49 @@ function makeLink(base, noParam) {
 // ============================================================
 // DAILY PLAN
 // ============================================================
-var DAILY_PLAN = [
-  { // 0 日
-    label: 'シャドーイング＋単語復習',
+var DAILY_PLAN = {
+  0: {
+    title: '🗓 今日やること — シャドーイング＋単語復習',
     tasks: ['シャドーイング 0.7倍速 3回通し', '単語復習（SM-2）'],
     buttons: [
-      {label: 'シャドーイングを始める', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'},
-      {label: '単語帳を開く', target: './vocab.html', cls: 'btn-secondary', icon: 'book-open'}
+      {label: 'シャドーイング', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'},
+      {label: '単語帳', target: './vocab.html', cls: 'btn-secondary', icon: 'book-open'}
     ]
   },
-  { // 1 月
-    label: 'シャドーイング練習',
+  1: {
+    title: '🗓 今日やること — シャドーイング練習',
     tasks: ['速度を段階的に上げながら録音', 'AI評価を受ける'],
     buttons: [{label: 'シャドーイングを始める', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'}]
   },
-  { // 2 火
-    label: 'シャドーイング練習',
+  2: {
+    title: '🗓 今日やること — シャドーイング練習',
     tasks: ['速度を段階的に上げながら録音', 'AI評価を受ける'],
     buttons: [{label: 'シャドーイングを始める', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'}]
   },
-  { // 3 水
-    label: 'Pimsleur式対話練習',
+  3: {
+    title: '🗓 今日やること — Pimsleur式対話練習',
     tasks: ['日本語提示→3秒以内に英語で答える', 'フィードバックを確認する'],
     buttons: [{label: '学習用チャットを開く', target: CLAUDE_CHAT, cls: 'btn-blue', icon: 'message-circle', noParam: true}]
   },
-  { // 4 木
-    label: 'Pimsleur式対話練習',
+  4: {
+    title: '🗓 今日やること — Pimsleur式対話練習',
     tasks: ['日本語提示→3秒以内に英語で答える', 'フィードバックを確認する'],
     buttons: [{label: '学習用チャットを開く', target: CLAUDE_CHAT, cls: 'btn-blue', icon: 'message-circle', noParam: true}]
   },
-  { // 5 金
-    label: '単語復習',
+  5: {
+    title: '🗓 今日やること — 単語復習',
     tasks: ['SM-2に従った単語復習', 'Core Vocabulary優先'],
     buttons: [{label: '単語帳を開く', target: './vocab.html', cls: 'btn-green', icon: 'book-open'}]
   },
-  { // 6 土
-    label: '振り返り＋スクリプト作成＋初回練習',
+  6: {
+    title: '🗓 今日やること — 振り返り＋スクリプト作成＋初回練習',
     tasks: ['振り返り→スクリプト作成→初回練習', '単語初回学習'],
     buttons: [
       {label: '学習用チャットを開く', target: CLAUDE_CHAT, cls: 'btn-blue', icon: 'message-circle', noParam: true},
       {label: 'シャドーイングを始める', target: './shadowing.html', cls: 'btn-primary', icon: 'mic'}
     ]
   }
-];
+};
 
 var DAY_JA = ['日', '月', '火', '水', '木', '金', '土'];
 var MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
@@ -272,8 +296,10 @@ var MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','
 (function init() {
   var now = new Date();
   var day = now.getDay();
-  var dateStr = now.getFullYear() + '年' + MONTH_JA[now.getMonth()] + now.getDate() + '日（' + DAY_JA[day] + '）';
-  document.getElementById('dateLabel').textContent = dateStr;
+
+  // Date label
+  document.getElementById('dateLabel').textContent =
+    now.getFullYear() + '年' + MONTH_JA[now.getMonth()] + now.getDate() + '日（' + DAY_JA[day] + '）';
 
   renderTodayCard(day);
   updateQuickLinks();
@@ -293,19 +319,20 @@ var MONTH_JA = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','
 // ============================================================
 function renderTodayCard(day) {
   var plan = DAILY_PLAN[day];
-  document.getElementById('todayTitle').textContent = '🗓 今日やること — ' + plan.label;
+  if (!plan) return;
+  document.getElementById('todayTitle').textContent = plan.title;
 
   var tasksHtml = plan.tasks.map(function(t) {
-    return '<div class="today-task"><i data-lucide="check-circle" style="width:16px;height:16px;color:var(--accent)"></i>' + t + '</div>';
+    return '<li>' + escHtml(t) + '</li>';
   }).join('');
   document.getElementById('todayTasks').innerHTML = tasksHtml;
 
   var btnsHtml = plan.buttons.map(function(b) {
     var href = b.noParam ? b.target : makeLink(b.target);
-    var target = b.noParam ? ' target="_blank"' : '';
-    return '<a href="' + href + '"' + target + ' class="btn ' + b.cls + '">'
+    var extra = b.noParam ? ' target="_blank" rel="noopener"' : '';
+    return '<a href="' + href + '"' + extra + ' class="btn ' + b.cls + '">'
       + '<i data-lucide="' + b.icon + '" style="width:18px;height:18px"></i>'
-      + b.label + '</a>';
+      + escHtml(b.label) + '</a>';
   }).join('');
   document.getElementById('todayBtns').innerHTML = btnsHtml;
 }
@@ -314,10 +341,13 @@ function renderTodayCard(day) {
 // QUICK LINKS
 // ============================================================
 function updateQuickLinks() {
-  document.getElementById('ql-shad').href  = makeLink('./shadowing.html');
+  var shadLink = makeLink('./shadowing.html');
+  document.getElementById('ql-shad').href  = shadLink;
   document.getElementById('ql-vocab').href = makeLink('./vocab.html');
-  document.getElementById('ql-rec').href   = makeLink('./shadowing.html') + (GEM_KEY || GH_TOKEN ? '&' : '?') + 'tab=progress';
-  document.getElementById('seeAllLink').href = makeLink('./shadowing.html');
+  // progress link: append #progress (params already in shadLink)
+  var sep = shadLink.indexOf('?') >= 0 ? '&' : '?';
+  document.getElementById('ql-rec').href   = shadLink + sep + '_tab=progress#progress';
+  document.getElementById('seeAllLink').href = shadLink;
 }
 
 // ============================================================
@@ -328,26 +358,22 @@ function updatePhase(now) {
   var end   = new Date('2026-07-31');
   var total = (end - start) / 86400000;
   var elapsed = Math.max(0, Math.min(total, (now - start) / 86400000));
-  var remain = Math.max(0, Math.ceil((end - now) / 86400000));
+  var remain  = Math.max(0, Math.ceil((end - now) / 86400000));
   var pct = Math.round((elapsed / total) * 100);
-  document.getElementById('phaseFill').style.width = pct + '%';
-  document.getElementById('phaseRemain').textContent = '残り ' + remain + '日';
-  document.getElementById('phaseStart').textContent = '〜7月末';
+  document.getElementById('phaseBar').style.width = pct + '%';
+  document.getElementById('phaseRemain').textContent = '残り ' + remain + '日（' + pct + '%）';
 }
 
 // ============================================================
-// NO TOKEN STATE
+// NO TOKEN
 // ============================================================
 function setNoToken() {
-  var msg = '<div class="no-token">GHトークン未設定 — URLに ?gh=TOKEN を追加してください</div>';
-  document.getElementById('recentList').innerHTML = msg;
-  document.getElementById('monthCount').textContent = '—';
-  document.getElementById('streakBadge').textContent = '🔥 —日';
+  document.getElementById('recentList').innerHTML = '<div class="no-token">GHトークン未設定 — URLに ?gh=TOKEN を追加してください</div>';
   document.getElementById('seeAllLink').style.display = 'none';
 }
 
 // ============================================================
-// DATA LOADING
+// GITHUB API
 // ============================================================
 function apiGet(path) {
   return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
@@ -356,10 +382,16 @@ function apiGet(path) {
 }
 
 function decodeB64(b64) {
-  var raw = atob(b64.replace(/\n/g, ''));
-  return decodeURIComponent(escape(raw));
+  try {
+    return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+  } catch(e) {
+    return atob(b64.replace(/\n/g, ''));
+  }
 }
 
+// ============================================================
+// HELPERS
+// ============================================================
 function getWeekStart(now) {
   var d = now.getDay();
   var diff = d === 0 ? -6 : 1 - d;
@@ -374,21 +406,83 @@ function parseRecording(name) {
   return {date: m[1], scriptId: m[2], mode: m[3]};
 }
 
+function calcStreak(datesSet, now) {
+  var streak = 0;
+  var d = new Date(now);
+  for (var i = 0; i < 365; i++) {
+    var key = d.toISOString().split('T')[0];
+    if (datesSet[key]) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else if (i === 0) {
+      // today not yet practiced — allow checking yesterday
+      d.setDate(d.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function setDonut(arcId, txtId, val, max) {
+  var circ = 251.2; // 2 * PI * 40
+  var dash = max > 0 ? (val / max) * circ : 0;
+  var arc = document.getElementById(arcId);
+  var txt = document.getElementById(txtId);
+  if (arc) arc.setAttribute('stroke-dasharray', dash.toFixed(2) + ' ' + (circ - dash).toFixed(2));
+  if (txt) txt.textContent = val + '/' + max;
+}
+
+// Build a small SVG line chart for recent scores
+function buildScoreChart(scores) {
+  if (!scores || scores.length === 0) {
+    return '<span style="font-size:13px;color:var(--text2);font-weight:600">データなし</span>';
+  }
+  var avg = Math.round(scores.reduce(function(s, v) { return s + v; }, 0) / scores.length);
+  var W = 110, H = 60, PT = 6, PB = 6, PL = 4, PR = 4;
+  var iW = W - PL - PR;
+  var iH = H - PT - PB;
+  var n = scores.length;
+  function px(i) { return PL + (n > 1 ? i * (iW / (n - 1)) : iW / 2); }
+  function py(v) { return PT + iH - ((v / 100) * iH); }
+  var pathD = scores.map(function(v, i) { return (i === 0 ? 'M' : 'L') + px(i).toFixed(1) + ',' + py(v).toFixed(1); }).join(' ');
+  var dots = scores.map(function(v, i) {
+    return '<circle cx="' + px(i).toFixed(1) + '" cy="' + py(v).toFixed(1) + '" r="2.5" fill="var(--accent)"/>';
+  }).join('');
+  return '<div style="text-align:center">'
+    + '<div style="font-size:32px;font-weight:800;color:var(--accent);line-height:1">' + avg + '</div>'
+    + '<div style="font-size:12px;color:var(--text2);margin:3px 0 6px">直近' + n + '回の平均</div>'
+    + '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">'
+    + '<path d="' + pathD + '" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity=".7"/>'
+    + dots
+    + '</svg></div>';
+}
+
+// ============================================================
+// LOAD DASHBOARD DATA
+// ============================================================
+var SCRIPT_NAMES = {
+  'short':             '自己紹介 ショート版',
+  'casual':            '自己紹介 カジュアル版',
+  'formal':            '自己紹介 フォーマル版',
+  'sop-status-report': 'SOP対応課題の状況報告'
+};
+
 function loadDashboardData(now) {
-  var weekStart = getWeekStart(now);
-  var monthStr  = now.toISOString().slice(0, 7); // YYYY-MM
+  var weekStart  = getWeekStart(now);
+  var monthStr   = now.toISOString().slice(0, 7); // YYYY-MM
 
   Promise.all([
-    apiGet('recordings').catch(function() { return []; }),
-    apiGet('records').catch(function() { return []; })
+    apiGet('recordings').catch(function() { return null; }),
+    apiGet('records').catch(function() { return null; })
   ]).then(function(results) {
-    var recFiles = Array.isArray(results[0]) ? results[0] : [];
-    var recJsons = Array.isArray(results[1]) ? results[1] : [];
+    var recFiles  = Array.isArray(results[0]) ? results[0] : [];
+    var recJsons  = Array.isArray(results[1]) ? results[1] : [];
 
-    // Parse recordings
+    // Parse all recordings
     var recordings = [];
     recFiles.forEach(function(f) {
-      var r = parseRecording(f.name);
+      var r = parseRecording(f.name || '');
       if (r) recordings.push(r);
     });
 
@@ -403,30 +497,26 @@ function loadDashboardData(now) {
     recordings.forEach(function(r) {
       if (r.mode === 'shadowing' && r.date >= weekStart) shadDays[r.date] = true;
     });
-    var shadCount = Object.keys(shadDays).length;
-    setDonut('shadArc', 'shadTxt', shadCount, 7);
+    setDonut('shadArc', 'shadTxt', Object.keys(shadDays).length, 7);
 
-    // This week vocab days (from records — approximation: reading mode as proxy if no vocab data)
-    // Use all practice days as vocab approximation (since vocab.html doesn't log recordings)
+    // This week practice days (vocab approximation — all modes)
     var pracDays = {};
     recordings.forEach(function(r) {
       if (r.date >= weekStart) pracDays[r.date] = true;
     });
-    var pracCount = Object.keys(pracDays).length;
-    setDonut('vocabArc', 'vocabTxt', pracCount, 7);
+    setDonut('vocabArc', 'vocabTxt', Object.keys(pracDays).length, 7);
 
     // Monthly count
-    var monthCount = recordings.filter(function(r) { return r.date.slice(0,7) === monthStr; }).length;
-    document.getElementById('monthCount').textContent = monthCount;
-    document.getElementById('monthSub').textContent = monthStr + '月の録音数';
+    var monthCount = recordings.filter(function(r) { return r.date.slice(0, 7) === monthStr; }).length;
+    document.getElementById('monthNum').textContent = monthCount;
 
-    // Load recent records (JSON files, newest first)
+    // Load recent records (newest 3 JSON files)
     var jsonFiles = recJsons.filter(function(f) {
-      return f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
-    }).sort(function(a,b) { return b.name.localeCompare(a.name); }).slice(0, 3);
+      return f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
+    }).sort(function(a, b) { return b.name.localeCompare(a.name); }).slice(0, 3);
 
     if (jsonFiles.length === 0) {
-      document.getElementById('recentList').innerHTML = '<div style="font-size:14px;color:var(--text2);font-weight:700;padding:8px 0">記録がまだありません</div>';
+      document.getElementById('recentList').innerHTML = '<div class="no-token">記録がまだありません</div>';
       return;
     }
 
@@ -436,68 +526,45 @@ function loadDashboardData(now) {
         try { return JSON.parse(decodeB64(d.content)); } catch(e) { return null; }
       }).catch(function() { return null; });
     })).then(function(recs) {
-      renderRecentRecords(recs.filter(Boolean));
+      recs = recs.filter(Boolean);
+      renderRecentRecords(recs);
       document.getElementById('seeAllLink').style.display = 'block';
+
+      // Score chart from recent records
+      var scores = recs.filter(function(r) { return r.score != null; })
+        .slice(0, 7).map(function(r) { return r.score; });
+      document.getElementById('scoreContent').innerHTML = buildScoreChart(scores);
     });
   }).catch(function() {
-    document.getElementById('recentList').innerHTML = '<div style="font-size:13px;color:var(--text2);font-weight:700">読み込みエラー</div>';
+    document.getElementById('recentList').innerHTML = '<div class="no-token">読み込みエラー</div>';
   });
 }
 
-function calcStreak(datesSet, now) {
-  var streak = 0;
-  var d = new Date(now);
-  for (var i = 0; i < 365; i++) {
-    var key = d.toISOString().split('T')[0];
-    if (datesSet[key]) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    } else if (i === 0) {
-      // today not practiced yet — check yesterday
-      d.setDate(d.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-  return streak;
-}
-
-function setDonut(arcId, txtId, val, max) {
-  var circ = 2 * Math.PI * 38; // 238.76
-  var dash = max > 0 ? (val / max) * circ : 0;
-  var remain = circ - dash;
-  var arc = document.getElementById(arcId);
-  var txt = document.getElementById(txtId);
-  if (arc) arc.setAttribute('stroke-dasharray', dash.toFixed(2) + ' ' + remain.toFixed(2));
-  if (txt) txt.textContent = val + '/' + max;
-}
-
-var SCRIPT_NAMES = {
-  'short': '自己紹介 ショート版',
-  'casual': '自己紹介 カジュアル版',
-  'formal': '自己紹介 フォーマル版',
-  'sop-status-report': 'SOP対応課題の状況報告'
-};
-
 function renderRecentRecords(recs) {
-  if (!recs.length) {
-    document.getElementById('recentList').innerHTML = '<div style="font-size:14px;color:var(--text2);font-weight:700;padding:8px 0">記録がありません</div>';
+  if (!recs || !recs.length) {
+    document.getElementById('recentList').innerHTML = '<div class="no-token">記録がありません</div>';
     return;
   }
   var html = recs.map(function(r) {
-    var modeLabel = r.mode === 'reading' ? '音読' : r.mode === 'shadowing' ? 'シャドー' : r.mode || '—';
+    var modeLabel = r.mode === 'reading' ? '音読' : r.mode === 'shadowing' ? 'シャドー' : (r.mode || '—');
     var modeCls   = r.mode === 'reading' ? 'rm-r' : 'rm-s';
     var title = SCRIPT_NAMES[r.scriptId] || r.scriptTitle || r.scriptId || '—';
     if (title.length > 14) title = title.slice(0, 13) + '…';
     var score = r.score != null ? r.score + '点' : '—';
     return '<div class="rec-item">'
       + '<span class="rec-mode ' + modeCls + '">' + modeLabel + '</span>'
-      + '<div class="rec-info"><div class="rec-script">' + title + '</div>'
-      + '<div class="rec-date">' + (r.date || '') + ' ' + (r.time || '') + '</div></div>'
-      + '<div class="rec-score">' + score + '</div>'
+      + '<div class="rec-info">'
+      + '<div class="rec-script">' + escHtml(title) + '</div>'
+      + '<div class="rec-date">' + escHtml((r.date || '') + (r.time ? ' ' + r.time : '')) + '</div>'
+      + '</div>'
+      + '<div class="rec-score">' + escHtml(score) + '</div>'
       + '</div>';
   }).join('');
   document.getElementById('recentList').innerHTML = html;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>
