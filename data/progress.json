@@ -27,7 +27,8 @@
     },
     "2026-05-31": {
       "shadowing": true,
-      "vocab": true
+      "vocab": true,
+      "vocabDoneCount": 25
     }
   }
 }
