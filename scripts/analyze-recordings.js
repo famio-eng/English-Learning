@@ -215,9 +215,11 @@ async function main() {
   }
   console.log('既存レコード: ' + existingSet.size + ' 件\n');
 
-  // 3. Find unanalyzed
+  // 3. Find unanalyzed — sort newest first so today's recordings are prioritized
   var unanalyzed = recordings.filter(function(f) {
     return !existingSet.has(f.name.replace('.m4a', ''));
+  }).sort(function(a, b) {
+    return b.name.localeCompare(a.name);
   });
   console.log('未分析ファイル: ' + unanalyzed.length + ' 件');
   unanalyzed.forEach(function(f) { console.log('  - ' + f.name); });
