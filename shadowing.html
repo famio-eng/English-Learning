@@ -417,6 +417,7 @@ var elapsed = 0;
 var dur = 0;
 var startT = null;
 var iv = null;
+var _boundaryFired = false;
 var points = 0;
 var practiceHistory = [];
 var readOk = 0;
@@ -1068,13 +1069,14 @@ function showAIFeedback(r, mode) {
 function doSpeak() {
   if (!current) return;
   synth.cancel();
+  _boundaryFired = false;
   var u = new SpeechSynthesisUtterance(current.raw);
   u.rate = rate;
   u.lang = 'en-US';
   dur = (current.raw.split(/\s+/).length / (200 * rate)) * 60;
   elapsed = 0;
   u.onstart = function() { playing = true; paused = false; updateBtn(); setSt('playing', '再生中'); startProg(); };
-  u.onboundary = function(e) { if (e.name === 'word') highlightWord(e.charIndex); };
+  u.onboundary = function(e) { if (e.name === 'word') { _boundaryFired = true; highlightWord(e.charIndex); } };
   u.onend = function() {
     playing = false; paused = false; updateBtn();
     var pf = document.getElementById('pFill');
@@ -1132,7 +1134,7 @@ function togglePlay() {
 function stopAll() {
   synth.cancel();
   clearInterval(iv);
-  playing = false; paused = false; elapsed = 0;
+  playing = false; paused = false; elapsed = 0; _boundaryFired = false;
   var pf = document.getElementById('pFill'); if (pf) pf.style.width = '0%';
   var tc = document.getElementById('tCur'); if (tc) tc.textContent = '0:00';
   var tt = document.getElementById('tTot'); if (tt) tt.textContent = '0:00';
@@ -1179,6 +1181,10 @@ function startProg() {
     var pf = document.getElementById('pFill'); if (pf) pf.style.width = (p * 100) + '%';
     var tc = document.getElementById('tCur'); if (tc) tc.textContent = fmt(e);
     var tt = document.getElementById('tTot'); if (tt) tt.textContent = fmt(dur);
+    if (!_boundaryFired && current && dur > 0) {
+      var rawLen = current.raw.trim().length;
+      highlightWord(Math.min(Math.floor((e / dur) * rawLen), rawLen - 1));
+    }
   }, 200);
 }
 

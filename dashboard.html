@@ -263,10 +263,7 @@ var GH_REPO  = 'English-Learning';
 var CLAUDE_CHAT = 'https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6';
 
 function makeLink(base) {
-  var params = [];
-  if (GEM_KEY)  params.push('k='  + GEM_KEY);
-  if (GH_TOKEN) params.push('gh=' + GH_TOKEN);
-  return base + (params.length ? '?' + params.join('&') : '');
+  return base + '?k=' + encodeURIComponent(GEM_KEY) + '&gh=' + encodeURIComponent(GH_TOKEN);
 }
 
 function escHtml(s) {
@@ -614,10 +611,9 @@ function saveDailyTask(key, value) {
 // ============================================================
 function updateQuickLinks() {
   var shadLink = makeLink('./shadowing.html');
-  var sep = shadLink.indexOf('?') >= 0 ? '&' : '?';
   document.getElementById('ql-shad').href  = shadLink;
   document.getElementById('ql-vocab').href = makeLink('./vocab.html');
-  document.getElementById('ql-rec').href   = shadLink + sep + '_tab=progress';
+  document.getElementById('ql-rec').href   = shadLink + '&_tab=progress';
   document.getElementById('seeAllLink').href = shadLink;
 }
 
