@@ -1,0 +1,23 @@
+{
+  "date": "2026-05-30",
+  "time": "18:59",
+  "scriptId": "sop-status-report",
+  "scriptTitle": "SOP対応課題の状況報告",
+  "mode": "shadowing",
+  "score": 52,
+  "scoreLabel": "Needs Work",
+  "passed": false,
+  "strengths": [
+    "Maintains a consistent volume throughout the recording.",
+    "Attempts to shadow the entire script, demonstrating effort to cover the content.",
+    "Some individual words are pronounced clearly and correctly."
+  ],
+  "improvements": [
+    "Improve pronunciation accuracy for specific words (e.g., 'Declaration', 'exclusion', 'additional', 'design documents') and clarity of 'r' sounds.",
+    "Enhance fluency by reducing hesitations, repetitions, and unnecessary filler words or sounds.",
+    "Develop more natural English rhythm and intonation to avoid a choppy or monotone delivery."
+  ],
+  "nextStepAdvice": "Practice reading aloud with a focus on linking words smoothly, reducing pauses, and actively mimicking the intonation patterns of native English speakers.",
+  "canAdvance": false,
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-30-18-59-sop-status-report-shadowing.m4a"
+}
