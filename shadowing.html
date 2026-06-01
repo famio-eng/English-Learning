@@ -920,6 +920,20 @@ function autoSaveRecording(mode) {
 function evalRec(mode) {
   autoSaveRecording(mode); // バックグラウンドで録音をGitHubに保存
   var fa = document.getElementById('fbArea');
+
+  // APIキー未設定の場合は自己評価にフォールバック
+  if (!GEM_KEY) {
+    if (fa) fa.innerHTML = '<div class="fb-card">'
+      + '<div style="font-size:13px;color:var(--amber);margin-bottom:8px">⚠️ GeminiキーがURLにありません</div>'
+      + '<div style="font-size:12px;color:var(--text2);margin-bottom:12px">URLに <code style="background:var(--bg3);padding:2px 5px;border-radius:4px">?k=APIキー</code> を追加するとAI評価が使えます。今回は自己評価で記録してください。</div>'
+      + '<div style="display:flex;gap:8px">'
+      + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="selfEval(\'bad\',\'' + mode + '\')">😕 難しい</button>'
+      + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="selfEval(\'ok\',\'' + mode + '\')">🙂 まあまあ</button>'
+      + '<button class="btn btn-primary" style="flex:1;font-size:13px" onclick="selfEval(\'good\',\'' + mode + '\')">😄 できた</button>'
+      + '</div></div>';
+    return;
+  }
+
   if (fa) fa.innerHTML = '<div style="text-align:center;padding:16px"><span class="spinner"></span><div style="font-size:13px;color:var(--text2);margin-top:8px">Gemini AI評価中...</div></div>';
 
   var totalSize = recChunks.reduce(function(s, c) { return s + c.size; }, 0);
