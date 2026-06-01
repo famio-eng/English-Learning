@@ -1,0 +1,23 @@
+{
+  "date": "2026-05-25",
+  "time": "16:35",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "reading",
+  "score": 72,
+  "scoreLabel": "Fair",
+  "passed": false,
+  "strengths": [
+    "Clear articulation of many common words and phrases.",
+    "Good overall flow with no significant hesitations or filler words.",
+    "Complete delivery of the script."
+  ],
+  "improvements": [
+    "Focus on accurate pronunciation of multi-syllable words like 'electrosurgical,' 'generator,' 'certification,' and 'responsibility.'",
+    "Adjust pacing, particularly for longer words and complex phrases, to ensure each sound is clearly articulated.",
+    "Vary intonation more to add natural emphasis and engagement to the speech."
+  ],
+  "nextStepAdvice": "Practice breaking down longer words into syllables and focusing on accurate pronunciation of each syllable, then re-integrating them into sentences at a slightly slower pace.",
+  "canAdvance": false,
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-25-16-35-short-reading.m4a"
+}
