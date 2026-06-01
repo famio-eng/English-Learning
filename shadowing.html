@@ -194,16 +194,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 // Usage: ?k=GEMINI_KEY&gh=GITHUB_TOKEN
 var _params = new URLSearchParams(window.location.search);
 var GH_TOKEN  = _params.get('gh') || '';
+var GEM_KEY   = _params.get('k')  || '';
 var GH_OWNER  = 'famio-eng';
 var GH_REPO   = 'English-Learning';
 var GEM_URL   = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
-
-// GEM_KEY is read from URL parameter ?k=AIza...
-// e.g. https://famio-eng.github.io/english-shadowing/?k=AIzaSy...
-var GEM_KEY = (function() {
-  var params = new URLSearchParams(window.location.search);
-  return params.get('k') || '';
-})();
 
 // ============================================================
 // SCRIPTS DATA
