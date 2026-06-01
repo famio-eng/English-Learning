@@ -1,0 +1,23 @@
+{
+  "date": "2026-06-01",
+  "time": "19:59",
+  "scriptId": "sop-status-report",
+  "scriptTitle": "SOP対応課題の状況報告",
+  "mode": "shadowing",
+  "score": 45,
+  "scoreLabel": "Needs Work",
+  "passed": false,
+  "strengths": [
+    "The speaker attempted to cover the entire script, demonstrating good completeness.",
+    "The pacing was generally consistent, allowing for comprehension despite other challenges.",
+    "Most words were identifiable, indicating a foundational understanding of the script."
+  ],
+  "improvements": [
+    "Significant improvement is needed in the pronunciation of 'r' and 'th' sounds, which were consistently mispronounced (e.g., 'r' often softened or replaced, 'th' often sounded like 'd').",
+    "Develop more natural English rhythm and intonation to avoid a somewhat monotone delivery and improve sentence flow.",
+    "Focus on articulating word endings (e.g., 't', 'd', 's') more clearly to enhance overall clarity and accuracy."
+  ],
+  "nextStepAdvice": "Practice targeted pronunciation drills for challenging sounds like 'r' and 'th', and actively listen to native speakers to mimic natural rhythm and intonation patterns.",
+  "canAdvance": false,
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-01-19-59-sop-status-report-shadowing.m4a"
+}
