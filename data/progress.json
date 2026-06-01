@@ -29,6 +29,10 @@
       "shadowing": true,
       "vocab": true,
       "vocabDoneCount": 25
+    },
+    "2026-06-01": {
+      "vocab": true,
+      "vocabDoneCount": 3
     }
   }
 }
