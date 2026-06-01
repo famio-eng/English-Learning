@@ -1,0 +1,23 @@
+{
+  "date": "2026-05-25",
+  "time": "16:38",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "reading",
+  "score": 78,
+  "scoreLabel": "Good",
+  "passed": false,
+  "strengths": [
+    "Clear articulation of most words.",
+    "Good overall pacing.",
+    "Generally smooth delivery."
+  ],
+  "improvements": [
+    "Some words were mispronounced (e.g., \"electrosurgical,\" \"regulatory,\" \"certification\").",
+    "Intonation could be more natural, especially at the end of sentences.",
+    "Some pauses were a bit long, breaking the flow."
+  ],
+  "nextStepAdvice": "Focus on practicing specific challenging words and vary your intonation to sound more natural.",
+  "canAdvance": false,
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-25-16-38-short-reading.m4a"
+}
