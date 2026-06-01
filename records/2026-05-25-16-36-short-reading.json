@@ -1,0 +1,23 @@
+{
+  "date": "2026-05-25",
+  "time": "16:36",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "reading",
+  "score": 55,
+  "scoreLabel": "Needs Work",
+  "passed": false,
+  "strengths": [
+    "Clear articulation of most individual words.",
+    "Consistent volume throughout the recording.",
+    "The entire script was read without omissions."
+  ],
+  "improvements": [
+    "Pronunciation of specific consonant sounds, especially 'v' (e.g., \"development,\" \"approval,\" \"responsibility\") and 'g' (e.g., \"surgical,\" \"generator,\" \"surgery\").",
+    "Developing more natural rhythm and intonation patterns to avoid a flat delivery.",
+    "Improving the overall flow and smoothness by linking words and phrases more naturally."
+  ],
+  "nextStepAdvice": "Focus on practicing the correct articulation of 'v' and 'g' sounds, and actively work on varying your pitch and stress to achieve a more natural rhythm.",
+  "canAdvance": false,
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-05-25-16-36-short-reading.m4a"
+}
