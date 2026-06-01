@@ -133,10 +133,10 @@
         "drive results",
         "drive change"
       ],
-      "interval": 0.8564244480000003,
-      "nextReview": "2026-06-01",
-      "reviewCount": 6,
-      "streak": 0,
+      "interval": 1.5073070284800005,
+      "nextReview": "2026-06-03",
+      "reviewCount": 7,
+      "streak": 1,
       "missCount": 3,
       "lastMissed": "2026-05-31"
     },
@@ -624,12 +624,12 @@
         "issue a Declaration of Conformity",
         "European Declaration of Conformity"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-01",
-      "reviewCount": 3,
-      "streak": 1,
-      "missCount": 2,
-      "lastMissed": "2026-05-31"
+      "interval": 0.48,
+      "nextReview": "2026-06-02",
+      "reviewCount": 4,
+      "streak": 0,
+      "missCount": 3,
+      "lastMissed": "2026-06-01"
     },
     {
       "id": "w023",
@@ -733,10 +733,10 @@
         "incorporate requirements",
         "incorporate changes into"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-01",
-      "reviewCount": 4,
-      "streak": 1,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-06-03",
+      "reviewCount": 5,
+      "streak": 2,
       "missCount": 3,
       "lastMissed": "2026-05-31"
     },
