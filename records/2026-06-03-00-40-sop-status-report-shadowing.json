@@ -1,0 +1,23 @@
+{
+  "date": "2026-06-03",
+  "time": "00:40",
+  "scriptId": "sop-status-report",
+  "scriptTitle": "SOP対応課題の状況報告",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 85,
+  "scoreLabel": "非常に良い",
+  "passed": true,
+  "strengths": [
+    "「Recently」、「important」、「decision」、「Declaration」、「Conformity」などの単語の発音が非常にクリアで正確でした。",
+    "全体的なリズムとイントネーションが自然で、ビジネスコミュニケーションに適しています。",
+    "流暢さがあり、途切れなくスムーズに話せています。"
+  ],
+  "improvements": [
+    "European: eu-RO-pe-an。スクリプトでは「the European」とありますが、音声では「an European」と発音されています。スクリプトに忠実に「the」を使いましょう。また、「European」は/j/の音で始まるため、通常は「a European」となります。",
+    "スクリプトの最後は「SOP」で終わっていますが、音声では「compliance」が追加されています。シャドーイングではスクリプトに忠実に発音しましょう。"
+  ],
+  "nextStepAdvice": "次の練習では、冠詞（a/an/the）の使い分けに特に注意して発音してみましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-04-00-39-sop-status-report-shadowing.m4a"
+}
