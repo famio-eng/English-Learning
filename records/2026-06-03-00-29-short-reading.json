@@ -1,0 +1,28 @@
+{
+  "date": "2026-06-03",
+  "time": "00:29",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "reading",
+  "rate": 0.7,
+  "score": 55,
+  "scoreLabel": "改善の余地あり",
+  "passed": false,
+  "strengths": [
+    "「project manager」の発音は非常にクリアでした。",
+    "「certification」や「responsibility」のような長い単語も正確に発音できていました。",
+    "全体的に声量が安定しており、聞き取りやすいです。"
+  ],
+  "improvements": [
+    "「relatively」: re-LA-tiv-ly と発音されていますが、RE-la-tiv-ly が正しいです。最初のREに強勢を置きます。",
+    "「development」: DE-vel-op-ment と発音されていますが、de-VEL-op-ment が正しいです。VELに強勢を置きます。",
+    "「role」: 「law」と発音されていますが、「role」(rōl) が正しいです。口を丸め、舌を奥に引いて発音します。",
+    "「electrosurgical」: e-lec-tro-SUR-gi-cal。SURの部分をよりはっきりと、強勢を意識して発音しましょう。",
+    "「regulatory」: RE-gu-la-to-ry。REに強勢を置きます。",
+    "全体的なリズムとイントネーションをより自然にするために、単語と単語のつながりを意識しましょう。",
+    "句読点や文の区切りで、もう少し自然なポーズを取ると、より聞き取りやすくなります。"
+  ],
+  "nextStepAdvice": "特に「role」の正しい発音と、単語の正しい強勢（アクセント）を意識して練習するようにしましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-04-00-29-short-reading.m4a"
+}
