@@ -38,7 +38,7 @@
       "memo": "仕事が長引いて時間気力がなかった"
     },
     "2026-06-03": {
-      "dialogue": true,
+      "dialogue": false,
       "vocab": true,
       "vocabDoneCount": 4,
       "shadowing": true
