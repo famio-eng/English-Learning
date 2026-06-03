@@ -10,9 +10,9 @@
     },
     "sop-status-report": {
       "readOk": 2,
-      "shadOk": 2,
-      "lastScore": 45,
-      "lastDate": "2026-06-01",
+      "shadOk": 3,
+      "lastScore": 85,
+      "lastDate": "2026-06-03",
       "readCleared": true,
       "shadCleared": true
     }
