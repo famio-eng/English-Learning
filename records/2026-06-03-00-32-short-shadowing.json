@@ -1,0 +1,28 @@
+{
+  "date": "2026-06-03",
+  "time": "00:32",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 60,
+  "scoreLabel": "良い",
+  "passed": false,
+  "strengths": [
+    "「Hi, I'm Fami」の発音は非常に明瞭でした。",
+    "「company」や「years」など、基本的な単語の多くは正確に発音できています。",
+    "「project manager」や「certification」など、比較的長い単語も概ね理解できる発音でした。",
+    "「looking forward to」のようなフレーズは、自然なつながりがありました。"
+  ],
+  "improvements": [
+    "role: ROL（口を丸めて「ロウ」と発音し、Lの音をはっきりと）",
+    "electrosurgical: e-lec-tro-SUR-gi-cal（SURに強勢。'g'の音をよりはっきりと「ジ」と発音）",
+    "endoscopic: en-do-SCO-pic（SCOに強勢。'p'の音をより強く「プ」と発音）",
+    "regulatory: RE-gu-la-to-ry（REに強勢。't'の音を「ラ」に近い音で発音）",
+    "an: 「We are at an exciting stage」の「an」が「ア」のように聞こえました。母音の前の「an」は、次の単語とつなげて発音しましょう。",
+    "全体的に、文のつながりがスムーズになるよう、単語間のリンキングを意識すると良いでしょう。"
+  ],
+  "nextStepAdvice": "特にRとLの音の区別と、単語の語尾の子音をはっきりと発音することを意識して練習しましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-04-00-32-short-shadowing.m4a"
+}
