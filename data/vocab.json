@@ -133,10 +133,10 @@
         "drive results",
         "drive change"
       ],
-      "interval": 1.5073070284800005,
-      "nextReview": "2026-06-03",
-      "reviewCount": 7,
-      "streak": 1,
+      "interval": 2.6528603701248015,
+      "nextReview": "2026-06-06",
+      "reviewCount": 8,
+      "streak": 2,
       "missCount": 3,
       "lastMissed": "2026-05-31"
     },
@@ -160,10 +160,10 @@
         "new to the role",
         "new to the team"
       ],
-      "interval": 2.9040000000000004,
-      "nextReview": "2026-06-03",
-      "reviewCount": 6,
-      "streak": 0,
+      "interval": 6.388800000000002,
+      "nextReview": "2026-06-10",
+      "reviewCount": 7,
+      "streak": 1,
       "missCount": 2,
       "lastMissed": "2026-05-31"
     },
@@ -191,12 +191,12 @@
         "application process",
         "regulatory submission"
       ],
-      "interval": 3.1402229760000018,
-      "nextReview": "2026-06-03",
-      "reviewCount": 6,
-      "streak": 2,
-      "missCount": 2,
-      "lastMissed": "2026-05-27"
+      "interval": 1.5073070284800008,
+      "nextReview": "2026-06-05",
+      "reviewCount": 7,
+      "streak": 0,
+      "missCount": 3,
+      "lastMissed": "2026-06-03"
     },
     {
       "id": "w008",
@@ -624,10 +624,10 @@
         "issue a Declaration of Conformity",
         "European Declaration of Conformity"
       ],
-      "interval": 0.2304,
-      "nextReview": "2026-06-03",
-      "reviewCount": 5,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-06-04",
+      "reviewCount": 6,
+      "streak": 1,
       "missCount": 4,
       "lastMissed": "2026-06-03"
     },
