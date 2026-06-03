@@ -40,7 +40,8 @@
     "2026-06-03": {
       "dialogue": true,
       "vocab": true,
-      "vocabDoneCount": 4
+      "vocabDoneCount": 4,
+      "shadowing": true
     }
   }
 }
