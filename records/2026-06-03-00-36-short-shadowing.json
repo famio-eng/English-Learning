@@ -1,0 +1,24 @@
+{
+  "date": "2026-06-03",
+  "time": "00:36",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 80,
+  "scoreLabel": "良い",
+  "passed": true,
+  "strengths": [
+    "「relatively」、「product」、「development」などの多音節語の強勢が正確で、非常に聞き取りやすいです。",
+    "「electrosurgical」や「endoscopic」といった専門用語も、正確な発音と強勢でクリアに発話できています。",
+    "全体的に流暢で、自然な速さで話せており、聞き取りやすいペースです。"
+  ],
+  "improvements": [
+    "I've: 'v'の音が弱く、「I've been」が「アイビン」のように聞こえる箇所がありました。'v'の音を意識して発音しましょう。",
+    "regulatory: re-GU-la-to-ry のように2音節目に強勢が置かれていますが、正しくは RE-gu-la-to-ry (レ-ギュ-ラ-トー-リー) のように1音節目に強勢を置きます。",
+    "and driving: 「and」の音が弱く、次の単語とのつながりが不明瞭な箇所がありました。もう少しはっきりと発音できると、よりスムーズなつながりになります。"
+  ],
+  "nextStepAdvice": "「regulatory」のような専門用語の強勢の位置を意識して発音練習をしましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-04-00-36-short-shadowing.m4a"
+}
