@@ -624,12 +624,12 @@
         "issue a Declaration of Conformity",
         "European Declaration of Conformity"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-06-02",
-      "reviewCount": 4,
+      "interval": 0.2304,
+      "nextReview": "2026-06-03",
+      "reviewCount": 5,
       "streak": 0,
-      "missCount": 3,
-      "lastMissed": "2026-06-01"
+      "missCount": 4,
+      "lastMissed": "2026-06-03"
     },
     {
       "id": "w023",
@@ -652,10 +652,10 @@
         "meet the exclusion criteria",
         "outlined in the SOP"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-02",
-      "reviewCount": 3,
-      "streak": 2,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-06",
+      "reviewCount": 4,
+      "streak": 3,
       "missCount": 1,
       "lastMissed": "2026-05-31"
     },
@@ -678,12 +678,12 @@
         "proceed in parallel with",
         "work in parallel"
       ],
-      "interval": 5.451776000000002,
-      "nextReview": "2026-06-05",
-      "reviewCount": 3,
-      "streak": 3,
-      "missCount": 0,
-      "lastMissed": ""
+      "interval": 2.6168524800000013,
+      "nextReview": "2026-06-06",
+      "reviewCount": 4,
+      "streak": 0,
+      "missCount": 1,
+      "lastMissed": "2026-06-03"
     },
     {
       "id": "w025",
@@ -704,10 +704,10 @@
         "estimate the scope of work",
         "scope of effort"
       ],
-      "interval": 5.451776000000002,
-      "nextReview": "2026-06-05",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 9.595125760000005,
+      "nextReview": "2026-06-13",
+      "reviewCount": 4,
+      "streak": 4,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -733,10 +733,10 @@
         "incorporate requirements",
         "incorporate changes into"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-03",
-      "reviewCount": 5,
-      "streak": 2,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-06",
+      "reviewCount": 6,
+      "streak": 3,
       "missCount": 3,
       "lastMissed": "2026-05-31"
     },
@@ -759,10 +759,10 @@
         "addressed in the sustaining phase",
         "post-launch sustaining"
       ],
-      "interval": 5.451776000000002,
-      "nextReview": "2026-06-05",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 9.595125760000005,
+      "nextReview": "2026-06-13",
+      "reviewCount": 4,
+      "streak": 4,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -785,10 +785,10 @@
         "prepare the test protocol",
         "review the test protocol"
       ],
-      "interval": 5.451776000000002,
-      "nextReview": "2026-06-05",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 9.595125760000005,
+      "nextReview": "2026-06-13",
+      "reviewCount": 4,
+      "streak": 4,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -811,10 +811,10 @@
         "Please feel free to ask",
         "Please feel free to contact me"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-02",
-      "reviewCount": 3,
-      "streak": 2,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-06",
+      "reviewCount": 4,
+      "streak": 3,
       "missCount": 1,
       "lastMissed": "2026-05-31"
     }
