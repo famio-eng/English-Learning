@@ -1,0 +1,26 @@
+{
+  "date": "2026-06-03",
+  "time": "00:33",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 64,
+  "scoreLabel": "Fair",
+  "passed": false,
+  "strengths": [
+    "「Hi, I'm Fami」の発音が明瞭で、聞き取りやすいです。",
+    "「electrosurgical」、「regulatory」、「endoscopic」といった専門用語も、概ね正確に発音できており、意味が伝わります。",
+    "全体的に声量が安定しており、明瞭度は高いです。"
+  ],
+  "improvements": [
+    "development: de-VE-lop-ment。VEに強勢を置き、最後の「-ment」をもう少しはっきりと発音しましょう。現在は「デベロップメン」のように聞こえることがあります。",
+    "manager: MA-na-ger。MAに強勢を置き、最後の「-ger」をもう少し明確に発音しましょう。",
+    "projects: PRO-jects。最後の「-s」の音をしっかり発音し、「プロジェクト」ではなく「プロジェクツ」と聞こえるように意識しましょう。",
+    "forward: FOR-ward。最後の「-d」の音をもう少しはっきりと発音しましょう。",
+    "Rhythm and Intonation: 全体的にイントネーションが平坦になりがちです。文の重要な単語を強調し、自然な抑揚をつけることで、より流暢に聞こえます。例えば、「I've been with the COMPANY for about TEN years, but I'm RELATIVELY new to product DEVELOPMENT...」のように、意味のまとまりごとに高低差をつける練習をしましょう。"
+  ],
+  "nextStepAdvice": "各単語の語尾の子音（-t, -d, -sなど）を意識して、はっきりと発音する練習をしましょう。これにより、単語の区切りが明確になり、よりクリアな発音になります。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-04-00-33-short-shadowing.m4a"
+}
