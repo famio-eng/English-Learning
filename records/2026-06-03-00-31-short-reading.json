@@ -1,0 +1,24 @@
+{
+  "date": "2026-06-03",
+  "time": "00:31",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "reading",
+  "rate": 0.7,
+  "score": 72,
+  "scoreLabel": "良好",
+  "passed": true,
+  "strengths": [
+    "明瞭さ: 全体的に非常にクリアで聞き取りやすいです。",
+    "複雑な単語の発音: \"electrosurgical\" (e-lec-tro-SUR-gi-cal), \"endoscopic\" (en-do-SCO-pic), \"generator\" (GE-ne-ra-tor), \"certification\" (cer-ti-fi-CA-tion), \"responsibility\" (re-spon-si-BI-li-ty) など、多くの専門用語や長い単語を正確に発音できています。"
+  ],
+  "improvements": [
+    "単語の強勢: \"relatively\" は re-LA-tive-ly ではなく、RE-la-tive-ly。REに強勢。",
+    "単語の強勢: \"development\" は DE-ve-lop-ment ではなく、de-VE-lop-ment。VEに強勢。",
+    "単語の強勢: \"regulatory\" は re-gu-LA-to-ry ではなく、RE-gu-la-to-ry。REに強勢。",
+    "流暢さとペース: 全体的に少しゆっくりで、句読点以外の場所でわずかな間があるため、より自然な会話の流れを意識すると良いでしょう。"
+  ],
+  "nextStepAdvice": "次の練習では、特に「relatively」「development」「regulatory」の3つの単語の強勢を意識して発音してみましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-04-00-30-short-reading.m4a"
+}
