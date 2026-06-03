@@ -1,0 +1,28 @@
+{
+  "date": "2026-06-03",
+  "time": "00:35",
+  "scriptId": "short",
+  "scriptTitle": "自己紹介 ショート版（1分）",
+  "mode": "shadowing",
+  "rate": 0.7,
+  "score": 62,
+  "scoreLabel": "まずまず",
+  "passed": false,
+  "strengths": [
+    "「Hi, I'm Fami.」の発音は自然で、聞き取りやすかったです。",
+    "「product development」や「project manager」など、多くのビジネス用語が明瞭に発音されていました。",
+    "「endoscopic」の強勢と発音は正確でした。",
+    "「responsibility」の強勢と発音も正確でした。"
+  ],
+  "improvements": [
+    "「role」: 「just two years into this law」と発音されていましたが、「role: RO-le」（役割）が正しいです。",
+    "「electrosurgical」と「surgery」: 'ur' の音が「アー」に近い発音になっていました。舌を少し巻き、口を丸めるようにして「er」の音を出す練習をしましょう。例: 「electrosurgical: e-lec-tro-SUR-gi-cal。SURに強勢。」、「surgery: SUR-ge-ry。SURに強勢。」",
+    "「regulatory」: 「RE-gu-la-to-ry。REに強勢。」現在、「re-GU-la-to-ry」のようにGUに強勢が置かれています。",
+    "文章全体のイントネーションがやや平坦で、自然な抑揚が不足しています。",
+    "「Happy to work with.」の文が途中で終わっており、不自然でした。",
+    "全体的に「r」の音が弱く、一部の単語で不明瞭になることがあります。"
+  ],
+  "nextStepAdvice": "特に、今回指摘した「electrosurgical」や「surgery」の 'ur' の音と、「regulatory」のような長い単語の強勢の位置に注意して練習しましょう。",
+  "memo": "",
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-06-04-00-34-short-shadowing.m4a"
+}
