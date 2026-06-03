@@ -2,11 +2,11 @@
   "scriptProgress": {
     "short": {
       "readOk": 3,
-      "shadOk": 0,
-      "lastScore": 62,
+      "shadOk": 1,
+      "lastScore": 80,
       "lastDate": "2026-06-03",
       "readCleared": true,
-      "shadCleared": false
+      "shadCleared": true
     },
     "sop-status-report": {
       "readOk": 2,
