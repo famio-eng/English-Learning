@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>対話練習</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root {
+  --bg:#1a1a1a;--card:#242424;--card2:#2a2a2a;--border:#3a3a3a;
+  --accent:#7c6ff7;--green:#22c55e;--amber:#f59e0b;--blue:#38bdf8;--red:#ef4444;
+  --text:#f0f0f0;--text2:#aaaaaa;--text3:#666666;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;font-size:14px;min-height:100%}
+a{color:inherit;text-decoration:none}
+.container{max-width:540px;margin:0 auto;padding:0 14px 64px}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:18px 0 14px}
+.back-btn{color:var(--text2);font-size:14px;font-weight:700;display:flex;align-items:center;gap:4px;cursor:pointer;background:none;border:none}
+.page-title{font-size:18px;font-weight:800}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
+.section{margin-bottom:12px}
+.sec-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+
+/* Buttons */
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;text-align:center;transition:opacity .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-secondary{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Script cards */
+.script-card{background:var(--card2);border:2px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .15s;margin-bottom:8px}
+.script-card.selected{border-color:var(--accent);background:rgba(124,111,247,.08)}
+.script-card-title{font-size:14px;font-weight:800}
+.script-card-sub{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* Count buttons */
+.count-row{display:flex;gap:8px}
+.count-btn{flex:1;padding:11px 0;border:2px solid var(--border);border-radius:10px;background:var(--card2);color:var(--text);font-size:15px;font-weight:800;cursor:pointer;text-align:center;transition:border-color .15s,background .15s}
+.count-btn.selected{border-color:var(--accent);background:rgba(124,111,247,.12);color:var(--accent)}
+
+/* Progress bar */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.prog-label{font-size:13px;font-weight:800;color:var(--text2);white-space:nowrap}
+.prog-bar{flex:1;height:4px;background:var(--border);border-radius:2px}
+.prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+
+/* Scene */
+.scene-card{background:var(--card2);border-radius:14px;padding:20px 18px;text-align:center;margin-bottom:14px}
+.scene-text{font-size:22px;font-weight:800;line-height:1.5}
+.scene-hint{font-size:11px;color:var(--text3);margin-top:6px}
+.target-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.target-chip{background:rgba(124,111,247,.1);border:1px solid rgba(124,111,247,.25);border-radius:6px;padding:3px 9px;font-size:12px;color:var(--accent);font-weight:700}
+
+/* Countdown ring */
+.cd-wrap{display:flex;flex-direction:column;align-items:center;margin:10px 0 16px}
+.cd-ring-wrap{position:relative;width:80px;height:80px}
+.cd-ring-wrap svg{transform:rotate(-90deg)}
+.cd-ring-bg{fill:none;stroke:var(--border);stroke-width:6}
+.cd-ring-fg{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .95s linear}
+.cd-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:800}
+.cd-label{font-size:11px;font-weight:700;color:var(--text2);margin-top:6px}
+
+/* Wave animation */
+.wave-wrap{display:flex;align-items:center;justify-content:center;gap:4px;height:44px;margin:10px 0}
+.wave-bar{width:4px;background:var(--accent);border-radius:2px;animation:wave .8s ease-in-out infinite}
+.wave-bar:nth-child(1){animation-delay:0s}
+.wave-bar:nth-child(2){animation-delay:.12s}
+.wave-bar:nth-child(3){animation-delay:.24s}
+.wave-bar:nth-child(4){animation-delay:.36s}
+.wave-bar:nth-child(5){animation-delay:.24s}
+.wave-bar:nth-child(6){animation-delay:.12s}
+.wave-bar:nth-child(7){animation-delay:0s}
+@keyframes wave{0%,100%{height:8px}50%{height:36px}}
+
+/* CEFR */
+.cefr-badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:800}
+.cefr-A1{background:rgba(170,170,170,.12);color:var(--text2)}
+.cefr-A2{background:rgba(56,189,248,.12);color:var(--blue)}
+.cefr-B1{background:rgba(245,158,11,.12);color:var(--amber)}
+.cefr-B2{background:rgba(124,111,247,.12);color:var(--accent)}
+.cefr-C1{background:rgba(34,197,94,.12);color:var(--green)}
+.cefr-C2{background:rgba(239,68,68,.12);color:var(--red)}
+
+/* Feedback */
+.fb-stats{display:flex;gap:10px;margin-bottom:14px}
+.fb-stat{flex:1;background:var(--card2);border-radius:10px;padding:12px;text-align:center}
+.fb-stat-val{font-size:20px;font-weight:800}
+.fb-stat-lbl{font-size:11px;color:var(--text2);margin-top:2px}
+.fb-sec{margin-bottom:14px}
+.fb-sec-title{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.fb-list{list-style:none}
+.fb-list li{padding:6px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.5;display:flex;gap:6px}
+.fb-list li:last-child{border:none}
+.fb-list li::before{content:'•';color:var(--accent);flex-shrink:0}
+.model-answer-box{background:rgba(124,111,247,.07);border:1px solid rgba(124,111,247,.18);border-radius:10px;padding:14px;font-size:14px;line-height:1.7;font-weight:700}
+
+/* End screen */
+.end-cefr-hero{text-align:center;padding:28px 0 20px}
+.end-cefr-big{font-size:52px;font-weight:800}
+.results-list{list-style:none}
+.results-list li{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.results-list li:last-child{border:none}
+.result-scene{font-size:13px;color:var(--text2);flex:1;margin-right:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.phrase-chips{display:flex;flex-wrap:wrap;gap:6px}
+.phrase-chip{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700}
+
+/* Graph */
+.graph-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* Loading */
+.loading-center{text-align:center;padding:60px 16px}
+.spinner{display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;z-index:9999;white-space:nowrap;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <button class="back-btn" onclick="goBack()">
+      <i data-lucide="arrow-left" style="width:16px;height:16px"></i> 戻る
+    </button>
+    <div class="page-title">対話練習</div>
+    <div style="width:60px"></div>
+  </div>
+  <div id="app"></div>
+</div>
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+var _p = new URLSearchParams(window.location.search);
+var GEM_KEY  = _p.get('k')  || '';
+var GH_TOKEN = _p.get('gh') || '';
+var GH_OWNER = 'famio-eng';
+var GH_REPO  = 'English-Learning';
+var GH_BRANCH = 'main';
+var GH_PROGRESS = 'data/progress.json';
+var GEM_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+
+// ============================================================
+// SCRIPTS
+// ============================================================
+var SCRIPTS = [
+  {
+    id: 'short',
+    title: '自己紹介 ショート版（1分）',
+    raw: "Hi, I'm Fami. I've been with the company for about ten years, but I'm relatively new to product development as a project manager—just two years into this role. I'm currently leading a project for an electrosurgical generator used in endoscopic surgery. We're at an exciting stage right now, about to submit applications for regulatory approval across multiple countries. I got my PMP certification earlier this year, so I'm looking forward to taking on more responsibility and driving projects forward. Happy to work with you all."
+  },
+  {
+    id: 'casual',
+    title: '自己紹介 カジュアル版（2分）',
+    raw: "Thanks for having me. My name is Fami. I've been with the medical device company for ten years, but I want to be honest—my journey into product development is still relatively new. I spent most of my career in other areas, and this current project is actually my first real experience leading a major development initiative. It's been a challenging but rewarding two years.\n\nRight now, I'm managing a project for an electrosurgical generator—basically, it controls the power output of an electric scalpel used in minimally invasive endoscopic surgery. The technology is complex, and there's a lot to learn about regulatory pathways, but I'm genuinely excited about what we're building and where we're headed.\n\nWe're at a critical milestone. After two years of development, we're getting ready to move into regulatory submissions. That's no small feat in the medical device world, and I'm proud of what the team has accomplished so far. I recently earned my PMP certification, which has given me a much clearer framework for managing all the moving parts of this project.\n\nLooking forward to collaborating with all of you."
+  },
+  {
+    id: 'formal',
+    title: '自己紹介 フォーマル版（3〜4分）',
+    raw: "Good morning, everyone. My name is Fami, and I'm the project manager for our electrosurgical generator development initiative.\n\nI'd like to give you a brief background on my journey here. I've been with the medical device company for approximately ten years. However, I want to be transparent: my direct experience in product development is more limited. For most of my tenure, I worked in other functions within the organization. This current project represents my first substantive leadership role in a full-scale medical device development program.\n\nWhat we're developing is an electrosurgical generator—a device that controls the power output of an electric surgical knife, or electroscalpel, used in endoscopic procedures. These are minimally invasive surgeries, which is why precision in power delivery is critical. The regulatory landscape for such devices is demanding, which has been an important learning curve for me.\n\nThe project itself is now in its second year. We've made significant progress through the development and clinical validation phases. As of now, we're preparing to move into regulatory submissions across multiple countries—a major milestone. This involves coordinating with various regulatory bodies, ensuring compliance with their specific requirements, and managing a complex timeline.\n\nTo strengthen my capabilities as a project manager, I completed my PMP certification earlier this year. That credential has given me a more rigorous framework for managing scope, schedule, cost, and stakeholder communication—all critical elements as we navigate the regulatory phase ahead.\n\nI'm committed to bringing both technical diligence and collaborative leadership to this team. I recognize that I'm still building my expertise in the medical device domain, but I'm also bringing a growth mindset and a willingness to learn from all of you. I look forward to working together."
+  },
+  {
+    id: 'sop-status-report',
+    title: 'SOP対応課題の状況報告',
+    raw: "Recently, our project reached an important decision: to move forward with the European Declaration of Conformity process without waiting for full SOP compliance. This was supported by our confirmation that this project meets the exclusion criteria outlined in the SOP. Thank you all for your support in reaching this decision.\n\nAt the same time, Rob has recommended that we proceed in parallel with the SOP compliance work specifically related to risk management. We have already started working with the team to estimate the scope of that effort. We will share the results separately, and I'd like to discuss the details further when Rob visits Japan.\n\nRegarding the additional verification test with increased sample size, also recommended by Rob, we are currently preparing the test protocol with Rob's support.\n\nHowever, there is one concern I'd like to raise. According to our team members, if we proceed with the risk management-related SOP compliance, the approach to sample size may need to be reconsidered. This means we may need to incorporate the SOP requirements into the additional test protocol as well.\n\nFurthermore, since this SOP compliance work may result in changes to design documents, there is a possibility that we will need to go through the European Declaration of Conformity process once more in the future. However, our current thinking is that this could be addressed in the sustaining phase rather than within the current project timeline.\n\nThat covers the current status and key challenges. Please feel free to share any questions or comments."
+  }
+];
+
+// ============================================================
+// CEFR
+// ============================================================
+var CEFR_LEVELS = ['A1','A2','B1','B2','C1','C2'];
+var CEFR_DESC = {
+  A1:'単語レベルで何とか伝わる',
+  A2:'簡単な文で意図は伝わる',
+  B1:'多少の誤りはあるが自然に伝わる',
+  B2:'ほぼ正確・自然な表現が使える',
+  C1:'ネイティブに近い流暢さ',
+  C2:'ネイティブレベル'
+};
+
+function cefrToNum(lv) { var i = CEFR_LEVELS.indexOf(lv); return i >= 0 ? i + 1 : 3; }
+function numToCefr(n)  { return CEFR_LEVELS[Math.min(Math.max(Math.round(n), 1), 6) - 1]; }
+function avgCefr(results) {
+  if (!results.length) return 'B1';
+  var sum = results.reduce(function(a, r) { return a + cefrToNum(r.cefrLevel || 'B1'); }, 0);
+  return numToCefr(sum / results.length);
+}
+
+// ============================================================
+// SESSION STATE
+// ============================================================
+var S = {
+  screen: 'start',    // start | loading | question | evaluating | feedback | end
+  script: null,
+  count: 5,
+  questions: [],
+  results: [],
+  currentQ: 0,
+  countdown: 3,
+  cdIv: null,
+  recStart: null,
+  recording: false,
+  mr: null,
+  chunks: [],
+  blob: null,
+  pastSessions: []
+};
+
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
+  var app = document.getElementById('app');
+  if (!app) return;
+  var html = '';
+  if      (S.screen === 'start')      html = buildStart();
+  else if (S.screen === 'loading')    html = buildLoading('Geminiが問題を生成中...');
+  else if (S.screen === 'question')   html = buildQuestion();
+  else if (S.screen === 'evaluating') html = buildLoading('Geminiが評価中...');
+  else if (S.screen === 'feedback')   html = buildFeedback();
+  else if (S.screen === 'end')        html = buildEnd();
+  app.innerHTML = html;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+// ---- START ----
+function buildStart() {
+  var scriptCards = SCRIPTS.map(function(s) {
+    var sel = S.script && S.script.id === s.id;
+    return '<div class="script-card' + (sel ? ' selected' : '') + '" onclick="selScript(\'' + s.id + '\')">'
+      + '<div class="script-card-title">' + escH(s.title) + '</div>'
+      + '</div>';
+  }).join('');
+
+  var cntBtns = [3, 5, 10].map(function(n) {
+    return '<button class="count-btn' + (S.count === n ? ' selected' : '') + '" onclick="selCount(' + n + ')">' + n + '問</button>';
+  }).join('');
+
+  return '<div class="section"><div class="sec-label">スクリプトを選択</div>' + scriptCards + '</div>'
+    + '<div class="section" style="margin-top:16px"><div class="sec-label">問題数</div>'
+    + '<div class="count-row">' + cntBtns + '</div></div>'
+    + '<div style="margin-top:24px">'
+    + '<button class="btn btn-primary" onclick="startSession()" ' + (!S.script ? 'disabled' : '') + '>練習開始</button>'
+    + '</div>';
+}
+
+// ---- LOADING ----
+function buildLoading(msg) {
+  return '<div class="loading-center">'
+    + '<div class="spinner"></div>'
+    + '<div style="margin-top:14px;font-weight:700;color:var(--text2)">' + escH(msg) + '</div>'
+    + '</div>';
+}
+
+// ---- QUESTION ----
+function buildQuestion() {
+  var q = S.questions[S.currentQ];
+  if (!q) return '';
+  var pct = (S.currentQ / S.questions.length * 100).toFixed(0);
+  var avgBadge = S.results.length
+    ? '<span class="cefr-badge cefr-' + avgCefr(S.results) + '">' + avgCefr(S.results) + '</span>'
+    : '<span style="color:var(--text3);font-size:12px">-</span>';
+
+  // Countdown ring
+  var R = 30, C = 2 * Math.PI * R;
+  var offset = C * (1 - S.countdown / 3);
+  var cdHtml = S.countdown > 0
+    ? '<div class="cd-wrap"><div class="cd-ring-wrap">'
+      + '<svg width="80" height="80" viewBox="0 0 80 80">'
+      + '<circle class="cd-ring-bg" cx="40" cy="40" r="' + R + '"/>'
+      + '<circle class="cd-ring-fg" id="cdRing" cx="40" cy="40" r="' + R
+      + '" stroke-dasharray="' + C.toFixed(2) + '" stroke-dashoffset="' + offset.toFixed(2) + '"/>'
+      + '</svg>'
+      + '<div class="cd-num" id="cdNum">' + S.countdown + '</div>'
+      + '</div><div class="cd-label">準備...</div></div>'
+    : '';
+
+  // Action area
+  var actionHtml = '';
+  if (S.recording) {
+    actionHtml = '<div class="wave-wrap">'
+      + '<div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>'
+      + '<div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>'
+      + '<div class="wave-bar"></div></div>'
+      + '<button class="btn btn-danger" onclick="stopRec()" style="margin-top:6px">⏹ 回答完了</button>';
+  } else if (S.countdown <= 0) {
+    actionHtml = '<button class="btn btn-primary" style="display:flex;align-items:center;justify-content:center;gap:8px" onclick="startRec()">'
+      + '<i data-lucide="mic" style="width:18px;height:18px"></i> 録音して回答</button>';
+  }
+
+  var phrases = (q.targetPhrases || []).map(function(p) {
+    return '<span class="target-chip">' + escH(p) + '</span>';
+  }).join('');
+
+  return '<div class="prog-row">'
+    + '<div class="prog-label">Q' + (S.currentQ + 1) + '/' + S.questions.length + '</div>'
+    + '<div class="prog-bar"><div class="prog-fill" id="pFill" style="width:' + pct + '%"></div></div>'
+    + avgBadge
+    + '</div>'
+    + '<div class="scene-card">'
+    + '<div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">英語で答えてください</div>'
+    + '<div class="scene-text">' + escH(q.scene) + '</div>'
+    + (phrases ? '<div class="target-chips">' + phrases + '</div>' : '')
+    + '</div>'
+    + cdHtml
+    + '<div style="margin-bottom:10px">' + actionHtml + '</div>'
+    + '<button class="btn btn-secondary" onclick="skipQ()">スキップ（日本語で回答）</button>';
+}
+
+// ---- FEEDBACK ----
+function buildFeedback() {
+  var r = S.results[S.currentQ - 1];
+  if (!r) return '';
+  var q = S.questions[S.currentQ - 1] || {};
+  var isLast = S.currentQ >= S.questions.length;
+  var nextLabel = isLast ? 'セッション終了' : '次の問題 →';
+
+  if (r.skipped) {
+    return '<div class="card section" style="text-align:center;padding:28px">'
+      + '<div style="font-size:12px;color:var(--text3);margin-bottom:8px">スキップ</div>'
+      + '<div style="font-size:18px;font-weight:800;margin-bottom:16px">' + escH(r.scene) + '</div>'
+      + (r.modelAnswer ? '<div class="sec-label">模範回答</div><div class="model-answer-box">' + escH(r.modelAnswer) + '</div>' : '')
+      + '</div>'
+      + '<button class="btn btn-primary" style="margin-top:14px" onclick="nextQ()">' + nextLabel + '</button>';
+  }
+
+  var strengths = (r.strengths || []).map(function(s) { return '<li>' + escH(s) + '</li>'; }).join('');
+  var improvements = (r.improvements || []).map(function(s) { return '<li>' + escH(s) + '</li>'; }).join('');
+
+  return '<div class="fb-stats">'
+    + '<div class="fb-stat"><div class="fb-stat-val"><span class="cefr-badge cefr-' + r.cefrLevel + '">' + r.cefrLevel + '</span></div>'
+    + '<div class="fb-stat-lbl">' + (CEFR_DESC[r.cefrLevel] || '') + '</div></div>'
+    + '<div class="fb-stat"><div class="fb-stat-val">' + r.reactionTime.toFixed(1) + '秒</div><div class="fb-stat-lbl">反応時間</div></div>'
+    + '</div>'
+    + '<div class="card section">'
+    + '<div style="font-size:12px;color:var(--text2);margin-bottom:4px">シーン</div>'
+    + '<div style="font-size:16px;font-weight:800">' + escH(q.scene || '') + '</div>'
+    + '</div>'
+    + '<div class="fb-sec"><div class="fb-sec-title">良かった点</div>'
+    + '<ul class="fb-list">' + (strengths || '<li style="color:var(--text3)">なし</li>') + '</ul></div>'
+    + '<div class="fb-sec"><div class="fb-sec-title">改善点</div>'
+    + '<ul class="fb-list">' + (improvements || '<li style="color:var(--text3)">なし</li>') + '</ul></div>'
+    + '<div class="fb-sec"><div class="fb-sec-title">模範回答</div>'
+    + '<div class="model-answer-box">' + escH(r.modelAnswer || '—') + '</div></div>'
+    + '<button class="btn btn-primary" style="margin-top:16px" onclick="nextQ()">' + nextLabel + '</button>';
+}
+
+// ---- END ----
+function buildEnd() {
+  var avg = avgCefr(S.results);
+  var resList = S.results.map(function(r, i) {
+    var q = S.questions[i] || {};
+    var badge = r.skipped
+      ? '<span style="font-size:12px;color:var(--text3)">スキップ</span>'
+      : '<span class="cefr-badge cefr-' + r.cefrLevel + '">' + r.cefrLevel + '</span>';
+    return '<li><span class="result-scene">Q' + (i+1) + '. ' + escH((q.scene||'').substring(0,22)) + '…</span>' + badge + '</li>';
+  }).join('');
+
+  // Weak phrases
+  var weakSet = {};
+  S.results.forEach(function(r) {
+    (r.improvements || []).forEach(function(imp) {
+      var m = imp.match(/["「]([^"」]{2,25})["」]/g);
+      if (m) m.forEach(function(p) { weakSet[p.replace(/["「」"]/g, '')] = true; });
+    });
+  });
+  var weakPhrases = Object.keys(weakSet).slice(0, 8);
+  var weakHtml = weakPhrases.length
+    ? weakPhrases.map(function(p) { return '<span class="phrase-chip">' + escH(p) + '</span>'; }).join('')
+    : '<span style="color:var(--text3);font-size:13px">なし</span>';
+
+  var graphHtml = buildCefrGraph();
+  var saveDisabled = !GH_TOKEN ? ' disabled' : '';
+  var saveLbl = GH_TOKEN ? '💾 GitHubに保存' : '⚠️ GH_TOKENなし（保存不可）';
+
+  return '<div class="end-cefr-hero">'
+    + '<div class="end-cefr-big"><span class="cefr-badge cefr-' + avg + '" style="font-size:40px;padding:10px 24px">' + avg + '</span></div>'
+    + '<div style="font-size:14px;color:var(--text2);margin-top:10px">' + (CEFR_DESC[avg]||'') + '</div>'
+    + '<div style="font-size:12px;color:var(--text3);margin-top:4px">今回の平均</div>'
+    + '</div>'
+    + '<div class="card section"><div class="sec-label">問題ごとの結果</div>'
+    + '<ul class="results-list">' + resList + '</ul></div>'
+    + '<div class="card section"><div class="sec-label">苦手なフレーズ</div>'
+    + '<div class="phrase-chips">' + weakHtml + '</div></div>'
+    + graphHtml
+    + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">'
+    + '<button class="btn btn-primary" id="saveBtn" onclick="saveSession()"' + saveDisabled + '>' + saveLbl + '</button>'
+    + '<button class="btn btn-secondary" onclick="retrySession()">もう一度</button>'
+    + '<a class="btn btn-secondary" href="./dashboard.html?k=' + encodeURIComponent(GEM_KEY) + '&gh=' + encodeURIComponent(GH_TOKEN) + '">ダッシュボードへ</a>'
+    + '</div>';
+}
+
+function buildCefrGraph() {
+  var sessions = S.pastSessions;
+  if (sessions.length < 2) return '';
+  var W = 300, H = 110, pL = 38, pR = 12, pT = 12, pB = 22;
+  var iW = W - pL - pR, iH = H - pT - pB;
+  var n = sessions.length;
+
+  function xp(i) { return pL + (n > 1 ? i * iW / (n - 1) : iW / 2); }
+  function yp(lv) { return pT + iH - ((cefrToNum(lv) - 1) / 5) * iH; }
+
+  var gridLines = CEFR_LEVELS.map(function(lv) {
+    var y = yp(lv);
+    return '<line x1="' + pL + '" y1="' + y.toFixed(1) + '" x2="' + (W-pR) + '" y2="' + y.toFixed(1)
+      + '" stroke="var(--border)" stroke-width="1"/>'
+      + '<text x="' + (pL-4) + '" y="' + (y+4).toFixed(1) + '" fill="var(--text3)" font-size="9" text-anchor="end">' + lv + '</text>';
+  }).join('');
+
+  var pts = sessions.map(function(s, i) { return xp(i).toFixed(1) + ',' + yp(s.averageCefrLevel).toFixed(1); }).join(' ');
+  var dots = sessions.map(function(s, i) {
+    var isCur = i === n - 1;
+    return '<circle cx="' + xp(i).toFixed(1) + '" cy="' + yp(s.averageCefrLevel).toFixed(1)
+      + '" r="' + (isCur ? 6 : 4) + '" fill="var(--accent)"'
+      + (isCur ? ' stroke="var(--bg)" stroke-width="2"' : ' opacity="0.7"') + '/>';
+  }).join('');
+
+  var dateLabels = '';
+  if (n >= 1) {
+    dateLabels += '<text x="' + xp(0).toFixed(1) + '" y="' + (H-4) + '" fill="var(--text3)" font-size="8" text-anchor="middle">' + (sessions[0].date||'').substring(5) + '</text>';
+    dateLabels += '<text x="' + xp(n-1).toFixed(1) + '" y="' + (H-4) + '" fill="var(--text3)" font-size="8" text-anchor="middle">' + (sessions[n-1].date||'').substring(5) + '</text>';
+  }
+
+  return '<div class="card section"><div class="sec-label">CEFRレベル推移（過去10セッション）</div>'
+    + '<div class="graph-scroll"><svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">'
+    + gridLines
+    + '<polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-opacity="0.5"/>'
+    + dots + dateLabels
+    + '</svg></div></div>';
+}
+
+// ============================================================
+// ACTIONS
+// ============================================================
+function goBack() {
+  if (S.screen === 'start') {
+    window.location.href = './dashboard.html?k=' + encodeURIComponent(GEM_KEY) + '&gh=' + encodeURIComponent(GH_TOKEN);
+    return;
+  }
+  if (S.screen === 'end') { S.screen = 'start'; render(); return; }
+  if (confirm('練習を中断しますか？')) {
+    stopAll();
+    S.screen = 'start';
+    render();
+  }
+}
+
+function selScript(id) {
+  S.script = SCRIPTS.filter(function(s) { return s.id === id; })[0] || null;
+  render();
+}
+
+function selCount(n) { S.count = n; render(); }
+
+function stopAll() {
+  if (S.cdIv) { clearInterval(S.cdIv); S.cdIv = null; }
+  if (S.mr && S.recording) { try { S.mr.stop(); } catch(e) {} }
+  S.recording = false;
+}
+
+async function startSession() {
+  if (!S.script) return;
+  if (!GEM_KEY) { showToast('⚠️ GeminiキーがURLにありません (?k=)'); return; }
+  S.results = [];
+  S.currentQ = 0;
+  S.screen = 'loading';
+  render();
+
+  await loadPastSessions();
+  var weakPhrases = extractWeak();
+  var qs = await generateQuestions(S.script, S.count, weakPhrases);
+  if (!qs || !qs.length) {
+    showToast('問題生成に失敗しました');
+    S.screen = 'start';
+    render();
+    return;
+  }
+  S.questions = qs;
+  S.currentQ = 0;
+  S.countdown = 3;
+  S.screen = 'question';
+  render();
+  startCountdown();
+}
+
+function startCountdown() {
+  if (S.cdIv) clearInterval(S.cdIv);
+  S.cdIv = setInterval(function() {
+    S.countdown--;
+    if (S.countdown <= 0) {
+      clearInterval(S.cdIv); S.cdIv = null;
+      S.countdown = 0;
+      render();
+      startRec();
+    } else {
+      var numEl = document.getElementById('cdNum');
+      var ringEl = document.getElementById('cdRing');
+      if (numEl) numEl.textContent = S.countdown;
+      if (ringEl) {
+        var C = 2 * Math.PI * 30;
+        ringEl.setAttribute('stroke-dashoffset', (C * (1 - S.countdown / 3)).toFixed(2));
+      }
+    }
+  }, 1000);
+}
+
+function startRec() {
+  if (S.recording) return;
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    var mt = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4'
+           : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '';
+    S.mr = mt ? new MediaRecorder(stream, { mimeType: mt }) : new MediaRecorder(stream);
+    S.chunks = [];
+    S.recStart = Date.now();
+    S.recording = true;
+    S.mr.ondataavailable = function(e) { if (e.data && e.data.size > 0) S.chunks.push(e.data); };
+    S.mr.onstop = function() {
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      var reactionTime = (Date.now() - S.recStart) / 1000;
+      S.blob = new Blob(S.chunks, { type: mt || 'audio/webm' });
+      S.recording = false;
+      doEval(reactionTime);
+    };
+    S.mr.start();
+    render();
+  }).catch(function() {
+    showToast('マイクへのアクセスが拒否されました');
+    S.recording = false;
+    render();
+  });
+}
+
+function stopRec() {
+  if (S.mr && S.recording) S.mr.stop();
+}
+
+async function skipQ() {
+  if (S.cdIv) { clearInterval(S.cdIv); S.cdIv = null; }
+  stopAll();
+  var q = S.questions[S.currentQ];
+  S.screen = 'evaluating';
+  render();
+  var answer = await getModelAnswer(q);
+  S.results.push({
+    q: S.currentQ + 1,
+    scene: q ? q.scene : '',
+    cefrLevel: 'A1',
+    score: 0,
+    reactionTime: 0,
+    strengths: [],
+    improvements: ['スキップされました。次回は英語で話してみましょう'],
+    modelAnswer: answer,
+    skipped: true
+  });
+  S.currentQ++;
+  S.screen = 'feedback';
+  render();
+}
+
+async function doEval(reactionTime) {
+  S.screen = 'evaluating';
+  render();
+  var q = S.questions[S.currentQ];
+  var ev = await evalAnswer(S.blob, q, reactionTime);
+  S.results.push(Object.assign({ q: S.currentQ + 1, scene: q ? q.scene : '', reactionTime: reactionTime }, ev));
+  S.currentQ++;
+  S.screen = 'feedback';
+  render();
+}
+
+function nextQ() {
+  if (S.currentQ >= S.questions.length) {
+    finishSession();
+  } else {
+    S.countdown = 3;
+    S.screen = 'question';
+    render();
+    startCountdown();
+  }
+}
+
+function finishSession() {
+  var curSess = { date: new Date().toISOString().split('T')[0], averageCefrLevel: avgCefr(S.results) };
+  S.pastSessions.push(curSess);
+  S.screen = 'end';
+  render();
+  markDailyTask();
+}
+
+function retrySession() {
+  S.results = []; S.questions = []; S.currentQ = 0;
+  S.screen = 'start';
+  render();
+}
+
+// ============================================================
+// GEMINI
+// ============================================================
+function callGemini(parts) {
+  if (!GEM_KEY) return Promise.resolve(null);
+  return fetch(GEM_URL + '?key=' + GEM_KEY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096 } })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (!d.candidates || !d.candidates[0]) return null;
+    return (d.candidates[0].content.parts || []).map(function(p) { return p.text || ''; }).join('');
+  })
+  .catch(function() { return null; });
+}
+
+async function generateQuestions(script, count, weakPhrases) {
+  var weakStr = weakPhrases.length ? '苦手なフレーズ（優先出題）: ' + weakPhrases.join(', ') + '\n\n' : '';
+  var prompt = '対話練習の問題を' + count + '問生成してください。\n\n'
+    + 'スクリプト: ' + script.title + '\n\n'
+    + weakStr
+    + '本文:\n"""\n' + script.raw + '\n"""\n\n'
+    + 'JSON配列のみを返してください（マークダウン不要）:\n'
+    + '[{"scene":"英語で伝えてほしい内容を日本語で20〜35文字","targetPhrases":["英語フレーズ1","英語フレーズ2"]}, ...]\n\n'
+    + 'ルール: sceneはスクリプト内容に基づく日本語の指示。targetPhrasesはスクリプト中の重要表現1〜2個。難易度にバリエーション。';
+  try {
+    var res = await callGemini([{ text: prompt }]);
+    if (!res) return null;
+    var m = res.match(/\[[\s\S]*?\]/);
+    if (!m) return null;
+    return JSON.parse(m[0]);
+  } catch(e) { return null; }
+}
+
+async function evalAnswer(audioBlob, q, reactionTime) {
+  var fallback = { cefrLevel: 'B1', score: 50, strengths: [], improvements: ['評価に失敗しました'], modelAnswer: '', fillerCount: 0 };
+  if (!audioBlob || audioBlob.size < 100) {
+    return Object.assign(fallback, { cefrLevel: 'A1', score: 0, improvements: ['音声が録音されませんでした'] });
+  }
+  var base64 = await blobToB64(audioBlob);
+  var mt = audioBlob.type || 'audio/mp4';
+  var prompt = 'ビジネス英語の音声録音を評価してください。\n\n'
+    + '日本語指示: 「' + (q ? q.scene : '') + '」\n'
+    + 'ターゲットフレーズ: ' + ((q && q.targetPhrases) ? q.targetPhrases.join(', ') : '') + '\n'
+    + '参照スクリプト（' + (S.script ? S.script.title : '') + '):\n"""\n' + (S.script ? S.script.raw.substring(0, 600) : '') + '\n"""\n\n'
+    + 'JSONのみ返してください（マークダウン不要）:\n'
+    + '{"cefrLevel":"B1","score":70,"strengths":["良かった点を具体的に1〜2個"],'
+    + '"improvements":["改善点を具体的に1〜2個"],"modelAnswer":"模範英文1〜2文","fillerCount":0}\n\n'
+    + 'CEFR: A1=単語のみ A2=簡単な文 B1=多少の誤り B2=ほぼ正確 C1=流暢 C2=ネイティブ';
+  try {
+    var res = await callGemini([{ text: prompt }, { inline_data: { mime_type: mt, data: base64 } }]);
+    if (!res) return fallback;
+    var m = res.match(/\{[\s\S]*\}/);
+    if (!m) return fallback;
+    var obj = JSON.parse(m[0]);
+    if (!CEFR_DESC[obj.cefrLevel]) obj.cefrLevel = 'B1';
+    return obj;
+  } catch(e) { return fallback; }
+}
+
+async function getModelAnswer(q) {
+  if (!GEM_KEY || !q) return '';
+  var prompt = '「' + q.scene + '」\nこの日本語指示に対する模範的な英語回答を1〜2文で。テキストのみ（説明不要）。'
+    + (q.targetPhrases && q.targetPhrases.length ? '\nできれば使ってほしい表現: ' + q.targetPhrases.join(', ') : '');
+  try {
+    return await callGemini([{ text: prompt }]) || '';
+  } catch(e) { return ''; }
+}
+
+// ============================================================
+// GITHUB
+// ============================================================
+function decB64(s) { return decodeURIComponent(escape(atob(s.replace(/\n/g, '')))); }
+function encB64(s) { return btoa(unescape(encodeURIComponent(s))); }
+
+function ghGet(path) {
+  return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
+    headers: { 'Authorization': 'Bearer ' + GH_TOKEN, 'Accept': 'application/vnd.github.v3+json' }
+  }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+}
+
+function ghPut(path, content, message) {
+  return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
+    method: 'PUT',
+    headers: { 'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: message, content: content, branch: GH_BRANCH })
+  }).then(function(r) { return r.json(); }).catch(function() { return null; });
+}
+
+async function loadPastSessions() {
+  S.pastSessions = [];
+  if (!GH_TOKEN) return;
+  try {
+    var files = await ghGet('records?ref=' + GH_BRANCH);
+    if (!Array.isArray(files)) return;
+    var dFiles = files
+      .filter(function(f) { return f.name.endsWith('-dialogue.json'); })
+      .sort(function(a, b) { return b.name.localeCompare(a.name); })
+      .slice(0, 9);
+    var loaded = await Promise.all(dFiles.map(function(f) {
+      var url = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/' + GH_BRANCH + '/records/' + f.name;
+      return fetch(url).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+    }));
+    S.pastSessions = loaded.filter(Boolean).reverse();
+  } catch(e) {}
+}
+
+function extractWeak() {
+  var phrs = {};
+  S.pastSessions.forEach(function(s) {
+    (s.keyPhrases || []).forEach(function(p) { phrs[p] = true; });
+  });
+  return Object.keys(phrs).slice(0, 5);
+}
+
+async function saveSession() {
+  if (!GH_TOKEN) return;
+  var btn = document.getElementById('saveBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '保存中...'; }
+
+  var now = new Date();
+  var d = now.toISOString().split('T')[0];
+  var h = String(now.getHours()).padStart(2,'0');
+  var m = String(now.getMinutes()).padStart(2,'0');
+  var fname = d + '-' + h + '-' + m + '-dialogue.json';
+
+  var weakSet = {};
+  S.results.forEach(function(r) {
+    (r.improvements || []).forEach(function(imp) {
+      var mt = imp.match(/["「]([^"」]{2,25})["」]/g);
+      if (mt) mt.forEach(function(p) { weakSet[p.replace(/["「」"]/g,'')] = true; });
+    });
+  });
+
+  var record = {
+    date: d, time: h + ':' + m, type: 'dialogue',
+    scriptId: S.script ? S.script.id : '',
+    scriptTitle: S.script ? S.script.title : '',
+    questions: S.questions.length,
+    averageCefrLevel: avgCefr(S.results),
+    results: S.results.map(function(r, i) {
+      return { q: i+1, scene: r.scene, cefrLevel: r.cefrLevel, score: r.score||0,
+               reactionTime: r.reactionTime, strengths: r.strengths||[],
+               improvements: r.improvements||[], modelAnswer: r.modelAnswer||'' };
+    }),
+    keyPhrases: Object.keys(weakSet).slice(0, 6),
+    nextAction: S.results.length ? ((S.results[S.results.length-1].improvements||[])[0]||'') : ''
+  };
+
+  var res = await ghPut('records/' + fname, encB64(JSON.stringify(record, null, 2)), 'Add dialogue: ' + fname);
+  if (res && res.content) {
+    showToast('✓ 保存しました');
+    if (btn) btn.textContent = '✓ 保存済み';
+  } else {
+    showToast('保存に失敗しました');
+    if (btn) { btn.disabled = false; btn.textContent = '💾 GitHubに保存'; }
+  }
+}
+
+function markDailyTask() {
+  if (!GH_TOKEN) return;
+  var today = new Date().toISOString().split('T')[0];
+  var url = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS;
+  fetch(url, { headers: { 'Authorization': 'Bearer ' + GH_TOKEN } })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      if (!d || !d.content) return;
+      var obj;
+      try { obj = JSON.parse(decB64(d.content)); } catch(e) { obj = {}; }
+      if (!obj.dailyTasks) obj.dailyTasks = {};
+      if (!obj.dailyTasks[today]) obj.dailyTasks[today] = {};
+      if (obj.dailyTasks[today].dialogue) return;
+      obj.dailyTasks[today].dialogue = true;
+      return fetch(url, {
+        method: 'PUT',
+        headers: { 'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Update: dialogue done ' + today, content: encB64(JSON.stringify(obj, null, 2)), sha: d.sha, branch: GH_BRANCH })
+      });
+    }).catch(function() {});
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function escH(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function blobToB64(blob) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onloadend = function() { resolve(reader.result.split(',')[1]); };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { if (t.parentNode) t.parentNode.removeChild(t); }, 2800);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() { render(); });
+</script>
+</body>
+</html>
