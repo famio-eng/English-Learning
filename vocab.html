@@ -222,7 +222,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 // ============================================================
 var GH_OWNER = 'famio-eng';
 var GH_REPO  = 'English-Learning';
-var GH_TOKEN = (new URLSearchParams(window.location.search)).get('gh') || '';
+var _vp = new URLSearchParams(window.location.search);
+var GH_TOKEN = _vp.get('gh') || '';
+var GEM_KEY  = _vp.get('k')  || '';
 var RAW_BASE = 'https://raw.githubusercontent.com/' + GH_OWNER + '/' + GH_REPO + '/main/';
 var PROGRESS_KEY = 'vocab_progress_v2';
 var STATS_KEY    = 'vocab_daily_stats';
@@ -1108,7 +1110,8 @@ if (GH_TOKEN) {
   var a = document.getElementById('backToDash');
   if (a) {
     var params = [];
-    if (GH_TOKEN) params.push('gh=' + GH_TOKEN);
+    if (GEM_KEY)  params.push('k='  + encodeURIComponent(GEM_KEY));
+    if (GH_TOKEN) params.push('gh=' + encodeURIComponent(GH_TOKEN));
     if (params.length) a.href = './dashboard.html?' + params.join('&');
   }
 })();
