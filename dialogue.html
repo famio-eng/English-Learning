@@ -476,16 +476,22 @@ async function startSession() {
   await loadPastSessions();
   var weakPhrases = extractWeak();
   var qs;
+  var apiErrMsg = null;
   try {
     qs = await generateQuestions(S.script, S.count, weakPhrases);
   } catch(e) {
-    showToast('問題生成失敗: ' + (e.message || '不明なエラー'));
-    S.screen = 'start';
-    render();
-    return;
+    apiErrMsg = e.message || '不明なエラー';
   }
   if (!qs || !qs.length) {
-    showToast('問題生成に失敗しました（応答が空です）');
+    qs = makeFallbackQuestions(S.script, S.count);
+    if (apiErrMsg) {
+      showToast('問題生成失敗: ' + apiErrMsg + ' | オフライン問題で開始します');
+    } else {
+      showToast('API応答が空のためオフライン問題を使用します');
+    }
+  }
+  if (!qs || !qs.length) {
+    showToast('問題の生成に失敗しました');
     S.screen = 'start';
     render();
     return;
@@ -630,21 +636,47 @@ function callGemini(parts) {
 }
 
 async function generateQuestions(script, count, weakPhrases) {
-  var weakStr = weakPhrases.length ? '苦手なフレーズ（優先出題）: ' + weakPhrases.join(', ') + '\n\n' : '';
-  var prompt = '対話練習の問題を' + count + '問生成してください。\n\n'
-    + 'スクリプト: ' + script.title + '\n\n'
+  var excerpt = script.raw.replace(/\n+/g, ' ').substring(0, 200);
+  var weakStr = weakPhrases.length
+    ? '\n苦手フレーズ（優先出題）: ' + weakPhrases.slice(0, 5).join(', ')
+    : '';
+  var prompt = '以下のスクリプトを参考に、ビジネス英語の瞬間英作文練習用の日本語シーンを' + count + '問生成してください。'
+    + '\n\nスクリプト: ' + script.title
+    + '\n本文（抜粋）: ' + excerpt + '…'
     + weakStr
-    + '本文:\n"""\n' + script.raw + '\n"""\n\n'
-    + 'JSON配列のみを返してください（マークダウン不要）:\n'
-    + '[{"scene":"英語で伝えてほしい内容を日本語で20〜35文字","targetPhrases":["英語フレーズ1","英語フレーズ2"]}, ...]\n\n'
-    + 'ルール: sceneはスクリプト内容に基づく日本語の指示。targetPhrasesはスクリプト中の重要表現1〜2個。難易度にバリエーション。';
+    + '\n\n以下のJSON配列のみを返してください。説明文は不要です:\n'
+    + '[{"scene":"日本語でのシーン説明（20文字程度）","targetPhrases":["英語フレーズ1","英語フレーズ2"]}]';
   var res = await callGemini([{ text: prompt }]);
   try {
     if (!res) return null;
-    var m = res.match(/\[[\s\S]*?\]/);
+    var cleaned = res.replace(/```(?:json)?\n?/gi, '').replace(/\n?```/g, '').trim();
+    var m = cleaned.match(/\[[\s\S]*\]/);  // greedy: capture full array including nested []
     if (!m) return null;
-    return JSON.parse(m[0]);
+    var arr = JSON.parse(m[0]);
+    return Array.isArray(arr) && arr.length ? arr : null;
   } catch(e) { return null; }
+}
+
+function makeFallbackQuestions(script, count) {
+  var sents = [];
+  script.raw.replace(/\n+/g, ' ').replace(/([^.!?]{10,}[.!?])\s*/g, function(_, s) {
+    s = s.trim().replace(/[.!?]+$/, '');
+    if (s.length >= 15 && s.length <= 250) sents.push(s);
+  });
+  if (!sents.length) return null;
+  var result = [];
+  for (var i = 0; i < count; i++) {
+    var idx = Math.min(Math.round(i * sents.length / count), sents.length - 1);
+    var s = sents[idx];
+    var words = s.split(' ');
+    var ph1 = words.slice(0, 5).join(' ');
+    var ph2 = words.slice(Math.floor(words.length / 2), Math.floor(words.length / 2) + 4).join(' ');
+    result.push({
+      scene: '(練習' + (i + 1) + ') 「' + s.substring(0, 24) + '…」を英語で',
+      targetPhrases: [ph1, ph2].filter(function(p) { return p && p.trim().length > 3; }).slice(0, 2)
+    });
+  }
+  return result;
 }
 
 async function evalAnswer(audioBlob, q, reactionTime) {
