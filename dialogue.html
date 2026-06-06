@@ -475,9 +475,17 @@ async function startSession() {
 
   await loadPastSessions();
   var weakPhrases = extractWeak();
-  var qs = await generateQuestions(S.script, S.count, weakPhrases);
+  var qs;
+  try {
+    qs = await generateQuestions(S.script, S.count, weakPhrases);
+  } catch(e) {
+    showToast('問題生成失敗: ' + (e.message || '不明なエラー'));
+    S.screen = 'start';
+    render();
+    return;
+  }
   if (!qs || !qs.length) {
-    showToast('問題生成に失敗しました');
+    showToast('問題生成に失敗しました（応答が空です）');
     S.screen = 'start';
     render();
     return;
@@ -612,10 +620,13 @@ function callGemini(parts) {
   })
   .then(function(r) { return r.json(); })
   .then(function(d) {
+    if (d.error) {
+      var msg = (d.error.message || '').split('\n')[0].substring(0, 120);
+      throw new Error('Gemini API Error ' + d.error.code + ' - ' + msg);
+    }
     if (!d.candidates || !d.candidates[0]) return null;
     return (d.candidates[0].content.parts || []).map(function(p) { return p.text || ''; }).join('');
-  })
-  .catch(function() { return null; });
+  });
 }
 
 async function generateQuestions(script, count, weakPhrases) {
@@ -627,8 +638,8 @@ async function generateQuestions(script, count, weakPhrases) {
     + 'JSON配列のみを返してください（マークダウン不要）:\n'
     + '[{"scene":"英語で伝えてほしい内容を日本語で20〜35文字","targetPhrases":["英語フレーズ1","英語フレーズ2"]}, ...]\n\n'
     + 'ルール: sceneはスクリプト内容に基づく日本語の指示。targetPhrasesはスクリプト中の重要表現1〜2個。難易度にバリエーション。';
+  var res = await callGemini([{ text: prompt }]);
   try {
-    var res = await callGemini([{ text: prompt }]);
     if (!res) return null;
     var m = res.match(/\[[\s\S]*?\]/);
     if (!m) return null;
