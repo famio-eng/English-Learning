@@ -62,7 +62,9 @@
     },
     "2026-06-07": {
       "_m_shadowing": true,
-      "shadowing": true
+      "shadowing": true,
+      "_m_vocab": true,
+      "vocab": true
     }
   }
 }
