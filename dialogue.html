@@ -113,6 +113,11 @@ a{color:inherit;text-decoration:none}
 /* Graph */
 .graph-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
+/* Question display */
+.q-label{font-size:11px;font-weight:700;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+.q-japanese{font-size:19px;font-weight:800;line-height:1.7;color:var(--text);text-align:left}
+.q-hint{margin-top:12px;padding:10px 12px;background:rgba(124,111,247,.08);border:1px solid rgba(124,111,247,.2);border-radius:8px}
+
 /* Loading */
 .loading-center{text-align:center;padding:60px 16px}
 .spinner{display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
@@ -205,6 +210,7 @@ var S = {
   currentQ: 0,
   countdown: 3,
   cdIv: null,
+  showHint: false,
   recStart: null,
   recording: false,
   mr: null,
@@ -283,6 +289,23 @@ function buildQuestion() {
       + '</div><div class="cd-label">準備...</div></div>'
     : '';
 
+  // Hint area (shown inside scene card when activated)
+  var hintHtml = '';
+  if (S.showHint) {
+    var chips = (q.targetPhrases || []).map(function(p) {
+      return '<span class="target-chip">' + escH(p) + '</span>';
+    }).join('');
+    hintHtml = '<div class="q-hint">'
+      + (chips ? '<div class="target-chips" style="justify-content:flex-start">' + chips + '</div>' : '')
+      + (q.hint ? '<div style="font-size:12px;color:var(--text2);margin-top:6px">' + escH(q.hint) + '</div>' : '')
+      + '</div>';
+  }
+
+  // Hint button: visible during countdown if not yet shown
+  var hintBtnHtml = (!S.showHint && S.countdown > 0 && (q.targetPhrases || []).length)
+    ? '<button class="btn btn-secondary" style="margin-bottom:10px;font-size:13px;padding:10px" onclick="S.showHint=true;render()">💡 ヒントを見る</button>'
+    : '';
+
   // Action area
   var actionHtml = '';
   if (S.recording) {
@@ -293,26 +316,23 @@ function buildQuestion() {
       + '<button class="btn btn-danger" onclick="stopRec()" style="margin-top:6px">⏹ 回答完了</button>';
   } else if (S.countdown <= 0) {
     actionHtml = '<button class="btn btn-primary" style="display:flex;align-items:center;justify-content:center;gap:8px" onclick="startRec()">'
-      + '<i data-lucide="mic" style="width:18px;height:18px"></i> 録音して回答</button>';
+      + '<i data-lucide="mic" style="width:18px;height:18px"></i> 🎙 録音して回答</button>';
   }
-
-  var phrases = (q.targetPhrases || []).map(function(p) {
-    return '<span class="target-chip">' + escH(p) + '</span>';
-  }).join('');
 
   return '<div class="prog-row">'
     + '<div class="prog-label">Q' + (S.currentQ + 1) + '/' + S.questions.length + '</div>'
     + '<div class="prog-bar"><div class="prog-fill" id="pFill" style="width:' + pct + '%"></div></div>'
     + avgBadge
     + '</div>'
-    + '<div class="scene-card">'
-    + '<div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:8px">英語で答えてください</div>'
-    + '<div class="scene-text">' + escH(q.scene) + '</div>'
-    + (phrases ? '<div class="target-chips">' + phrases + '</div>' : '')
+    + '<div class="scene-card" style="text-align:left">'
+    + '<div class="q-label">❓ 以下を英語で言ってください</div>'
+    + '<div class="q-japanese">「' + escH(q.japanese || q.scene || '') + '」</div>'
+    + hintHtml
     + '</div>'
+    + hintBtnHtml
     + cdHtml
     + '<div style="margin-bottom:10px">' + actionHtml + '</div>'
-    + '<button class="btn btn-secondary" onclick="skipQ()">スキップ（日本語で回答）</button>';
+    + '<button class="btn btn-secondary" onclick="skipQ()">スキップ</button>';
 }
 
 // ---- FEEDBACK ----
@@ -326,7 +346,7 @@ function buildFeedback() {
   if (r.skipped) {
     return '<div class="card section" style="text-align:center;padding:28px">'
       + '<div style="font-size:12px;color:var(--text3);margin-bottom:8px">スキップ</div>'
-      + '<div style="font-size:18px;font-weight:800;margin-bottom:16px">' + escH(r.scene) + '</div>'
+      + '<div style="font-size:18px;font-weight:800;margin-bottom:16px">「' + escH(r.japanese || r.scene || '') + '」</div>'
       + (r.modelAnswer ? '<div class="sec-label">模範回答</div><div class="model-answer-box">' + escH(r.modelAnswer) + '</div>' : '')
       + '</div>'
       + '<button class="btn btn-primary" style="margin-top:14px" onclick="nextQ()">' + nextLabel + '</button>';
@@ -341,8 +361,8 @@ function buildFeedback() {
     + '<div class="fb-stat"><div class="fb-stat-val">' + r.reactionTime.toFixed(1) + '秒</div><div class="fb-stat-lbl">反応時間</div></div>'
     + '</div>'
     + '<div class="card section">'
-    + '<div style="font-size:12px;color:var(--text2);margin-bottom:4px">シーン</div>'
-    + '<div style="font-size:16px;font-weight:800">' + escH(q.scene || '') + '</div>'
+    + '<div style="font-size:12px;color:var(--text2);margin-bottom:4px">問題文</div>'
+    + '<div style="font-size:16px;font-weight:800">「' + escH(q.japanese || q.scene || '') + '」</div>'
     + '</div>'
     + '<div class="fb-sec"><div class="fb-sec-title">良かった点</div>'
     + '<ul class="fb-list">' + (strengths || '<li style="color:var(--text3)">なし</li>') + '</ul></div>'
@@ -361,7 +381,7 @@ function buildEnd() {
     var badge = r.skipped
       ? '<span style="font-size:12px;color:var(--text3)">スキップ</span>'
       : '<span class="cefr-badge cefr-' + r.cefrLevel + '">' + r.cefrLevel + '</span>';
-    return '<li><span class="result-scene">Q' + (i+1) + '. ' + escH((q.scene||'').substring(0,22)) + '…</span>' + badge + '</li>';
+    return '<li><span class="result-scene">Q' + (i+1) + '. ' + escH((q.japanese||q.scene||'').substring(0,22)) + '…</span>' + badge + '</li>';
   }).join('');
 
   // Weak phrases
@@ -471,6 +491,7 @@ async function startSession() {
   if (!GEM_KEY) { showToast('⚠️ GeminiキーがURLにありません (?k=)'); return; }
   S.results = [];
   S.currentQ = 0;
+  S.showHint = false;
   S.screen = 'loading';
   render();
 
@@ -572,7 +593,7 @@ async function skipQ() {
   var answer = await getModelAnswer(q);
   S.results.push({
     q: S.currentQ + 1,
-    scene: q ? q.scene : '',
+    japanese: q ? (q.japanese || q.scene || '') : '',
     cefrLevel: 'A1',
     score: 0,
     reactionTime: 0,
@@ -595,13 +616,14 @@ async function doEval(reactionTime) {
     showToast('評価失敗: ' + ev._evalError);
     delete ev._evalError;
   }
-  S.results.push(Object.assign({ q: S.currentQ + 1, scene: q ? q.scene : '', reactionTime: reactionTime }, ev));
+  S.results.push(Object.assign({ q: S.currentQ + 1, japanese: q ? (q.japanese || q.scene || '') : '', reactionTime: reactionTime }, ev));
   S.currentQ++;
   S.screen = 'feedback';
   render();
 }
 
 function nextQ() {
+  S.showHint = false;
   if (S.currentQ >= S.questions.length) {
     finishSession();
   } else {
@@ -648,16 +670,16 @@ function callGemini(parts) {
 }
 
 async function generateQuestions(script, count, weakPhrases) {
-  var excerpt = script.raw.replace(/\n+/g, ' ').substring(0, 200);
   var weakStr = weakPhrases.length
     ? '\n苦手フレーズ（優先出題）: ' + weakPhrases.slice(0, 5).join(', ')
     : '';
-  var prompt = '以下のスクリプトを参考に、ビジネス英語の瞬間英作文練習用の日本語シーンを' + count + '問生成してください。'
-    + '\n\nスクリプト: ' + script.title
-    + '\n本文（抜粋）: ' + excerpt + '…'
+  var prompt = '以下のスクリプトから瞬間英作文の練習問題を' + count + '問生成してください。\n'
+    + '各問題は「日本語の文章を英語で言う」形式です。\n\n'
+    + 'スクリプト: ' + script.raw
     + weakStr
-    + '\n\n以下のJSON配列のみを返してください。説明文は不要です:\n'
-    + '[{"scene":"日本語でのシーン説明（20文字程度）","targetPhrases":["英語フレーズ1","英語フレーズ2"]}]';
+    + '\n\n以下のJSON配列のみを返してください：\n'
+    + '[{"japanese":"瞬時に英語で言ってほしい日本語の文章","targetPhrases":["使ってほしい英語フレーズ1","フレーズ2"],"hint":"難しい単語のヒント（任意）"}]\n\n'
+    + '条件:\n- 1問は1〜2文程度の長さ\n- スクリプトの重要フレーズを含む問題を優先\n- 簡単な問題から徐々に難しくなるよう順番を調整';
   var res = await callGemini([{ text: prompt }]);
   try {
     if (!res) return null;
@@ -684,8 +706,9 @@ function makeFallbackQuestions(script, count) {
     var ph1 = words.slice(0, 5).join(' ');
     var ph2 = words.slice(Math.floor(words.length / 2), Math.floor(words.length / 2) + 4).join(' ');
     result.push({
-      scene: '(練習' + (i + 1) + ') 「' + s.substring(0, 24) + '…」を英語で',
-      targetPhrases: [ph1, ph2].filter(function(p) { return p && p.trim().length > 3; }).slice(0, 2)
+      japanese: 'スクリプト第' + (i + 1) + '文を英語で言ってください（ヒント: 「' + s.substring(0, 20) + '…」）',
+      targetPhrases: [ph1, ph2].filter(function(p) { return p && p.trim().length > 3; }).slice(0, 2),
+      hint: s  // full English sentence shown as hint
     });
   }
   return result;
@@ -700,7 +723,7 @@ async function evalAnswer(audioBlob, q, reactionTime) {
   var mt = S.recMimeType || audioBlob.type || 'audio/mp4';
   var scriptExcerpt = S.script ? S.script.raw.replace(/\n+/g, ' ').substring(0, 200) : '';
   var prompt = 'You are an English coach evaluating a business English speaking practice.\n'
-    + 'Scene: ' + (q ? q.scene : '') + '\n'
+    + 'Scene: ' + (q ? (q.japanese || q.scene || '') : '') + '\n'
     + 'Target phrases: ' + ((q && q.targetPhrases) ? q.targetPhrases.join(', ') : '') + '\n'
     + 'Reference script: ' + scriptExcerpt + '\n\n'
     + 'Return ONLY this JSON, no markdown:\n'
@@ -728,8 +751,9 @@ async function evalAnswer(audioBlob, q, reactionTime) {
 
 async function getModelAnswer(q) {
   if (!GEM_KEY || !q) return '';
-  var prompt = '「' + q.scene + '」\nこの日本語指示に対する模範的な英語回答を1〜2文で。テキストのみ（説明不要）。'
-    + (q.targetPhrases && q.targetPhrases.length ? '\nできれば使ってほしい表現: ' + q.targetPhrases.join(', ') : '');
+  var jp = q.japanese || q.scene || '';
+  var prompt = 'Translate this Japanese sentence to natural business English (1-2 sentences):\n「' + jp + '」\nReturn the English text only, no explanation.'
+    + (q.targetPhrases && q.targetPhrases.length ? '\nTry to use: ' + q.targetPhrases.join(', ') : '');
   try {
     return await callGemini([{ text: prompt }]) || '';
   } catch(e) { return ''; }
@@ -807,7 +831,7 @@ async function saveSession() {
     questions: S.questions.length,
     averageCefrLevel: avgCefr(S.results),
     results: S.results.map(function(r, i) {
-      return { q: i+1, scene: r.scene, cefrLevel: r.cefrLevel, score: r.score||0,
+      return { q: i+1, japanese: r.japanese || '', cefrLevel: r.cefrLevel, score: r.score||0,
                reactionTime: r.reactionTime, strengths: r.strengths||[],
                improvements: r.improvements||[], modelAnswer: r.modelAnswer||'' };
     }),
