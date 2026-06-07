@@ -20,10 +20,10 @@
         "electrosurgical unit (ESU)",
         "RF energy output"
       ],
-      "interval": 130.77619083837448,
-      "nextReview": "2026-10-14",
-      "reviewCount": 8,
-      "streak": 8,
+      "interval": 7.7440000000000015,
+      "nextReview": "2026-06-15",
+      "reviewCount": 3,
+      "streak": 3,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -47,10 +47,10 @@
         "endoscopic procedure",
         "endoscopic device"
       ],
-      "interval": 130.77619083837448,
-      "nextReview": "2026-10-14",
-      "reviewCount": 8,
-      "streak": 8,
+      "interval": 7.7440000000000015,
+      "nextReview": "2026-06-15",
+      "reviewCount": 3,
+      "streak": 3,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -75,11 +75,11 @@
         "regulatory submission",
         "FDA clearance"
       ],
-      "interval": 14.26649354600449,
-      "nextReview": "2026-06-19",
-      "reviewCount": 10,
-      "streak": 4,
-      "missCount": 1,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-10",
+      "reviewCount": 5,
+      "streak": 3,
+      "missCount": 0,
       "lastMissed": "2026-05-27"
     },
     {
@@ -102,10 +102,10 @@
         "hold a PMP certification",
         "certified project manager"
       ],
-      "interval": 130.77619083837448,
-      "nextReview": "2026-10-14",
-      "reviewCount": 8,
-      "streak": 8,
+      "interval": 7.7440000000000015,
+      "nextReview": "2026-06-15",
+      "reviewCount": 3,
+      "streak": 3,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -133,12 +133,12 @@
         "drive results",
         "drive change"
       ],
-      "interval": 8.217500282498587,
-      "nextReview": "2026-06-13",
-      "reviewCount": 10,
-      "streak": 4,
-      "missCount": 3,
-      "lastMissed": "2026-05-31"
+      "interval": 0.5760000000000001,
+      "nextReview": "2026-06-08",
+      "reviewCount": 3,
+      "streak": 0,
+      "missCount": 2,
+      "lastMissed": "2026-06-07"
     },
     {
       "id": "w006",
@@ -160,12 +160,12 @@
         "new to the role",
         "new to the team"
       ],
-      "interval": 8.433216000000002,
-      "nextReview": "2026-06-13",
-      "reviewCount": 9,
-      "streak": 1,
-      "missCount": 3,
-      "lastMissed": "2026-06-04"
+      "interval": 2.2,
+      "nextReview": "2026-06-09",
+      "reviewCount": 4,
+      "streak": 2,
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w007",
@@ -191,12 +191,12 @@
         "application process",
         "regulatory submission"
       ],
-      "interval": 4.669034251419652,
-      "nextReview": "2026-06-10",
-      "reviewCount": 9,
-      "streak": 2,
-      "missCount": 3,
-      "lastMissed": "2026-06-03"
+      "interval": 2.1120000000000005,
+      "nextReview": "2026-06-09",
+      "reviewCount": 3,
+      "streak": 1,
+      "missCount": 1,
+      "lastMissed": "2026-05-26"
     },
     {
       "id": "w008",
@@ -225,9 +225,9 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -253,9 +253,9 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -281,9 +281,9 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 1,
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -307,11 +307,11 @@
         "key milestone",
         "project milestone"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -335,11 +335,11 @@
         "a remarkable feat",
         "an impressive feat"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.6,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -364,11 +364,11 @@
         "manage all the moving parts",
         "a lot of moving parts"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -392,11 +392,11 @@
         "strategic initiative",
         "business initiative"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -424,10 +424,10 @@
         "transparent communication",
         "transparent process"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-05-28",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -455,11 +455,11 @@
         "substantive role",
         "substantive change"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -483,11 +483,11 @@
         "evolving landscape",
         "navigate the landscape"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -511,10 +511,10 @@
         "conduct clinical validation",
         "clinical trial"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-05-28",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -539,11 +539,11 @@
         "engage stakeholders",
         "key stakeholders"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -567,11 +567,11 @@
         "embrace a growth mindset",
         "foster a growth mindset"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -596,11 +596,11 @@
         "diligent work",
         "technical diligence"
       ],
-      "interval": 1,
-      "nextReview": "2026-05-25",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-05-27",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
+      "missCount": 1,
       "lastMissed": "2026-05-26"
     },
     {
@@ -624,12 +624,12 @@
         "issue a Declaration of Conformity",
         "European Declaration of Conformity"
       ],
-      "interval": 5.451776000000002,
-      "nextReview": "2026-06-10",
-      "reviewCount": 9,
-      "streak": 4,
-      "missCount": 4,
-      "lastMissed": "2026-06-03"
+      "interval": 1,
+      "nextReview": "2026-06-08",
+      "reviewCount": 2,
+      "streak": 1,
+      "missCount": 1,
+      "lastMissed": "2026-05-31"
     },
     {
       "id": "w023",
@@ -652,10 +652,10 @@
         "meet the exclusion criteria",
         "outlined in the SOP"
       ],
-      "interval": 9.595125760000005,
-      "nextReview": "2026-06-15",
-      "reviewCount": 6,
-      "streak": 5,
+      "interval": 1,
+      "nextReview": "2026-06-08",
+      "reviewCount": 2,
+      "streak": 1,
       "missCount": 1,
       "lastMissed": "2026-05-31"
     },
@@ -678,11 +678,11 @@
         "proceed in parallel with",
         "work in parallel"
       ],
-      "interval": 8.105962242048006,
-      "nextReview": "2026-06-13",
-      "reviewCount": 6,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-10",
+      "reviewCount": 2,
       "streak": 2,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-06-03"
     },
     {
@@ -704,10 +704,10 @@
         "estimate the scope of work",
         "scope of effort"
       ],
-      "interval": 29.721861554176026,
-      "nextReview": "2026-07-05",
-      "reviewCount": 6,
-      "streak": 6,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-10",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -733,11 +733,11 @@
         "incorporate requirements",
         "incorporate changes into"
       ],
-      "interval": 9.595125760000005,
-      "nextReview": "2026-06-15",
-      "reviewCount": 8,
-      "streak": 5,
-      "missCount": 3,
+      "interval": 1,
+      "nextReview": "2026-06-08",
+      "reviewCount": 2,
+      "streak": 1,
+      "missCount": 1,
       "lastMissed": "2026-05-31"
     },
     {
@@ -759,10 +759,10 @@
         "addressed in the sustaining phase",
         "post-launch sustaining"
       ],
-      "interval": 29.721861554176026,
-      "nextReview": "2026-07-05",
-      "reviewCount": 6,
-      "streak": 6,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-10",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -785,10 +785,10 @@
         "prepare the test protocol",
         "review the test protocol"
       ],
-      "interval": 29.721861554176026,
-      "nextReview": "2026-07-05",
-      "reviewCount": 6,
-      "streak": 6,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-10",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -811,10 +811,10 @@
         "Please feel free to ask",
         "Please feel free to contact me"
       ],
-      "interval": 9.595125760000005,
-      "nextReview": "2026-06-15",
-      "reviewCount": 6,
-      "streak": 5,
+      "interval": 1,
+      "nextReview": "2026-06-08",
+      "reviewCount": 2,
+      "streak": 1,
       "missCount": 1,
       "lastMissed": "2026-05-31"
     },
@@ -825,6 +825,8 @@
       "meaning": "ペネトレーションテスト（セキュリティ侵入テスト）",
       "example": "We plan to conduct a penetration test to assess our system security.",
       "source": "ペネトレーションテスト方針の確認",
+      "scriptId": "pentest-alignment",
+      "added": "2026-06-07",
       "level": [
         "ビジネス英語",
         "TOEIC900+"
@@ -837,12 +839,12 @@
         "conduct a penetration test",
         "penetration testing"
       ],
-      "added": "2026-06-07",
       "interval": 1,
       "nextReview": "2026-06-07",
       "reviewCount": 0,
       "streak": 0,
-      "scriptId": "pentest-alignment"
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w031",
@@ -851,6 +853,8 @@
       "meaning": "〜について合意する・認識を合わせる",
       "example": "I'd like to align on two points regarding the project.",
       "source": "ペネトレーションテスト方針の確認",
+      "scriptId": "pentest-alignment",
+      "added": "2026-06-07",
       "level": [
         "ビジネス英語",
         "TOEIC800"
@@ -863,12 +867,12 @@
         "align on the approach",
         "align with your standards"
       ],
-      "added": "2026-06-07",
       "interval": 1,
       "nextReview": "2026-06-07",
       "reviewCount": 0,
       "streak": 0,
-      "scriptId": "pentest-alignment"
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w032",
@@ -877,6 +881,8 @@
       "meaning": "社内で実施する",
       "example": "We plan to conduct the test in-house rather than using an external vendor.",
       "source": "ペネトレーションテスト方針の確認",
+      "scriptId": "pentest-alignment",
+      "added": "2026-06-07",
       "level": [
         "ビジネス英語",
         "TOEIC700"
@@ -890,12 +896,12 @@
         "in-house team",
         "in-house development"
       ],
-      "added": "2026-06-07",
       "interval": 1,
       "nextReview": "2026-06-07",
       "reviewCount": 0,
       "streak": 0,
-      "scriptId": "pentest-alignment"
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w033",
@@ -904,6 +910,8 @@
       "meaning": "独立性を確保する",
       "example": "We want to ensure independence by assigning a separate team member.",
       "source": "ペネトレーションテスト方針の確認",
+      "scriptId": "pentest-alignment",
+      "added": "2026-06-07",
       "level": [
         "ビジネス英語",
         "TOEIC800"
@@ -914,12 +922,12 @@
         "ensure independence",
         "maintain independence"
       ],
-      "added": "2026-06-07",
       "interval": 1,
       "nextReview": "2026-06-07",
       "reviewCount": 0,
       "streak": 0,
-      "scriptId": "pentest-alignment"
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w034",
@@ -928,6 +936,8 @@
       "meaning": "不正アクセス",
       "example": "We consider the risk of unauthorized access to be low.",
       "source": "ペネトレーションテスト方針の確認",
+      "scriptId": "pentest-alignment",
+      "added": "2026-06-07",
       "level": [
         "ビジネス英語",
         "TOEIC800"
@@ -938,12 +948,12 @@
         "unauthorized access",
         "prevent unauthorized access"
       ],
-      "added": "2026-06-07",
       "interval": 1,
       "nextReview": "2026-06-07",
       "reviewCount": 0,
       "streak": 0,
-      "scriptId": "pentest-alignment"
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w035",
@@ -952,6 +962,8 @@
       "meaning": "外部に露出しているポート",
       "example": "We plan to focus on externally exposed ports only.",
       "source": "ペネトレーションテスト方針の確認",
+      "scriptId": "pentest-alignment",
+      "added": "2026-06-07",
       "level": [
         "ビジネス英語",
         "TOEIC900+"
@@ -962,12 +974,12 @@
         "externally exposed ports",
         "exposed to external networks"
       ],
-      "added": "2026-06-07",
       "interval": 1,
       "nextReview": "2026-06-07",
       "reviewCount": 0,
       "streak": 0,
-      "scriptId": "pentest-alignment"
+      "missCount": 0,
+      "lastMissed": ""
     },
     {
       "id": "w036",
@@ -976,6 +988,8 @@
       "meaning": "ご確認いただけますと幸いです",
       "example": "Do these approaches align with your standards? We'd appreciate your confirmation.",
       "source": "ペネトレーションテスト方針の確認",
+      "scriptId": "pentest-alignment",
+      "added": "2026-06-07",
       "level": [
         "ビジネス英語",
         "TOEIC700"
@@ -986,12 +1000,12 @@
         "We'd appreciate your confirmation",
         "We'd appreciate your feedback"
       ],
-      "added": "2026-06-07",
       "interval": 1,
       "nextReview": "2026-06-07",
       "reviewCount": 0,
       "streak": 0,
-      "scriptId": "pentest-alignment"
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
