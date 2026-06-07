@@ -1556,7 +1556,20 @@ function saveAnalysisRecord(fileInfo, result, mimeType) {
 // ============================================================
 // TASK ICONS
 // ============================================================
-var TASK_ICONS = {shadowing:'mic', vocab:'book-open', dialogue:'message-circle', weeklyReport:'bar-chart-2'};
+var TASK_ICONS = {shadowing:'mic', vocab:'book-open', dialogue:'message-circle', weeklyReport:'bar-chart-2', monologue:'volume-2'};
+
+// ============================================================
+// PAST RECORDS MODAL TASK DEFINITIONS (全タスク + 毎日の独り言)
+// ============================================================
+var PAST_MODAL_TASKS = {
+  0: [{key:'shadowing', label:'シャドーイング'}, {key:'vocab', label:'単語復習（SM-2）'}, {key:'monologue', label:'独り言 10分'}],
+  1: [{key:'shadowing', label:'シャドーイング'}, {key:'monologue', label:'独り言 10分'}],
+  2: [{key:'shadowing', label:'シャドーイング'}, {key:'monologue', label:'独り言 10分'}],
+  3: [{key:'dialogue',  label:'対話練習（Claude）'}, {key:'monologue', label:'独り言 10分'}],
+  4: [{key:'dialogue',  label:'対話練習（Claude）'}, {key:'monologue', label:'独り言 10分'}],
+  5: [{key:'vocab',     label:'単語復習（SM-2）'}, {key:'monologue', label:'独り言 10分'}],
+  6: [{key:'weeklyReport', label:'週次レポート生成'}, {key:'dialogue', label:'スクリプト作成'}, {key:'shadowing', label:'シャドーイング初回練習'}, {key:'vocab', label:'単語帳 初回学習'}, {key:'monologue', label:'独り言 10分'}]
+};
 
 // ============================================================
 // WEEKLY SCHEDULE
@@ -1614,7 +1627,24 @@ function renderSchedule() {
 // ============================================================
 function openPastRecordsModal() {
   document.getElementById('pastRecordsModal').classList.remove('hidden');
-  renderPastRecords();
+  var el = document.getElementById('pastRecordsContent');
+  if (el) el.innerHTML = '<div style="text-align:center;color:var(--text2);padding:20px;font-size:13px">読み込み中…</div>';
+  if (!GH_TOKEN) {
+    renderPastRecords();
+    return;
+  }
+  apiGet('data/progress.json').then(function(d) {
+    if (d && d.content) {
+      try {
+        var obj = JSON.parse(decodeB64(d.content));
+        dailyTaskData  = obj.dailyTasks || {};
+        dailyTaskState = dailyTaskData[todayStr] || dailyTaskState;
+      } catch(e) {}
+    }
+    renderPastRecords();
+  }).catch(function() {
+    renderPastRecords();
+  });
 }
 
 function closePastRecordsModal() {
@@ -1626,17 +1656,20 @@ function renderPastRecords() {
   if (!el) return;
   var now = new Date();
   var html = '';
-  for (var i = 0; i < 7; i++) {
+  for (var i = 0; i < 14; i++) {
     var d = new Date(now);
     d.setDate(d.getDate() - i);
     var ds  = d.toISOString().split('T')[0];
     var dow = d.getDay();
-    var tasksDef = DAILY_TASKS_DEF[dow] || [];
-    if (!tasksDef.length) continue;
+    var tasksDef = PAST_MODAL_TASKS[dow] || [];
     var tasks   = ds === todayStr ? dailyTaskState : (dailyTaskData[ds] || {});
     var isToday = ds === todayStr;
-    var dayStr  = ds + '（' + DAY_JA[dow] + '）' + (isToday ? '  TODAY' : '');
+    var dayStr  = ds + '（' + DAY_JA[dow] + '）' + (isToday ? ' TODAY' : '');
     html += '<div class="pr-day-hdr">' + escHtml(dayStr) + '</div>';
+    if (!tasksDef.length) {
+      html += '<div style="font-size:12px;color:var(--text3);padding:4px 0 6px">記録なし</div>';
+      continue;
+    }
     tasksDef.forEach(function(task) {
       var done   = !!tasks[task.key];
       var manual = !!tasks['_m_' + task.key];
@@ -1656,7 +1689,7 @@ function renderPastRecords() {
         + '</div>';
     });
   }
-  el.innerHTML = html;
+  el.innerHTML = html || '<div style="text-align:center;color:var(--text2);padding:20px;font-size:13px">データなし</div>';
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 

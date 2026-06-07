@@ -575,8 +575,8 @@ if (GH_TOKEN) loadScriptProgress();
   var a = document.getElementById('backToDash');
   if (a) {
     var params = [];
-    if (GEM_KEY) params.push('k=' + GEM_KEY);
-    if (GH_TOKEN) params.push('gh=' + GH_TOKEN);
+    if (GEM_KEY) params.push('k=' + encodeURIComponent(GEM_KEY));
+    if (GH_TOKEN) params.push('gh=' + encodeURIComponent(GH_TOKEN));
     if (params.length) a.href = './dashboard.html?' + params.join('&');
   }
 })();
