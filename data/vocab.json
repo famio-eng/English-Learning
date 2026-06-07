@@ -817,6 +817,174 @@
       "streak": 5,
       "missCount": 1,
       "lastMissed": "2026-05-31"
+    },
+    {
+      "id": "w030",
+      "word": "penetration test",
+      "pron": "/ˌpɛnɪˈtreɪʃən tɛst/",
+      "meaning": "ペネトレーションテスト（セキュリティ侵入テスト）",
+      "example": "We plan to conduct a penetration test to assess our system security.",
+      "source": "ペネトレーションテスト方針の確認",
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
+      "otherMeanings": [
+        "略称: pentest"
+      ],
+      "usageTips": "ITセキュリティ分野で頻出。系統的に侵入を試みてセキュリティの弱点を発見するテスト。",
+      "collocations": [
+        "conduct a penetration test",
+        "penetration testing"
+      ],
+      "added": "2026-06-07",
+      "interval": 1,
+      "nextReview": "2026-06-07",
+      "reviewCount": 0,
+      "streak": 0
+    },
+    {
+      "id": "w031",
+      "word": "align on",
+      "pron": "/əˈlaɪn ɒn/",
+      "meaning": "〜について合意する・認識を合わせる",
+      "example": "I'd like to align on two points regarding the project.",
+      "source": "ペネトレーションテスト方針の確認",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "otherMeanings": [
+        "align with（〜と一致する）"
+      ],
+      "usageTips": "会議の冒頭で「確認したい点がある」と言う時の定番表現。",
+      "collocations": [
+        "align on the approach",
+        "align with your standards"
+      ],
+      "added": "2026-06-07",
+      "interval": 1,
+      "nextReview": "2026-06-07",
+      "reviewCount": 0,
+      "streak": 0
+    },
+    {
+      "id": "w032",
+      "word": "conduct in-house",
+      "pron": "/kənˈdʌkt ɪnˈhaʊs/",
+      "meaning": "社内で実施する",
+      "example": "We plan to conduct the test in-house rather than using an external vendor.",
+      "source": "ペネトレーションテスト方針の確認",
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
+      "otherMeanings": [
+        "in-house: 社内の（形容詞）"
+      ],
+      "usageTips": "外部委託（outsource）の対義語として使う。",
+      "collocations": [
+        "conduct in-house",
+        "in-house team",
+        "in-house development"
+      ],
+      "added": "2026-06-07",
+      "interval": 1,
+      "nextReview": "2026-06-07",
+      "reviewCount": 0,
+      "streak": 0
+    },
+    {
+      "id": "w033",
+      "word": "ensure independence",
+      "pron": "/ɪnˈʃʊər ˌɪndɪˈpɛndəns/",
+      "meaning": "独立性を確保する",
+      "example": "We want to ensure independence by assigning a separate team member.",
+      "source": "ペネトレーションテスト方針の確認",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "otherMeanings": [],
+      "usageTips": "規制対応・品質管理で頻出。independenceは「独立性・中立性」の意味。",
+      "collocations": [
+        "ensure independence",
+        "maintain independence"
+      ],
+      "added": "2026-06-07",
+      "interval": 1,
+      "nextReview": "2026-06-07",
+      "reviewCount": 0,
+      "streak": 0
+    },
+    {
+      "id": "w034",
+      "word": "unauthorized access",
+      "pron": "/ʌnˈɔːθəraɪzd ˈækses/",
+      "meaning": "不正アクセス",
+      "example": "We consider the risk of unauthorized access to be low.",
+      "source": "ペネトレーションテスト方針の確認",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "otherMeanings": [],
+      "usageTips": "ITセキュリティ・法務文書で頻出。unauthorizedは「許可されていない」の意味。",
+      "collocations": [
+        "unauthorized access",
+        "prevent unauthorized access"
+      ],
+      "added": "2026-06-07",
+      "interval": 1,
+      "nextReview": "2026-06-07",
+      "reviewCount": 0,
+      "streak": 0
+    },
+    {
+      "id": "w035",
+      "word": "externally exposed ports",
+      "pron": "/ɪkˈstɜːrnəli ɪkˈspoʊzd pɔːrts/",
+      "meaning": "外部に露出しているポート",
+      "example": "We plan to focus on externally exposed ports only.",
+      "source": "ペネトレーションテスト方針の確認",
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
+      "otherMeanings": [],
+      "usageTips": "ITセキュリティ分野で頻出。外部ネットワークからアクセス可能なポートを指す。",
+      "collocations": [
+        "externally exposed ports",
+        "exposed to external networks"
+      ],
+      "added": "2026-06-07",
+      "interval": 1,
+      "nextReview": "2026-06-07",
+      "reviewCount": 0,
+      "streak": 0
+    },
+    {
+      "id": "w036",
+      "word": "We'd appreciate your confirmation",
+      "pron": "/wiːd əˈpriːʃieɪt jɔːr ˌkɒnfɜːˈmeɪʃən/",
+      "meaning": "ご確認いただけますと幸いです",
+      "example": "Do these approaches align with your standards? We'd appreciate your confirmation.",
+      "source": "ペネトレーションテスト方針の確認",
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
+      "otherMeanings": [],
+      "usageTips": "会議・メールの締めくくりに使う丁寧な確認依頼表現。Please confirmよりフォーマル。",
+      "collocations": [
+        "We'd appreciate your confirmation",
+        "We'd appreciate your feedback"
+      ],
+      "added": "2026-06-07",
+      "interval": 1,
+      "nextReview": "2026-06-07",
+      "reviewCount": 0,
+      "streak": 0
     }
   ]
 }
