@@ -208,6 +208,7 @@ var S = {
   recStart: null,
   recording: false,
   mr: null,
+  recMimeType: '',
   chunks: [],
   blob: null,
   pastSessions: []
@@ -528,9 +529,13 @@ function startCountdown() {
 function startRec() {
   if (S.recording) return;
   navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
-    var mt = MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4'
-           : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '';
+    var types = ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'audio/ogg'];
+    var mt = '';
+    for (var i = 0; i < types.length; i++) {
+      if (MediaRecorder.isTypeSupported(types[i])) { mt = types[i]; break; }
+    }
     S.mr = mt ? new MediaRecorder(stream, { mimeType: mt }) : new MediaRecorder(stream);
+    S.recMimeType = mt || (S.mr.mimeType || 'audio/webm');
     S.chunks = [];
     S.recStart = Date.now();
     S.recording = true;
@@ -538,11 +543,11 @@ function startRec() {
     S.mr.onstop = function() {
       stream.getTracks().forEach(function(t) { t.stop(); });
       var reactionTime = (Date.now() - S.recStart) / 1000;
-      S.blob = new Blob(S.chunks, { type: mt || 'audio/webm' });
+      S.blob = new Blob(S.chunks, { type: S.recMimeType });
       S.recording = false;
       doEval(reactionTime);
     };
-    S.mr.start();
+    S.mr.start(100);
     render();
   }).catch(function() {
     showToast('マイクへのアクセスが拒否されました');
@@ -552,7 +557,10 @@ function startRec() {
 }
 
 function stopRec() {
-  if (S.mr && S.recording) S.mr.stop();
+  if (S.mr && S.recording) {
+    try { if (S.mr.state === 'recording') S.mr.requestData(); } catch(e) {}
+    S.mr.stop();
+  }
 }
 
 async function skipQ() {
@@ -583,6 +591,10 @@ async function doEval(reactionTime) {
   render();
   var q = S.questions[S.currentQ];
   var ev = await evalAnswer(S.blob, q, reactionTime);
+  if (ev._evalError) {
+    showToast('評価失敗: ' + ev._evalError);
+    delete ev._evalError;
+  }
   S.results.push(Object.assign({ q: S.currentQ + 1, scene: q ? q.scene : '', reactionTime: reactionTime }, ev));
   S.currentQ++;
   S.screen = 'feedback';
@@ -682,27 +694,36 @@ function makeFallbackQuestions(script, count) {
 async function evalAnswer(audioBlob, q, reactionTime) {
   var fallback = { cefrLevel: 'B1', score: 50, strengths: [], improvements: ['評価に失敗しました'], modelAnswer: '', fillerCount: 0 };
   if (!audioBlob || audioBlob.size < 100) {
-    return Object.assign(fallback, { cefrLevel: 'A1', score: 0, improvements: ['音声が録音されませんでした'] });
+    return Object.assign({}, fallback, { cefrLevel: 'A1', score: 0, improvements: ['音声が録音されませんでした'] });
   }
   var base64 = await blobToB64(audioBlob);
-  var mt = audioBlob.type || 'audio/mp4';
-  var prompt = 'ビジネス英語の音声録音を評価してください。\n\n'
-    + '日本語指示: 「' + (q ? q.scene : '') + '」\n'
-    + 'ターゲットフレーズ: ' + ((q && q.targetPhrases) ? q.targetPhrases.join(', ') : '') + '\n'
-    + '参照スクリプト（' + (S.script ? S.script.title : '') + '):\n"""\n' + (S.script ? S.script.raw.substring(0, 600) : '') + '\n"""\n\n'
-    + 'JSONのみ返してください（マークダウン不要）:\n'
-    + '{"cefrLevel":"B1","score":70,"strengths":["良かった点を具体的に1〜2個"],'
-    + '"improvements":["改善点を具体的に1〜2個"],"modelAnswer":"模範英文1〜2文","fillerCount":0}\n\n'
-    + 'CEFR: A1=単語のみ A2=簡単な文 B1=多少の誤り B2=ほぼ正確 C1=流暢 C2=ネイティブ';
+  var mt = S.recMimeType || audioBlob.type || 'audio/mp4';
+  var scriptExcerpt = S.script ? S.script.raw.replace(/\n+/g, ' ').substring(0, 200) : '';
+  var prompt = 'You are an English coach evaluating a business English speaking practice.\n'
+    + 'Scene: ' + (q ? q.scene : '') + '\n'
+    + 'Target phrases: ' + ((q && q.targetPhrases) ? q.targetPhrases.join(', ') : '') + '\n'
+    + 'Reference script: ' + scriptExcerpt + '\n\n'
+    + 'Return ONLY this JSON, no markdown:\n'
+    + '{"cefrLevel":"B1","cefrDescription":"多少の誤りはあるが自然に伝わる","score":70,'
+    + '"strengths":["良かった点を日本語で"],'
+    + '"improvements":["改善点を日本語で"],'
+    + '"modelAnswer":"模範回答の英語","fillerCount":0}';
   try {
     var res = await callGemini([{ text: prompt }, { inline_data: { mime_type: mt, data: base64 } }]);
-    if (!res) return fallback;
-    var m = res.match(/\{[\s\S]*\}/);
-    if (!m) return fallback;
+    if (!res) return Object.assign({}, fallback, { improvements: ['APIからの応答が空でした'] });
+    var cleaned = res.replace(/```(?:json)?\n?/gi, '').replace(/\n?```/g, '').trim();
+    var m = cleaned.match(/\{[\s\S]*\}/);
+    if (!m) return Object.assign({}, fallback, { improvements: ['JSONの解析に失敗しました'] });
     var obj = JSON.parse(m[0]);
     if (!CEFR_DESC[obj.cefrLevel]) obj.cefrLevel = 'B1';
     return obj;
-  } catch(e) { return fallback; }
+  } catch(e) {
+    return Object.assign({}, fallback, {
+      cefrLevel: 'A1', score: 0,
+      improvements: ['評価エラー: ' + (e.message || '不明')],
+      _evalError: e.message || '不明なエラー'
+    });
+  }
 }
 
 async function getModelAnswer(q) {
