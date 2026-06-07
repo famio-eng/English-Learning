@@ -15,6 +15,13 @@
       "lastDate": "2026-06-03",
       "readCleared": true,
       "shadCleared": true
+    },
+    "pentest-alignment": {
+      "lastScore": 85,
+      "lastDate": "2026-06-07",
+      "readCleared": true,
+      "readOk": 1,
+      "shadOk": 0
     }
   },
   "vocabSelectedScripts": [
