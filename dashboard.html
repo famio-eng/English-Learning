@@ -623,9 +623,10 @@ function loadDailyTasks() {
 
 function updateVocabDonut() {
   var weekStart = getWeekStart(new Date());
+  var weekEnd   = getWeekEnd(new Date());
   var count = 0;
   Object.keys(dailyTaskData).forEach(function(date) {
-    if (date >= weekStart && dailyTaskData[date].vocab) count++;
+    if (date >= weekStart && date <= weekEnd && dailyTaskData[date].vocab) count++;
   });
   setDonut('vocabArc', 'vocabTxt', count, 7);
 }
@@ -725,11 +726,19 @@ function decodeB64(b64) {
 // HELPERS
 // ============================================================
 function getWeekStart(now) {
-  var d = now.getDay();
-  var diff = d === 0 ? -6 : 1 - d;
-  var mon = new Date(now);
-  mon.setDate(now.getDate() + diff);
-  return mon.toISOString().split('T')[0];
+  var day = now.getDay(); // 0=日, 6=土
+  var diff = day === 6 ? 0 : day + 1;
+  var sat = new Date(now);
+  sat.setDate(now.getDate() - diff);
+  return sat.toISOString().split('T')[0];
+}
+
+function getWeekEnd(now) {
+  var day = now.getDay(); // 0=日, 6=土
+  var diff = day === 6 ? 6 : 5 - day;
+  var fri = new Date(now);
+  fri.setDate(now.getDate() + diff);
+  return fri.toISOString().split('T')[0];
 }
 
 function parseRecording(name) {
@@ -786,6 +795,7 @@ var SCRIPT_NAMES = {
 
 function loadDashboardData(now) {
   var weekStart = getWeekStart(now);
+  var weekEnd   = getWeekEnd(now);
   var monthStr  = now.toISOString().slice(0,7);
   Promise.all([
     apiGet('recordings').catch(function(){return null;}),
@@ -802,7 +812,7 @@ function loadDashboardData(now) {
 
     // Donut: shadowing days this week (from recordings)
     var shadDays = {};
-    recordings.forEach(function(r){if(r.mode==='shadowing'&&r.date>=weekStart)shadDays[r.date]=true;});
+    recordings.forEach(function(r){if(r.mode==='shadowing'&&r.date>=weekStart&&r.date<=weekEnd)shadDays[r.date]=true;});
     setDonut('shadArc','shadTxt',Object.keys(shadDays).length,7);
 
     // Monthly count
@@ -877,12 +887,14 @@ function generateWeeklyReport() {
 
 function collectWeeklyData() {
   var now = new Date();
-  var weekStart = getWeekStart(now);
-  var weekEnd   = now.toISOString().split('T')[0];
+  var weekStart   = getWeekStart(now);
+  var weekEndFull = getWeekEnd(now);
+  var weekEnd     = now.toISOString().split('T')[0];
 
   var data = {
-    weekStart: weekStart,
-    weekEnd:   weekEnd,
+    weekStart:   weekStart,
+    weekEndFull: weekEndFull,
+    weekEnd:     weekEnd,
     taskDays:  {},
     recordings: [],
     scores:     [],
@@ -977,7 +989,7 @@ function analyzeWeekWithGemini(data) {
     : null;
   var prompt = '英語学習の週次レポートを日本語で作成してください。\n\n'
     + '【今週のデータ】\n'
-    + '期間: ' + data.weekStart + ' 〜 ' + data.weekEnd + '\n'
+    + '期間: ' + data.weekStart + '（土）〜 ' + (data.weekEndFull || data.weekEnd) + '（金）\n'
     + 'シャドーイング実施日数: ' + data.shadDays + '日\n'
     + '単語復習実施日数: ' + data.vocabDays + '日\n'
     + '対話練習実施日数: ' + data.dialogueDays + '日\n'
@@ -1007,6 +1019,11 @@ function renderWeeklyReportContent(data, analysis) {
     : 0;
 
   var html = '';
+
+  // Period
+  html += '<div style="font-size:12px;color:var(--text2);font-weight:600;text-align:center;margin-bottom:10px">'
+    + escHtml(data.weekStart) + '（土）〜 ' + escHtml(data.weekEndFull || data.weekEnd) + '（金）'
+    + '</div>';
 
   // Stats grid
   html += '<div class="wr-stats">';
@@ -1093,7 +1110,7 @@ function saveWeeklyReport() {
   var report = {
     generatedAt: new Date().toISOString(),
     weekStart:   weeklyReportData.weekStart,
-    weekEnd:     weeklyReportData.weekEnd,
+    weekEnd:     weeklyReportData.weekEndFull || weeklyReportData.weekEnd,
     stats: {
       shadDays:      weeklyReportData.shadDays,
       vocabDays:     weeklyReportData.vocabDays,
