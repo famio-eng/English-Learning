@@ -62,7 +62,8 @@
     "2026-06-07": {
       "weeklyReport": true,
       "vocab": true,
-      "vocabDoneCount": 15
+      "vocabDoneCount": 15,
+      "shadowing": true
     }
   }
 }
