@@ -366,8 +366,14 @@ var GH_REPO  = 'English-Learning';
 var CLAUDE_CHAT = 'https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6';
 var GEM_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
+// Build URL with appropriate params.
+// vocab.html only needs gh (no Gemini); all other apps need both k and gh.
 function makeLink(base) {
-  return base + '?k=' + encodeURIComponent(GEM_KEY) + '&gh=' + encodeURIComponent(GH_TOKEN);
+  var p = [];
+  var isVocab = base.indexOf('vocab.html') !== -1;
+  if (!isVocab && GEM_KEY) p.push('k='  + encodeURIComponent(GEM_KEY));
+  if (GH_TOKEN)             p.push('gh=' + encodeURIComponent(GH_TOKEN));
+  return base + (p.length ? '?' + p.join('&') : '');
 }
 
 function escHtml(s) {
@@ -445,6 +451,13 @@ var vocabDueCount  = null; // null=未取得, 0+=件数
     setNoToken();
   }
   if (typeof lucide !== 'undefined') lucide.createIcons();
+
+  // 起動時パラメータ検証
+  console.log('[dashboard] GEM_KEY :', GEM_KEY  ? '✓ 取得済み' : '✗ 未取得');
+  console.log('[dashboard] GH_TOKEN:', GH_TOKEN ? '✓ 取得済み' : '✗ 未取得');
+  console.log('[dashboard] shadowing link:', makeLink('./shadowing.html'));
+  console.log('[dashboard] vocab link:    ', makeLink('./vocab.html'));
+  console.log('[dashboard] dialogue link: ', makeLink('./dialogue.html'));
 })();
 
 // ============================================================
@@ -779,9 +792,17 @@ function setNoToken() {
 // GITHUB API
 // ============================================================
 function apiGet(path) {
+  var hdrs = {};
+  if (GH_TOKEN) hdrs['Authorization'] = 'Bearer ' + GH_TOKEN;
   return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
-    headers: {'Authorization': 'Bearer ' + GH_TOKEN}
-  }).then(function(r) { return r.ok ? r.json() : null; });
+    headers: hdrs
+  }).then(function(r) {
+    if (!r.ok) { console.warn('[apiGet] HTTP ' + r.status + ': ' + path); return null; }
+    return r.json();
+  }).catch(function(e) {
+    console.error('[apiGet] fetch error: ' + path, e.message || e);
+    return null;
+  });
 }
 
 function loadVocabDueCount() {
@@ -889,6 +910,7 @@ function loadDashboardData(now) {
   ]).then(function(results) {
     var recFiles  = Array.isArray(results[0]) ? results[0] : [];
     var recJsons  = Array.isArray(results[1]) ? results[1] : [];
+    console.log('[records] recordings:', recFiles.length, '件 / records JSON:', recJsons.length, '件');
     var recordings = recFiles.map(function(f){return parseRecording(f.name||'');}).filter(Boolean);
 
     // Streak
@@ -905,10 +927,11 @@ function loadDashboardData(now) {
     document.getElementById('monthNum').textContent =
       recordings.filter(function(r){return r.date.slice(0,7)===monthStr;}).length;
 
-    // Recent records (newest 3 JSON files)
+    // Recent records (newest 3 JSON files, excluding vocab-stats.json)
     var jsonFiles = recJsons.filter(function(f){
       return f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
     }).sort(function(a,b){return b.name.localeCompare(a.name);}).slice(0,3);
+    console.log('[records] 表示対象:', jsonFiles.map(function(f){return f.name;}));
 
     if (!jsonFiles.length) {
       document.getElementById('recentList').innerHTML = '<div class="no-token">記録がまだありません</div>';
@@ -916,17 +939,20 @@ function loadDashboardData(now) {
     }
     Promise.all(jsonFiles.map(function(f){
       return apiGet('records/'+f.name).then(function(d){
-        if(!d||!d.content)return null;
-        try{return JSON.parse(decodeB64(d.content));}catch(e){return null;}
-      }).catch(function(){return null;});
+        if(!d||!d.content){ console.warn('[records] content取得失敗:', f.name); return null; }
+        try{ return JSON.parse(decodeB64(d.content)); }
+        catch(e){ console.error('[records] JSON parse失敗:', f.name, e.message); return null; }
+      });
     })).then(function(recs){
       recs = recs.filter(Boolean);
+      console.log('[records] レンダリング:', recs.length, '件');
       renderRecentRecords(recs);
       document.getElementById('seeAllLink').style.display = 'block';
       var scores = recs.filter(function(r){return r.score!=null;}).map(function(r){return r.score;});
       document.getElementById('scoreContent').innerHTML = buildScoreChart(scores);
     });
-  }).catch(function(){
+  }).catch(function(e){
+    console.error('[records] loadDashboardData error:', e && e.message || e);
     document.getElementById('recentList').innerHTML = '<div class="no-token">読み込みエラー</div>';
   });
 }
