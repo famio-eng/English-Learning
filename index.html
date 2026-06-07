@@ -433,6 +433,15 @@ var SCRIPTS = [
       "Do these approaches align with your standards?",
       "We'd appreciate your confirmation."
     ],
+    vocab: [
+      {word:'penetration test', pron:'/\u02ccp\u025bn\u026a\u02c8tre\u026a\u0283\u0259n t\u025bst/', meaning:'\u30da\u30cd\u30c8\u30ec\u30fc\u30b7\u30e7\u30f3\u30c6\u30b9\u30c8\uff08\u4fb5\u5165\u30c6\u30b9\u30c8\uff09', example:'We plan to conduct the penetration test in-house.'},
+      {word:'align on', pron:'/\u0259\u02c8la\u026an \u0252n/', meaning:'\u301c\u306b\u3064\u3044\u3066\u5408\u610f\u3059\u308b\u30fb\u8a8d\u8b58\u3092\u5408\u308f\u305b\u308b', example:"I'd like to align on two points regarding our approach."},
+      {word:'in-house', pron:'/\u026an\u02c8ha\u028as/', meaning:'\u793e\u5185\u3067\u30fb\u81ea\u793e\u5185\u306e', example:'We plan to conduct the test in-house rather than using an external vendor.'},
+      {word:'ensure independence', pron:'/\u026an\u02c8\u0283\u028a\u0259r \u02cc\u026and\u026a\u02c8p\u025bnd\u0259ns/', meaning:'\u72ec\u7acb\u6027\u3092\u78ba\u4fdd\u3059\u308b', example:'We want to ensure independence by assigning a separate team member.'},
+      {word:'unauthorized access', pron:'/\u028cn\u02c8\u0254\u02d0\u03b8\u0259ra\u026azd \u02c8\u00e6kses/', meaning:'\u4e0d\u6b63\u30a2\u30af\u30bb\u30b9', example:'We consider the risk of unauthorized access to be low.'},
+      {word:'externally exposed ports', pron:'/\u026ak\u02c8st\u025c\u02d0rn\u0259li \u026ak\u02c8spo\u028azd p\u0254\u02d0rts/', meaning:'\u5916\u90e8\u306b\u9732\u51fa\u3057\u3066\u3044\u308b\u30dd\u30fc\u30c8', example:'We plan to focus on externally exposed ports only.'},
+      {word:"We'd appreciate your confirmation", pron:'/wi\u02d0d \u0259\u02c8pri\u02d0\u0283ie\u026at j\u0254\u02d0r \u02cck\u0252nf\u025c\u02d0\u02c8me\u026a\u0283\u0259n/', meaning:'\u3054\u78ba\u8a8d\u3044\u305f\u3060\u3051\u307e\u3059\u3068\u5e78\u3044\u3067\u3059', example:"Do these approaches align with your standards? We'd appreciate your confirmation."}
+    ],
     analyzed: {
       sentences: [
         {en:"Thank you for joining today. I'd like to align on two points regarding our penetration test.", ja:"\u672c\u65e5\u306f\u3054\u53c2\u52a0\u3044\u305f\u3060\u304d\u3042\u308a\u304c\u3068\u3046\u3054\u3056\u3044\u307e\u3059\u3002\u30da\u30cd\u30c8\u30ec\u30fc\u30b7\u30e7\u30f3\u30c6\u30b9\u30c8\u306b\u95a2\u3057\u3066\uff12\u70b9\u78ba\u8a8d\u3055\u305b\u3066\u304f\u3060\u3055\u3044\u3002"},
@@ -1370,7 +1379,7 @@ function saveRecord() {
 // ============================================================
 // PAST EVALUATIONS
 // ============================================================
-var SCRIPT_TITLES_IDX = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告'};
+var SCRIPT_TITLES_IDX = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告', 'pentest-alignment':'ペネトレーションテスト方針の確認'};
 var evalExpandCount = {}; // scriptId → shown count
 
 function loadPastEvaluations() {
