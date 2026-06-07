@@ -664,7 +664,15 @@ async function doEval(reactionTime) {
         return;
       }
     }
-    ev = { cefrLevel: 'A1', score: 0, improvements: ['評価エラー: ' + (e.message || '不明')], _evalError: e.message };
+    var hs2 = e.httpStatus || 0;
+    var userMsg2;
+    if (hs2 === 429) userMsg2 = 'レート制限に達しました。1分後に再試行してください。';
+    else if (hs2 === 400) userMsg2 = '音声データの形式に問題があります。録音し直してください。';
+    else if (hs2 === 401 || hs2 === 403) userMsg2 = 'APIキーが無効です。URLを確認してください。';
+    else if (hs2 > 0) userMsg2 = 'エラーが発生しました。（HTTP ' + hs2 + ' ' + (e.apiCode || '') + '）';
+    else userMsg2 = 'エラーが発生しました。（' + (e.message || '不明') + '）';
+    console.error('[doEval エラー] HTTP:', hs2, 'Code:', e.apiCode, 'Msg:', e.apiMessage || e.message);
+    ev = { cefrLevel: 'A1', score: 0, improvements: [userMsg2], _evalError: userMsg2 };
   }
   if (ev._evalError) {
     showToast('評価失敗: ' + ev._evalError);
@@ -707,19 +715,26 @@ function retrySession() {
 // ============================================================
 function callGemini(parts) {
   if (!GEM_KEY) return Promise.resolve(null);
+  var _httpStatus = 0;
   return fetch(GEM_URL + '?key=' + GEM_KEY, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096 } })
   })
   .then(function(r) {
+    _httpStatus = r.status;
     if (r.status === 503) throw new Error('GEMINI_503');
     return r.json();
   })
   .then(function(d) {
     if (d.error) {
-      var msg = (d.error.message || '').split('\n')[0].substring(0, 120);
-      throw new Error('Gemini API Error ' + d.error.code + ' - ' + msg);
+      var apiCode = d.error.status || String(d.error.code || _httpStatus);
+      var apiMsg  = (d.error.message || '').split('\n')[0].substring(0, 120);
+      var err = new Error('HTTP_' + _httpStatus);
+      err.httpStatus = _httpStatus;
+      err.apiCode = apiCode;
+      err.apiMessage = apiMsg;
+      throw err;
     }
     if (!d.candidates || !d.candidates[0]) return null;
     return (d.candidates[0].content.parts || []).map(function(p) { return p.text || ''; }).join('');
@@ -778,6 +793,8 @@ async function evalAnswer(audioBlob, q, reactionTime) {
   }
   var base64 = await blobToB64(audioBlob);
   var mt = S.recMimeType || audioBlob.type || 'audio/mp4';
+  var sizeKb = Math.round(audioBlob.size / 1024);
+  console.log('[AI評価] mime_type:', mt, '| size:', sizeKb + 'KB');
   var scriptExcerpt = S.script ? S.script.raw.replace(/\n+/g, ' ').substring(0, 200) : '';
   var prompt = 'You are an English coach evaluating a business English speaking practice.\n'
     + 'Scene: ' + (q ? (q.japanese || q.scene || '') : '') + '\n'
@@ -799,10 +816,23 @@ async function evalAnswer(audioBlob, q, reactionTime) {
     return obj;
   } catch(e) {
     if (e.message === 'GEMINI_503') throw e;
+    var hs = e.httpStatus || 0;
+    var userMsg;
+    if (hs === 429) userMsg = 'レート制限に達しました。1分後に再試行してください。';
+    else if (hs === 400) userMsg = '音声データの形式に問題があります。録音し直してください。';
+    else if (hs === 401 || hs === 403) userMsg = 'APIキーが無効です。URLを確認してください。';
+    else if (hs > 0) userMsg = 'エラーが発生しました。（HTTP ' + hs + ' ' + (e.apiCode || '') + '）';
+    else userMsg = 'エラーが発生しました。（' + (e.message || '不明') + '）';
+    var detail = 'エラー詳細:\n HTTP: ' + (hs || '-')
+      + '\n Code: ' + (e.apiCode || '-')
+      + '\n Message: ' + (e.apiMessage || e.message || '不明').substring(0, 150)
+      + '\n 音声形式: ' + mt
+      + '\n 録音サイズ: ' + sizeKb + 'KB';
+    console.error('[AI評価エラー]\n' + detail);
     return Object.assign({}, fallback, {
       cefrLevel: 'A1', score: 0,
-      improvements: ['評価エラー: ' + (e.message || '不明')],
-      _evalError: e.message || '不明なエラー'
+      improvements: [userMsg],
+      _evalError: userMsg
     });
   }
 }

@@ -423,12 +423,15 @@ var SCRIPTS = [
       "from our Product Security division",
       "who is separate from the approver.",
       "Second, on test scope.",
-      "We'd like to exclude physical security testing.",
-      "Since this device is used in a medical environment",
+      "We'd like to exclude",
+      "physical security testing.",
+      "Since this device is used",
+      "in a medical environment",
       "with high physical security standards,",
-      "we consider the risk of unauthorized access",
-      "to be low.",
-      "We plan to focus on externally exposed ports only.",
+      "we consider the risk",
+      "of unauthorized access to be low.",
+      "We plan to focus",
+      "on externally exposed ports only.",
       "Do these approaches align with your standards?",
       "We'd appreciate your confirmation."
     ],
@@ -995,9 +998,11 @@ function evalRec(mode) {
 
   var mtype = recMimeType || 'audio/webm';
   var blob = new Blob(recChunks, {type: mtype});
+  var sizeKb = Math.round(blob.size / 1024);
   var reader = new FileReader();
   reader.onload = function() {
     var b64 = reader.result.split(',')[1];
+    console.log('[AI評価] mime_type:', mtype, '| chunks:', recChunks.length, '| size:', sizeKb + 'KB');
     var scriptText = current ? current.raw.substring(0, 300) : '';
     var payload = {
       contents: [{
@@ -1016,35 +1021,65 @@ function evalRec(mode) {
       generationConfig: {temperature: 0.3}
     };
 
+    var _httpStatus = 0;
     fetch(GEM_URL + '?key=' + GEM_KEY, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload)
     }).then(function(res) {
+      _httpStatus = res.status;
       return res.json();
     }).then(function(data) {
-      if (data.error) throw new Error('Gemini: ' + data.error.message + ' (code:' + data.error.code + ')');
-      if (!data.candidates || !data.candidates[0]) throw new Error('レスポンスなし: ' + JSON.stringify(data).substring(0, 150));
+      if (data.error) {
+        var apiCode = data.error.status || String(data.error.code || _httpStatus);
+        var apiMsg  = data.error.message || '不明';
+        var detail  = 'エラー詳細:\n HTTP: ' + _httpStatus
+          + '\n Code: ' + apiCode
+          + '\n Message: ' + apiMsg.substring(0, 200)
+          + '\n 音声形式: ' + mtype
+          + '\n 録音サイズ: ' + sizeKb + 'KB';
+        var userMsg;
+        if (_httpStatus === 503) userMsg = 'Geminiが混雑しています。しばらく待って再評価してください。';
+        else if (_httpStatus === 429) userMsg = 'レート制限に達しました。1分後に再試行してください。';
+        else if (_httpStatus === 400) userMsg = '音声データの形式に問題があります。録音し直してください。';
+        else if (_httpStatus === 401 || _httpStatus === 403) userMsg = 'APIキーが無効です。URLを確認してください。';
+        else userMsg = 'エラーが発生しました。（' + apiCode + '）';
+        console.error('[AI評価エラー]\n' + detail);
+        var err = new Error(userMsg);
+        err.detail = detail;
+        throw err;
+      }
+      if (!data.candidates || !data.candidates[0]) {
+        var err2 = new Error('レスポンスなし');
+        err2.detail = 'HTTP: ' + _httpStatus + '\nBody: ' + JSON.stringify(data).substring(0, 200);
+        console.error('[AI評価エラー]\n' + err2.detail);
+        throw err2;
+      }
       var txt = data.candidates[0].content.parts[0].text || '';
       var clean = txt.replace(/```json|```/g, '').trim();
       var result;
       try {
         result = JSON.parse(clean);
       } catch(e) {
-        // Fallback values
         result = {score:65,passed:false,scoreLabel:'Keep Going',strengths:['練習継続中'],improvements:['引き続き練習しましょう'],nextStepAdvice:'もう少し練習してから進みましょう',canAdvance:false};
       }
       showAIFeedback(result, mode);
     }).catch(function(e) {
       var fa2 = document.getElementById('fbArea');
-      if (fa2) fa2.innerHTML = '<div class="fb-card">'
-        + '<div style="font-size:13px;color:var(--text2);margin-bottom:6px">⚠️ AI評価エラー</div>'
-        + '<div style="font-size:11px;color:var(--red);background:var(--bg3);padding:8px;border-radius:6px;margin-bottom:10px;word-break:break-all">' + (e.message || '不明なエラー') + '</div>'
-        + '<div style="display:flex;gap:8px">'
-        + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="selfEval(\'bad\',\'' + mode + '\')">😕 難しい</button>'
-        + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="selfEval(\'ok\',\'' + mode + '\')">🙂 まあまあ</button>'
-        + '<button class="btn btn-primary" style="flex:1;font-size:13px" onclick="selfEval(\'good\',\'' + mode + '\')">😄 できた</button>'
-        + '</div></div>';
+      if (fa2) {
+        var detailHtml = e.detail
+          ? '<pre style="font-size:10px;color:var(--text3);background:var(--bg3);padding:6px;border-radius:4px;white-space:pre-wrap;margin-bottom:10px;word-break:break-all">' + escHtml(e.detail) + '</pre>'
+          : '';
+        fa2.innerHTML = '<div class="fb-card">'
+          + '<div style="font-size:13px;color:var(--text2);margin-bottom:6px">⚠️ AI評価エラー</div>'
+          + '<div style="font-size:13px;color:var(--red);margin-bottom:6px">' + escHtml(e.message || '不明なエラー') + '</div>'
+          + detailHtml
+          + '<div style="display:flex;gap:8px">'
+          + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="selfEval(\'bad\',\'' + mode + '\')">😕 難しい</button>'
+          + '<button class="btn btn-secondary" style="flex:1;font-size:13px" onclick="selfEval(\'ok\',\'' + mode + '\')">🙂 まあまあ</button>'
+          + '<button class="btn btn-primary" style="flex:1;font-size:13px" onclick="selfEval(\'good\',\'' + mode + '\')">😄 できた</button>'
+          + '</div></div>';
+      }
     });
   };
   reader.readAsDataURL(blob);
@@ -1646,6 +1681,7 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
   if (!GEM_KEY) { showToast('URLにk=Geminiキーが必要です', false); return; }
   var btn = document.getElementById(btnId);
   if (btn) { btn.disabled = true; btn.textContent = '評価中...'; }
+  var _rCtx = {};
 
   var scriptObj = null;
   for (var i = 0; i < SCRIPTS.length; i++) {
@@ -1664,6 +1700,9 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
       });
     })
     .then(function(audio) {
+      _rCtx.mtype = audio.mtype;
+      _rCtx.sizeKb = Math.round(audio.b64.length * 3 / 4 / 1024);
+      console.log('[AI再評価] mime_type:', _rCtx.mtype, '| size:', _rCtx.sizeKb + 'KB');
       var payload = {
         contents: [{parts: [
           {text: 'You are an English pronunciation coach for a Japanese business professional.\nEvaluate this audio recording. Mode: ' + recMode + '.\nTarget script: "' + scriptText + '"\n\nScore based on:\n- Pronunciation accuracy\n- Natural rhythm and stress\n- Fluency and pacing\n- Clarity\n\nReturn ONLY valid JSON, no markdown:\n{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n- score: 0-100 based on actual performance\n- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n- Write ALL values in Japanese\n- Reference specific words from the script in feedback\n- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress). Example: "European: eu-RO-pe-an。ROに強勢。"\n- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n- Never write comparisons like "AではなくA" where both sides are identical'},
@@ -1677,9 +1716,31 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
         body: JSON.stringify(payload)
       });
     })
-    .then(function(res) { return res.json(); })
+    .then(function(res) {
+      _rCtx.httpStatus = res.status;
+      return res.json();
+    })
     .then(function(data) {
-      if (data.error) throw new Error('Gemini: ' + data.error.message);
+      if (data.error) {
+        var apiCode = data.error.status || String(data.error.code || _rCtx.httpStatus);
+        var apiMsg  = data.error.message || '不明';
+        var detail  = 'エラー詳細:\n HTTP: ' + _rCtx.httpStatus
+          + '\n Code: ' + apiCode
+          + '\n Message: ' + apiMsg.substring(0, 200)
+          + '\n 音声形式: ' + _rCtx.mtype
+          + '\n 録音サイズ: ' + _rCtx.sizeKb + 'KB';
+        var hs = _rCtx.httpStatus;
+        var userMsg;
+        if (hs === 503) userMsg = 'Geminiが混雑しています。しばらく待って再評価してください。';
+        else if (hs === 429) userMsg = 'レート制限に達しました。1分後に再試行してください。';
+        else if (hs === 400) userMsg = '音声データの形式に問題があります。';
+        else if (hs === 401 || hs === 403) userMsg = 'APIキーが無効です。URLを確認してください。';
+        else userMsg = 'エラーが発生しました。（' + apiCode + '）';
+        console.error('[AI再評価エラー]\n' + detail);
+        var err = new Error(userMsg);
+        err.detail = detail;
+        throw err;
+      }
       var txt = ((data.candidates || [])[0] || {content:{parts:[{text:''}]}}).content.parts[0].text || '';
       var clean = txt.replace(/```json|```/g, '').trim();
       var result;
@@ -1709,7 +1770,8 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
       else { showToast('保存エラー', false); if (btn) { btn.disabled = false; btn.textContent = '🔄 再評価'; } }
     })
     .catch(function(e) {
-      showToast('エラー: ' + (e.message || '不明'), false);
+      showToast((e.message || '不明なエラー'), false);
+      if (e.detail) console.error('[AI再評価エラー詳細]\n' + e.detail);
       if (btn) { btn.disabled = false; btn.textContent = '🔄 再評価'; }
     });
 }
