@@ -705,18 +705,24 @@ function closeYesterdayModal(saveMemo) {
 // ============================================================
 function loadDailyTasks() {
   apiGet('data/progress.json').then(function(d) {
-    if (!d || !d.content) return;
+    if (!d || !d.content) {
+      if (!d) console.warn('[loadDailyTasks] progress.json 取得失敗（timeout or エラー）');
+      return;
+    }
     try {
       var obj = JSON.parse(decodeB64(d.content));
       dailyTaskData  = obj.dailyTasks || {};
       dailyTaskState = dailyTaskData[todayStr] || {};
+      console.log('[loadDailyTasks] today(' + todayStr + '):', JSON.stringify(dailyTaskState));
       checkYesterdayModal(obj);
-    } catch(e) {}
+    } catch(e) {
+      console.error('[loadDailyTasks] parse error:', e.message);
+    }
     renderTodayCard(new Date().getDay());
     renderWeekAchievement();
     renderBadges();
     updateVocabDonut();
-  }).catch(function() {});
+  });
 }
 
 function updateVocabDonut() {
@@ -762,7 +768,9 @@ function updateQuickLinks() {
   var shadLink = makeLink('./shadowing.html');
   document.getElementById('ql-shad').href     = shadLink;
   document.getElementById('ql-vocab').href    = makeLink('./vocab.html');
-  document.getElementById('ql-rec').href      = shadLink + '&_tab=progress';
+  // _tab=progress: ? か & かを shadLink の内容で判断
+  var sep = shadLink.indexOf('?') !== -1 ? '&' : '?';
+  document.getElementById('ql-rec').href      = shadLink + sep + '_tab=progress';
   document.getElementById('ql-dialogue').href = makeLink('./dialogue.html');
   document.getElementById('seeAllLink').href  = shadLink;
 }
@@ -789,20 +797,29 @@ function setNoToken() {
 }
 
 // ============================================================
-// GITHUB API
+// GITHUB API — 10秒タイムアウト付き、常に resolve（null = 失敗）
 // ============================================================
 function apiGet(path) {
   var hdrs = {};
   if (GH_TOKEN) hdrs['Authorization'] = 'Bearer ' + GH_TOKEN;
-  return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
-    headers: hdrs
-  }).then(function(r) {
+  var fetchP = fetch(
+    'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path,
+    {headers: hdrs}
+  ).then(function(r) {
     if (!r.ok) { console.warn('[apiGet] HTTP ' + r.status + ': ' + path); return null; }
     return r.json();
   }).catch(function(e) {
     console.error('[apiGet] fetch error: ' + path, e.message || e);
     return null;
   });
+  // 10秒タイムアウト — reject でなく null で resolve してスピナーを確実に止める
+  var timeoutP = new Promise(function(resolve) {
+    setTimeout(function() {
+      console.warn('[apiGet] 10s timeout: ' + path);
+      resolve(null);
+    }, 10000);
+  });
+  return Promise.race([fetchP, timeoutP]);
 }
 
 function loadVocabDueCount() {
@@ -905,12 +922,15 @@ function loadDashboardData(now) {
   var weekEnd   = getWeekEnd(now);
   var monthStr  = now.toISOString().slice(0,7);
   Promise.all([
-    apiGet('recordings').catch(function(){return null;}),
-    apiGet('records').catch(function(){return null;})
+    apiGet('recordings'),
+    apiGet('records')
   ]).then(function(results) {
-    var recFiles  = Array.isArray(results[0]) ? results[0] : [];
-    var recJsons  = Array.isArray(results[1]) ? results[1] : [];
-    console.log('[records] recordings:', recFiles.length, '件 / records JSON:', recJsons.length, '件');
+    // null = timeout / HTTP error, [] = フォルダ存在するが空
+    var recFiles = Array.isArray(results[0]) ? results[0] : [];
+    var recJsons = results[1]; // null のまま保持して後で区別する
+    console.log('[records] recordings:', recFiles.length,
+      '件 / records:', recJsons === null ? 'timeout/失敗' : recJsons.length + '件');
+
     var recordings = recFiles.map(function(f){return parseRecording(f.name||'');}).filter(Boolean);
 
     // Streak
@@ -918,7 +938,7 @@ function loadDashboardData(now) {
     recordings.forEach(function(r){datesSet[r.date]=true;});
     document.getElementById('streakBadge').textContent = '🔥 ' + calcStreak(datesSet, now) + '日';
 
-    // Donut: shadowing days this week (from recordings)
+    // Donut: shadowing days this week
     var shadDays = {};
     recordings.forEach(function(r){if(r.mode==='shadowing'&&r.date>=weekStart&&r.date<=weekEnd)shadDays[r.date]=true;});
     setDonut('shadArc','shadTxt',Object.keys(shadDays).length,7);
@@ -926,6 +946,13 @@ function loadDashboardData(now) {
     // Monthly count
     document.getElementById('monthNum').textContent =
       recordings.filter(function(r){return r.date.slice(0,7)===monthStr;}).length;
+
+    // recJsons が null = timeout or API エラー
+    if (recJsons === null) {
+      document.getElementById('recentList').innerHTML =
+        '<div class="no-token">記録を取得できませんでした</div>';
+      return;
+    }
 
     // Recent records (newest 3 JSON files, excluding vocab-stats.json)
     var jsonFiles = recJsons.filter(function(f){
@@ -937,6 +964,7 @@ function loadDashboardData(now) {
       document.getElementById('recentList').innerHTML = '<div class="no-token">記録がまだありません</div>';
       return;
     }
+
     Promise.all(jsonFiles.map(function(f){
       return apiGet('records/'+f.name).then(function(d){
         if(!d||!d.content){ console.warn('[records] content取得失敗:', f.name); return null; }
@@ -946,14 +974,21 @@ function loadDashboardData(now) {
     })).then(function(recs){
       recs = recs.filter(Boolean);
       console.log('[records] レンダリング:', recs.length, '件');
+      if (!recs.length) {
+        document.getElementById('recentList').innerHTML = '<div class="no-token">記録を取得できませんでした</div>';
+        return;
+      }
       renderRecentRecords(recs);
       document.getElementById('seeAllLink').style.display = 'block';
       var scores = recs.filter(function(r){return r.score!=null;}).map(function(r){return r.score;});
       document.getElementById('scoreContent').innerHTML = buildScoreChart(scores);
+    }).catch(function(e) {
+      console.error('[records] inner error:', e && e.message || e);
+      document.getElementById('recentList').innerHTML = '<div class="no-token">記録を取得できませんでした</div>';
     });
   }).catch(function(e){
     console.error('[records] loadDashboardData error:', e && e.message || e);
-    document.getElementById('recentList').innerHTML = '<div class="no-token">読み込みエラー</div>';
+    document.getElementById('recentList').innerHTML = '<div class="no-token">記録を取得できませんでした</div>';
   });
 }
 
