@@ -61,9 +61,7 @@
       "memo": "出かけていて時間がなかった"
     },
     "2026-06-07": {
-      "weeklyReport": true,
-      "vocab": true,
-      "vocabDoneCount": 15,
+      "_m_shadowing": true,
       "shadowing": true
     }
   }
