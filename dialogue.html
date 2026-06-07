@@ -125,6 +125,9 @@ a{color:inherit;text-decoration:none}
 
 /* Toast */
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;z-index:9999;white-space:nowrap;pointer-events:none}
+
+/* Pending badge */
+.pending-badge{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;color:var(--amber);text-align:center;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -136,6 +139,7 @@ a{color:inherit;text-decoration:none}
     <div class="page-title">対話練習</div>
     <div style="width:60px"></div>
   </div>
+  <div id="pendingBadge" class="pending-badge" style="display:none"></div>
   <div id="app"></div>
 </div>
 <script>
@@ -193,9 +197,10 @@ var CEFR_DESC = {
 function cefrToNum(lv) { var i = CEFR_LEVELS.indexOf(lv); return i >= 0 ? i + 1 : 3; }
 function numToCefr(n)  { return CEFR_LEVELS[Math.min(Math.max(Math.round(n), 1), 6) - 1]; }
 function avgCefr(results) {
-  if (!results.length) return 'B1';
-  var sum = results.reduce(function(a, r) { return a + cefrToNum(r.cefrLevel || 'B1'); }, 0);
-  return numToCefr(sum / results.length);
+  var valid = results.filter(function(r) { return !r.pending; });
+  if (!valid.length) return 'B1';
+  var sum = valid.reduce(function(a, r) { return a + cefrToNum(r.cefrLevel || 'B1'); }, 0);
+  return numToCefr(sum / valid.length);
 }
 
 // ============================================================
@@ -217,7 +222,9 @@ var S = {
   recMimeType: '',
   chunks: [],
   blob: null,
-  pastSessions: []
+  pastSessions: [],
+  pendingEvals: [],    // [{qIndex, b64, mimeType, reactionTime, q}] — deferred due to 503
+  reEvalRunning: false
 };
 
 // ============================================================
@@ -235,6 +242,7 @@ function render() {
   else if (S.screen === 'end')        html = buildEnd();
   app.innerHTML = html;
   if (typeof lucide !== 'undefined') lucide.createIcons();
+  updatePendingBadge();
 }
 
 // ---- START ----
@@ -343,6 +351,17 @@ function buildFeedback() {
   var isLast = S.currentQ >= S.questions.length;
   var nextLabel = isLast ? 'セッション終了' : '次の問題 →';
 
+  if (r.pending) {
+    return '<div class="card section" style="text-align:center;padding:28px">'
+      + '<div style="font-size:30px;margin-bottom:8px">⏳</div>'
+      + '<div style="font-size:15px;font-weight:800;margin-bottom:8px;color:var(--amber)">評価保留中（503エラー）</div>'
+      + '<div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px">'
+      + 'Geminiサーバーが混雑しています。<br>セッション終了後に「保留分をまとめて評価」で<br>再評価できます。</div>'
+      + '<div style="font-size:14px;font-weight:700">「' + escH(r.japanese || '') + '」</div>'
+      + '</div>'
+      + '<button class="btn btn-primary" style="margin-top:14px" onclick="nextQ()">' + nextLabel + '</button>';
+  }
+
   if (r.skipped) {
     return '<div class="card section" style="text-align:center;padding:28px">'
       + '<div style="font-size:12px;color:var(--text3);margin-bottom:8px">スキップ</div>'
@@ -380,6 +399,8 @@ function buildEnd() {
     var q = S.questions[i] || {};
     var badge = r.skipped
       ? '<span style="font-size:12px;color:var(--text3)">スキップ</span>'
+      : r.pending
+      ? '<span style="font-size:12px;color:var(--amber)">— 評価保留中</span>'
       : '<span class="cefr-badge cefr-' + r.cefrLevel + '">' + r.cefrLevel + '</span>';
     return '<li><span class="result-scene">Q' + (i+1) + '. ' + escH((q.japanese||q.scene||'').substring(0,22)) + '…</span>' + badge + '</li>';
   }).join('');
@@ -400,6 +421,10 @@ function buildEnd() {
   var graphHtml = buildCefrGraph();
   var saveDisabled = !GH_TOKEN ? ' disabled' : '';
   var saveLbl = GH_TOKEN ? '💾 GitHubに保存' : '⚠️ GH_TOKENなし（保存不可）';
+  var pendingBtn = S.pendingEvals.length > 0
+    ? '<button class="btn" id="reEvalBtn" onclick="startReEval()" style="background:var(--amber);color:#0f172a">'
+      + '🔄 保留分をまとめて評価（' + S.pendingEvals.length + '問）</button>'
+    : '';
 
   return '<div class="end-cefr-hero">'
     + '<div class="end-cefr-big"><span class="cefr-badge cefr-' + avg + '" style="font-size:40px;padding:10px 24px">' + avg + '</span></div>'
@@ -412,6 +437,7 @@ function buildEnd() {
     + '<div class="phrase-chips">' + weakHtml + '</div></div>'
     + graphHtml
     + '<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">'
+    + pendingBtn
     + '<button class="btn btn-primary" id="saveBtn" onclick="saveSession()"' + saveDisabled + '>' + saveLbl + '</button>'
     + '<button class="btn btn-secondary" onclick="retrySession()">もう一度</button>'
     + '<a class="btn btn-secondary" href="./dashboard.html?k=' + encodeURIComponent(GEM_KEY) + '&gh=' + encodeURIComponent(GH_TOKEN) + '">ダッシュボードへ</a>'
@@ -611,7 +637,35 @@ async function doEval(reactionTime) {
   S.screen = 'evaluating';
   render();
   var q = S.questions[S.currentQ];
-  var ev = await evalAnswer(S.blob, q, reactionTime);
+  var ev;
+  try {
+    ev = await evalAnswer(S.blob, q, reactionTime);
+  } catch(e) {
+    if (e.message === 'GEMINI_503' && S.pendingEvals.length < 5) {
+      var b64 = await blobToB64(S.blob).catch(function() { return null; });
+      if (b64) {
+        S.pendingEvals.push({
+          qIndex: S.currentQ,
+          b64: b64,
+          mimeType: S.recMimeType || (S.blob && S.blob.type) || 'audio/webm',
+          reactionTime: reactionTime,
+          q: q
+        });
+        S.results.push({
+          q: S.currentQ + 1,
+          japanese: q ? (q.japanese || q.scene || '') : '',
+          cefrLevel: 'B1', score: null, reactionTime: reactionTime,
+          strengths: [], improvements: [], modelAnswer: '', pending: true
+        });
+        showToast('503エラー: 評価を保留しました（' + S.pendingEvals.length + '問）');
+        S.currentQ++;
+        S.screen = 'feedback';
+        render();
+        return;
+      }
+    }
+    ev = { cefrLevel: 'A1', score: 0, improvements: ['評価エラー: ' + (e.message || '不明')], _evalError: e.message };
+  }
   if (ev._evalError) {
     showToast('評価失敗: ' + ev._evalError);
     delete ev._evalError;
@@ -658,7 +712,10 @@ function callGemini(parts) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096 } })
   })
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    if (r.status === 503) throw new Error('GEMINI_503');
+    return r.json();
+  })
   .then(function(d) {
     if (d.error) {
       var msg = (d.error.message || '').split('\n')[0].substring(0, 120);
@@ -741,6 +798,7 @@ async function evalAnswer(audioBlob, q, reactionTime) {
     if (!CEFR_DESC[obj.cefrLevel]) obj.cefrLevel = 'B1';
     return obj;
   } catch(e) {
+    if (e.message === 'GEMINI_503') throw e;
     return Object.assign({}, fallback, {
       cefrLevel: 'A1', score: 0,
       improvements: ['評価エラー: ' + (e.message || '不明')],
@@ -893,6 +951,104 @@ function showToast(msg) {
   document.body.appendChild(t);
   setTimeout(function() { if (t.parentNode) t.parentNode.removeChild(t); }, 2800);
 }
+
+// ============================================================
+// PENDING EVALUATION
+// ============================================================
+function updatePendingBadge() {
+  var el = document.getElementById('pendingBadge');
+  if (!el) return;
+  if (S.pendingEvals.length > 0) {
+    el.style.display = 'block';
+    el.textContent = '⏳ 未評価: ' + S.pendingEvals.length + '問 — セッション終了後にまとめて再評価できます';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+async function evalAnswerFromB64(b64, mimeType, q) {
+  var fallback = { cefrLevel: 'B1', score: 50, strengths: [], improvements: ['評価に失敗しました'], modelAnswer: '', fillerCount: 0 };
+  if (!b64) return Object.assign({}, fallback, { improvements: ['音声データが見つかりません'] });
+  var scriptExcerpt = S.script ? S.script.raw.replace(/\n+/g, ' ').substring(0, 200) : '';
+  var prompt = 'You are an English coach evaluating a business English speaking practice.\n'
+    + 'Scene: ' + (q ? (q.japanese || q.scene || '') : '') + '\n'
+    + 'Target phrases: ' + ((q && q.targetPhrases) ? q.targetPhrases.join(', ') : '') + '\n'
+    + 'Reference script: ' + scriptExcerpt + '\n\n'
+    + 'Return ONLY this JSON, no markdown:\n'
+    + '{"cefrLevel":"B1","cefrDescription":"多少の誤りはあるが自然に伝わる","score":70,'
+    + '"strengths":["良かった点を日本語で"],'
+    + '"improvements":["改善点を日本語で"],'
+    + '"modelAnswer":"模範回答の英語","fillerCount":0}';
+  var res = await callGemini([{ text: prompt }, { inline_data: { mime_type: mimeType, data: b64 } }]);
+  if (!res) return Object.assign({}, fallback, { improvements: ['APIからの応答が空でした'] });
+  var cleaned = res.replace(/```(?:json)?\n?/gi, '').replace(/\n?```/g, '').trim();
+  var m = cleaned.match(/\{[\s\S]*\}/);
+  if (!m) return Object.assign({}, fallback, { improvements: ['JSONの解析に失敗しました'] });
+  var obj = JSON.parse(m[0]);
+  if (!CEFR_DESC[obj.cefrLevel]) obj.cefrLevel = 'B1';
+  return obj;
+}
+
+async function startReEval() {
+  if (S.reEvalRunning || !S.pendingEvals.length) return;
+  S.reEvalRunning = true;
+  var total = S.pendingEvals.length;
+  var done = 0;
+
+  for (var i = 0; i < total; i++) {
+    var btn = document.getElementById('reEvalBtn');
+    if (btn) btn.textContent = '評価中... ' + done + '/' + total + '問完了';
+
+    var pending = S.pendingEvals[i];
+    var ev = null;
+    var tried503 = false;
+
+    while (!ev) {
+      try {
+        ev = await evalAnswerFromB64(pending.b64, pending.mimeType, pending.q);
+      } catch(e) {
+        if (e.message === 'GEMINI_503' && !tried503) {
+          tried503 = true;
+          var retryBtn = document.getElementById('reEvalBtn');
+          if (retryBtn) retryBtn.textContent = '503エラー — 30秒後に再試行...';
+          await sleep(30000);
+        } else {
+          ev = { cefrLevel: 'B1', score: 0, strengths: [], improvements: ['再評価失敗: ' + (e.message || '不明')], modelAnswer: '' };
+        }
+      }
+    }
+
+    // Update matching pending result in S.results
+    for (var j = 0; j < S.results.length; j++) {
+      if (S.results[j].q === pending.qIndex + 1 && S.results[j].pending) {
+        Object.assign(S.results[j], ev, { pending: false, reactionTime: pending.reactionTime });
+        break;
+      }
+    }
+
+    done++;
+    if (i < total - 1) {
+      var waitBtn = document.getElementById('reEvalBtn');
+      if (waitBtn) waitBtn.textContent = '評価中... ' + done + '/' + total + '問完了（次まで5秒待機）';
+      await sleep(5000);
+    }
+  }
+
+  S.pendingEvals = [];
+  S.reEvalRunning = false;
+  render();
+  showToast('✓ 再評価が完了しました（' + total + '問）');
+}
+
+window.addEventListener('beforeunload', function(e) {
+  if (S.pendingEvals.length > 0) {
+    var msg = '未評価の録音が ' + S.pendingEvals.length + ' 問あります。閉じると評価できなくなります';
+    e.returnValue = msg;
+    return msg;
+  }
+});
 
 // ============================================================
 // INIT
