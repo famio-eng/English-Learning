@@ -140,6 +140,23 @@ a { color: inherit; text-decoration: none; }
 .edit-menu-opt{padding:13px 18px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
 .edit-menu-opt:last-child{border:none}
 .edit-menu-opt:active{background:var(--card2)}
+/* Past records modal */
+.pr-day-hdr{font-size:11px;font-weight:800;color:var(--text2);padding:8px 0 5px;border-top:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em}
+.pr-day-hdr:first-child{border-top:none;padding-top:0}
+.pr-task-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.pr-task-row:last-child{border:none}
+.pr-chk{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.pr-chk.chk-done{background:var(--green);border-color:var(--green)}
+.pr-chk.chk-manual{background:var(--accent);border-color:var(--accent)}
+/* Weekly schedule */
+.sched-table{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.sched-row{display:flex}
+.sched-row+.sched-row{border-top:1px solid var(--border)}
+.sched-row.today-row{background:rgba(124,111,247,.07)}
+.sched-day{min-width:50px;padding:10px 4px;font-size:12px;font-weight:800;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4;color:var(--text2)}
+.sched-row.today-row .sched-day{color:var(--accent)}
+.sched-tasks{flex:1;padding:8px 10px}
+.sched-task{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:12px;font-weight:600;color:var(--text)}
 </style>
 </head>
 <body>
@@ -223,6 +240,12 @@ a { color: inherit; text-decoration: none; }
     <div style="margin-top:12px;padding:10px 12px;background:var(--card2);border-radius:10px;border-left:3px solid var(--accent);font-size:13px;color:var(--text);font-weight:600;line-height:1.5">
       スピーキングの瞬発力と基本ビジネス表現の定着
     </div>
+  </div>
+
+  <!-- Weekly schedule -->
+  <div class="section card" id="scheduleCard">
+    <div class="card-title">今週のスケジュール</div>
+    <div id="scheduleTable"></div>
   </div>
 
   <!-- Quick links -->
@@ -313,6 +336,17 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
+<!-- Past records modal -->
+<div class="modal-overlay hidden" id="pastRecordsModal">
+  <div class="modal" style="max-width:480px;max-height:88vh;overflow-y:auto;padding:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:17px;font-weight:800">📅 過去の記録を修正</div>
+      <button onclick="closePastRecordsModal()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px">✕</button>
+    </div>
+    <div id="pastRecordsContent"></div>
+  </div>
+</div>
+
 <!-- Task edit menu -->
 <div id="editMenuOverlay" class="edit-menu-overlay" style="display:none" onclick="closeTaskMenu()"></div>
 <div id="editMenu" class="edit-menu" style="display:none"></div>
@@ -399,6 +433,7 @@ var vocabDueCount  = null; // null=未取得, 0+=件数
     now.getFullYear() + '年' + MONTH_JA[now.getMonth()] + now.getDate() + '日（' + DAY_JA[day] + '）';
   renderTodayCard(day);
   renderWeekAchievement();
+  renderSchedule();
   updateQuickLinks();
   updatePhase(now);
   loadVocabDueCount();
@@ -527,13 +562,17 @@ function renderWeekAchievement() {
       + '</div>';
   }
   var reportBtn = GEM_KEY
-    ? '<div style="margin-top:12px;text-align:center">'
+    ? '<div style="margin-top:8px;text-align:center">'
       + '<button onclick="openWeeklyReport()" class="btn btn-accent" style="font-size:12px;padding:6px 16px">'
       + '<i data-lucide="bar-chart-2" style="width:14px;height:14px"></i>今週のレポートを生成</button></div>'
     : '';
+  var editPastBtn = '<div style="margin-top:8px;text-align:center">'
+    + '<button onclick="openPastRecordsModal()" class="btn btn-secondary" style="font-size:12px;padding:6px 16px">'
+    + '<i data-lucide="calendar" style="width:14px;height:14px"></i>過去の記録を修正</button></div>';
   el.innerHTML = '<div class="week-label">今週の達成状況</div>'
     + '<div class="week-legend">✓ 全達成 &nbsp;△ 部分達成 &nbsp;☐ 未実施</div>'
     + '<div class="week-days">' + html + '</div>'
+    + editPastBtn
     + reportBtn;
 }
 
@@ -1475,6 +1514,149 @@ function saveAnalysisRecord(fileInfo, result) {
   }).then(function(r) {
     if (r && !r.ok) throw new Error('保存失敗 HTTP ' + r.status);
   });
+}
+
+// ============================================================
+// TASK ICONS
+// ============================================================
+var TASK_ICONS = {shadowing:'mic', vocab:'book-open', dialogue:'message-circle', weeklyReport:'bar-chart-2'};
+
+// ============================================================
+// WEEKLY SCHEDULE
+// ============================================================
+var WEEKLY_SCHEDULE = [
+  {days:[6], dayLabel:'土', tasks:[
+    {icon:'file-text',      text:'スクリプト作成'},
+    {icon:'mic',            text:'シャドーイング 初回練習'},
+    {icon:'book-open',      text:'単語帳 初回学習'}
+  ]},
+  {days:[0], dayLabel:'日', tasks:[
+    {icon:'mic',            text:'シャドーイング 0.7倍速×3'},
+    {icon:'book-open',      text:'単語復習（SM-2）'}
+  ]},
+  {days:[1,2], dayLabel:'月・火', tasks:[
+    {icon:'mic',            text:'シャドーイング 録音'},
+    {icon:'zap',            text:'AI評価'}
+  ]},
+  {days:[3,4], dayLabel:'水・木', tasks:[
+    {icon:'message-circle', text:'Pimsleur式対話練習'}
+  ]},
+  {days:[5], dayLabel:'金', tasks:[
+    {icon:'book-open',      text:'SM-2 単語復習'}
+  ]},
+  {days:[0,1,2,3,4,5,6], dayLabel:'毎日', tasks:[
+    {icon:'volume-2',       text:'独り言 10分'}
+  ]}
+];
+
+function renderSchedule() {
+  var el = document.getElementById('scheduleTable');
+  if (!el) return;
+  var today = new Date().getDay();
+  var html = '<div class="sched-table">';
+  WEEKLY_SCHEDULE.forEach(function(row) {
+    var isToday = row.days.indexOf(today) !== -1;
+    html += '<div class="sched-row' + (isToday ? ' today-row' : '') + '">'
+      + '<div class="sched-day">' + escHtml(row.dayLabel) + '</div>'
+      + '<div class="sched-tasks">';
+    row.tasks.forEach(function(t) {
+      html += '<div class="sched-task">'
+        + '<i data-lucide="' + t.icon + '" style="width:14px;height:14px;flex-shrink:0;color:'
+        + (isToday ? 'var(--accent)' : 'var(--text3)') + '"></i>'
+        + escHtml(t.text) + '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+// ============================================================
+// PAST RECORDS MODAL
+// ============================================================
+function openPastRecordsModal() {
+  document.getElementById('pastRecordsModal').classList.remove('hidden');
+  renderPastRecords();
+}
+
+function closePastRecordsModal() {
+  document.getElementById('pastRecordsModal').classList.add('hidden');
+}
+
+function renderPastRecords() {
+  var el = document.getElementById('pastRecordsContent');
+  if (!el) return;
+  var now = new Date();
+  var html = '';
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(now);
+    d.setDate(d.getDate() - i);
+    var ds  = d.toISOString().split('T')[0];
+    var dow = d.getDay();
+    var tasksDef = DAILY_TASKS_DEF[dow] || [];
+    if (!tasksDef.length) continue;
+    var tasks   = ds === todayStr ? dailyTaskState : (dailyTaskData[ds] || {});
+    var isToday = ds === todayStr;
+    var dayStr  = ds + '（' + DAY_JA[dow] + '）' + (isToday ? '  TODAY' : '');
+    html += '<div class="pr-day-hdr">' + escHtml(dayStr) + '</div>';
+    tasksDef.forEach(function(task) {
+      var done   = !!tasks[task.key];
+      var manual = !!tasks['_m_' + task.key];
+      var icon   = TASK_ICONS[task.key] || 'check-square';
+      var chkCls = done ? (manual ? 'pr-chk chk-manual' : 'pr-chk chk-done') : 'pr-chk';
+      var chkIcon = done ? '<i data-lucide="check" style="width:11px;height:11px;color:#fff;stroke-width:3"></i>' : '';
+      var mBadge = manual
+        ? '<span class="manual-badge"><i data-lucide="user-check" style="width:10px;height:10px"></i>手動</span>'
+        : '';
+      html += '<div class="pr-task-row">'
+        + '<div class="' + chkCls + '">' + chkIcon + '</div>'
+        + '<i data-lucide="' + icon + '" style="width:14px;height:14px;color:var(--text3);flex-shrink:0"></i>'
+        + '<span style="flex:1;font-size:13px;font-weight:700;line-height:1.4">' + escHtml(task.label) + '</span>'
+        + mBadge
+        + '<button class="task-pencil" onclick="togglePastTask(\'' + ds + '\',\'' + task.key + '\')">'
+        + '<i data-lucide="pencil" style="width:12px;height:12px"></i></button>'
+        + '</div>';
+    });
+  }
+  el.innerHTML = html;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function togglePastTask(dateStr, key) {
+  if (dateStr === todayStr) {
+    dailyTaskState['_m_' + key] = true;
+    saveDailyTask(key, !dailyTaskState[key]);
+    renderPastRecords();
+  } else {
+    if (!dailyTaskData[dateStr]) dailyTaskData[dateStr] = {};
+    dailyTaskData[dateStr][key] = !dailyTaskData[dateStr][key];
+    dailyTaskData[dateStr]['_m_' + key] = true;
+    renderPastRecords();
+    renderWeekAchievement();
+    savePastTaskRecord(dateStr);
+  }
+}
+
+function savePastTaskRecord(dateStr) {
+  if (!GH_TOKEN) return;
+  clearTimeout(savePastTaskRecord._t);
+  savePastTaskRecord._t = setTimeout(function() {
+    apiGet('data/progress.json').then(function(d) {
+      if (!d) return;
+      try {
+        var obj = JSON.parse(decodeB64(d.content));
+        if (!obj.dailyTasks) obj.dailyTasks = {};
+        obj.dailyTasks[dateStr] = Object.assign({}, dailyTaskData[dateStr]);
+        var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
+        fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/data/progress.json', {
+          method:'PUT',
+          headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+          body:JSON.stringify({message:'✏️ 記録修正: '+dateStr, content:encoded, sha:d.sha})
+        });
+      } catch(e) {}
+    });
+  }, 1000);
 }
 </script>
 </body>
