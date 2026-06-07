@@ -1333,7 +1333,7 @@ function openUnanalyzedModal() {
     }).map(function(f) {
       var m = f.name.match(/^(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(.+)-(reading|shadowing)\.[a-z0-9]+$/i);
       var ext = (f.name.match(/\.([a-z0-9]+)$/i) || ['', 'webm'])[1].toLowerCase();
-      var mimeMap = {m4a:'audio/mp4', mp4:'audio/mp4', webm:'audio/webm', ogg:'audio/ogg'};
+      var mimeMap = {m4a:'audio/mp4', mp4:'audio/mp4', webm:'audio/webm', ogg:'audio/ogg', mp3:'audio/mpeg', aac:'audio/aac', wav:'audio/wav'};
       return {name:f.name, date:m[1], time:m[2]+':'+m[3], scriptId:m[4], mode:m[5], mimeType:mimeMap[ext]||'audio/webm'};
     });
 
@@ -1425,7 +1425,8 @@ function startBatchAnalysis() {
       setTimeout(function() { next(pos + 1); }, 2000);
     }).catch(function(err) {
       console.error('[分析エラー]', uaFiles[indices[pos]].name, err);
-      setTimeout(function() { next(pos + 1); }, 2000);
+      progEl.innerHTML = '<div style="text-align:center;font-size:12px;color:var(--amber)">⚠ ' + escHtml(String(err.message || err)) + '</div>';
+      setTimeout(function() { next(pos + 1); }, 3000);
     });
   }
 
@@ -1433,35 +1434,56 @@ function startBatchAnalysis() {
 }
 
 function analyzeOneFile(fileInfo, retryCount) {
+  var AUDIO_MIME = {m4a:'audio/mp4', mp4:'audio/mp4', webm:'audio/webm', ogg:'audio/ogg', mp3:'audio/mpeg', aac:'audio/aac', wav:'audio/wav'};
+  var ext      = (fileInfo.name.match(/\.([a-z0-9]+)$/i) || ['','webm'])[1].toLowerCase();
+  var mimeType = AUDIO_MIME[ext] || 'audio/webm';
+
   return apiGet('recordings/' + fileInfo.name).then(function(d) {
     if (!d) throw new Error('ファイル情報取得失敗');
     if (d.content) {
-      return Promise.resolve(d.content.replace(/\n/g, ''));
+      var b64 = d.content.replace(/\n/g, '');
+      console.log('[音声取得] GitHub content API | mime:', mimeType,
+        '| size:', Math.round(b64.length * 3 / 4 / 1024) + 'KB',
+        '| b64[:100]:', b64.slice(0, 100));
+      return b64;
     } else if (d.download_url) {
-      return fetch(d.download_url).then(function(r) { return r.arrayBuffer(); }).then(function(buf) {
-        var bytes = new Uint8Array(buf);
-        var binary = '';
-        var chunk = 8192;
-        for (var i = 0; i < bytes.length; i += chunk) {
-          binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + chunk, bytes.length)));
-        }
-        return btoa(binary);
+      return fetch(d.download_url).then(function(r) {
+        var ct = r.headers.get('content-type') || '(unknown)';
+        return r.arrayBuffer().then(function(buf) {
+          var bytes = new Uint8Array(buf);
+          console.log('[音声取得] download_url | content-type:', ct,
+            '| size:', Math.round(bytes.length / 1024) + 'KB | mime:', mimeType);
+          var binary = '';
+          var chunk = 8192;
+          for (var i = 0; i < bytes.length; i += chunk) {
+            binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + chunk, bytes.length)));
+          }
+          var b64 = btoa(binary);
+          console.log('[音声取得] b64[:100]:', b64.slice(0, 100));
+          return b64;
+        });
       });
     } else {
       throw new Error('ダウンロードURL未取得');
     }
   }).then(function(b64) {
     var title     = SCRIPT_NAMES[fileInfo.scriptId] || fileInfo.scriptId;
-    var modeLabel = fileInfo.mode === 'reading' ? '音読' : 'シャドーイング';
-    var prompt = 'この英語' + modeLabel + '練習の録音を評価してください。\nスクリプト: ' + title + '\n\n'
-      + '発音・流暢さ・リズムを評価し、以下のJSON形式のみで返してください（コードブロック不要）:\n'
-      + '{"score":75,"cefrLevel":"B1","pronunciation":"発音の評価","fluency":"流暢さの評価","improvements":["改善点1","改善点2"]}';
+    var modeLabel = fileInfo.mode === 'reading' ? 'reading' : 'shadowing';
+    var passThreshold = fileInfo.mode === 'reading' ? 70 : 75;
+    var prompt = 'You are an English pronunciation coach.\n'
+      + 'Listen to this audio recording of English business speaking practice.\n'
+      + 'Mode: ' + modeLabel + '. Script excerpt: "' + title + '"\n\n'
+      + 'Return ONLY this JSON, no markdown:\n'
+      + '{"score":0,"passed":false,"scoreLabel":"Keep Going","strengths":["良かった点"],"improvements":["改善点"],"nextStepAdvice":"アドバイス","canAdvance":false}\n\n'
+      + 'Score 0-100. passed=true if score>=' + passThreshold + '.\n'
+      + 'Write ALL feedback in Japanese. Be specific.';
     var _httpStatus = 0;
+    console.log('[Gemini送信]', fileInfo.name, '| mime:', mimeType, '| b64 length:', b64.length);
     return fetch(GEM_URL + '?key=' + GEM_KEY, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
-        contents: [{parts:[{text:prompt},{inlineData:{mimeType:fileInfo.mimeType, data:b64}}]}],
+        contents: [{parts:[{text:prompt},{inlineData:{mimeType:mimeType, data:b64}}]}],
         generationConfig: {temperature:0.3, maxOutputTokens:512}
       })
     }).then(function(r) {
@@ -1469,36 +1491,51 @@ function analyzeOneFile(fileInfo, retryCount) {
       return r.json().catch(function(){ return {}; });
     }).then(function(d) {
       if (_httpStatus === 503 && retryCount === 0) {
+        console.log('[Gemini] 503 received, retrying in 30s...');
         return new Promise(function(resolve, reject) {
           setTimeout(function() { analyzeOneFile(fileInfo, 1).then(resolve).catch(reject); }, 30000);
         });
       }
       if (d.error) throw new Error('Gemini ' + _httpStatus + ': ' + (d.error.message || ''));
       var raw = (((d.candidates || [])[0] || {}).content || {}).parts;
-      var text = raw ? raw.map(function(p){return p.text||'';}).join('') : '';
-      var cleaned = text.replace(/```(?:json)?\n?/gi,'').replace(/\n?```/g,'').trim();
-      var m = cleaned.match(/\{[\s\S]*\}/);
+      var text = raw ? raw.map(function(p){ return p.text || ''; }).join('') : '';
+      console.log('[Gemini生レスポンス]', fileInfo.name, '\n', text);
+      var cleaned = text.replace(/```(?:json)?\n?/gi, '').replace(/\n?```/g, '').trim();
+      var matched = cleaned.match(/\{[\s\S]*\}/);
       var result = {};
-      if (m) { try { result = JSON.parse(m[0]); } catch(e) {} }
-      return saveAnalysisRecord(fileInfo, result);
+      if (matched) {
+        try { result = JSON.parse(matched[0]); }
+        catch(e) { console.warn('[JSONパース失敗]', e.message, '\n', cleaned); }
+      }
+      var hasData = (result.score > 0)
+        || (result.strengths    && result.strengths.length    > 0)
+        || (result.improvements && result.improvements.length > 0);
+      if (!hasData) {
+        throw new Error('空のレスポンス — スコア・フィードバック未取得。raw="' + text.slice(0, 200) + '"');
+      }
+      return saveAnalysisRecord(fileInfo, result, mimeType);
     });
   });
 }
 
-function saveAnalysisRecord(fileInfo, result) {
+function saveAnalysisRecord(fileInfo, result, mimeType) {
   var record = {
-    date:         fileInfo.date,
-    time:         fileInfo.time,
-    scriptId:     fileInfo.scriptId,
-    scriptTitle:  SCRIPT_NAMES[fileInfo.scriptId] || fileInfo.scriptId,
-    mode:         fileInfo.mode,
-    score:        result.score != null ? result.score : null,
-    cefrLevel:    result.cefrLevel || null,
-    pronunciation: result.pronunciation || null,
-    fluency:      result.fluency || null,
-    improvements: result.improvements || [],
-    analyzedAt:   new Date().toISOString(),
-    source:       'dashboard'
+    date:           fileInfo.date,
+    time:           fileInfo.time,
+    scriptId:       fileInfo.scriptId,
+    scriptTitle:    SCRIPT_NAMES[fileInfo.scriptId] || fileInfo.scriptId,
+    mode:           fileInfo.mode,
+    score:          result.score != null ? result.score : null,
+    passed:         result.passed  || false,
+    scoreLabel:     result.scoreLabel  || null,
+    strengths:      result.strengths   || [],
+    improvements:   result.improvements || [],
+    nextStepAdvice: result.nextStepAdvice || null,
+    canAdvance:     result.canAdvance  || false,
+    cefrLevel:      result.cefrLevel   || null,
+    mimeType:       mimeType           || fileInfo.mimeType || null,
+    analyzedAt:     new Date().toISOString(),
+    source:         'dashboard'
   };
   var baseName = fileInfo.name.replace(/\.[^.]+$/, '');
   var filePath  = 'records/' + baseName + '.json';
