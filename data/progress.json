@@ -17,11 +17,12 @@
       "shadCleared": true
     },
     "pentest-alignment": {
-      "lastScore": 85,
+      "lastScore": 65,
       "lastDate": "2026-06-07",
       "readCleared": true,
       "readOk": 1,
-      "shadOk": 0
+      "shadOk": 1,
+      "shadCleared": true
     }
   },
   "vocabSelectedScripts": [
