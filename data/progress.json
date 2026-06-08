@@ -65,6 +65,10 @@
       "shadowing": true,
       "_m_vocab": true,
       "vocab": true
+    },
+    "2026-06-06": {
+      "dialogue": true,
+      "_m_dialogue": true
     }
   }
 }
