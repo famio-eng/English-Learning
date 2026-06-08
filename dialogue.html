@@ -729,12 +729,15 @@ async function callGeminiWithFallback(payload) {
         body: JSON.stringify(payload)
       });
       var data = await res.json();
-      if (res.status === 429) {
-        console.log(models[i] + ' rate limited, trying next model...');
+      var isRateLimit = res.status === 429 || (data.error && data.error.code === 429);
+      if (isRateLimit) {
+        console.log(models[i] + ' 429 rate limited, trying: ' + (models[i + 1] || 'no more models'));
         continue;
       }
+      console.log('[Dialogue] Gemini success with model: ' + models[i]);
       return {data: data, model: models[i], status: res.status};
     } catch(e) {
+      console.log(models[i] + ' error: ' + e.message);
       if (i === models.length - 1) throw e;
       continue;
     }
