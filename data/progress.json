@@ -72,7 +72,9 @@
       "shadowing": true,
       "_m_shadowing": true,
       "vocab": true,
-      "_m_vocab": true
+      "_m_vocab": true,
+      "weeklyReport": true,
+      "_m_weeklyReport": true
     }
   }
 }
