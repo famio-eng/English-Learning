@@ -125,6 +125,17 @@ a { color: inherit; text-decoration: none; }
 .wr-list li::before{content:'•';color:var(--accent);flex-shrink:0}
 .wr-highlight{background:rgba(124,111,247,.07);border:1px solid rgba(124,111,247,.18);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;font-weight:600}
 .wr-phrase{display:inline-block;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:700;margin:2px}
+/* Past records edit modal */
+.prm-day{margin-bottom:14px}
+.prm-day-header{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.prm-task{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(58,58,58,.5)}
+.prm-task:last-child{border:none}
+.prm-check{width:20px;height:20px;border:2px solid var(--border);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.prm-check.done{background:var(--accent);border-color:var(--accent)}
+.prm-task-name{flex:1;font-size:13px;font-weight:600;color:var(--text)}
+.prm-edit-btn{background:none;border:none;cursor:pointer;padding:4px;color:var(--text3);display:flex;align-items:center}
+.prm-edit-btn:active{color:var(--accent)}
+.prm-manual-badge{display:inline-flex;align-items:center;gap:2px;font-size:10px;font-weight:700;color:var(--blue);flex-shrink:0}
 /* Weekly schedule */
 .sched-table{border:1px solid var(--border);border-radius:10px;overflow:hidden}
 .sched-row{display:flex}
@@ -156,6 +167,11 @@ a { color: inherit; text-decoration: none; }
     <div id="badgeArea"></div>
     <div class="today-btns" id="todayBtns"></div>
     <div class="week-achv" id="weekAchv"></div>
+    <div style="margin-top:10px;text-align:center">
+      <button onclick="openPastRecordsModal()" class="btn btn-secondary" style="font-size:12px;padding:7px 14px;min-height:36px">
+        <i data-lucide="calendar" style="width:14px;height:14px"></i>過去の記録を修正
+      </button>
+    </div>
   </div>
 
   <!-- Progress 2x2 -->
@@ -292,6 +308,20 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div id="weeklyReportContent"></div>
     <div id="weeklyReportActions" style="display:flex;gap:8px;margin-top:14px"></div>
+  </div>
+</div>
+
+<!-- Past Records Edit Modal -->
+<div class="modal-overlay hidden" id="pastRecordsModal">
+  <div class="modal" style="max-width:400px;max-height:85vh;overflow-y:auto;padding:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800">過去の記録を修正</div>
+      <button onclick="closePastRecordsModal()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px">✕</button>
+    </div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:14px">直近14日の達成状況を手動変更できます</div>
+    <div id="pastRecordsContent">
+      <div style="text-align:center;padding:20px"><div class="spinner"></div></div>
+    </div>
   </div>
 </div>
 
@@ -738,9 +768,11 @@ function setNoToken() {
 // GITHUB API
 // ============================================================
 function apiGet(path) {
-  return fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
+  var fetchP = fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + path, {
     headers: {'Authorization': 'Bearer ' + GH_TOKEN}
   }).then(function(r) { return r.ok ? r.json() : null; });
+  var timeoutP = new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 10000); });
+  return Promise.race([fetchP, timeoutP]);
 }
 
 function loadVocabDueCount() {
@@ -846,7 +878,7 @@ function loadDashboardData(now) {
     apiGet('records').catch(function(){return null;})
   ]).then(function(results) {
     var recFiles  = Array.isArray(results[0]) ? results[0] : [];
-    var recJsons  = Array.isArray(results[1]) ? results[1] : [];
+    var recJsons  = results[1]; // null = timeout/error, [] = empty, array = has files
     var recordings = recFiles.map(function(f){return parseRecording(f.name||'');}).filter(Boolean);
 
     // Streak
@@ -864,7 +896,11 @@ function loadDashboardData(now) {
       recordings.filter(function(r){return r.date.slice(0,7)===monthStr;}).length;
 
     // Recent records (newest 3 JSON files)
-    var jsonFiles = recJsons.filter(function(f){
+    if (recJsons === null) {
+      document.getElementById('recentList').innerHTML = '<div class="no-token">記録を取得できませんでした</div>';
+      return;
+    }
+    var jsonFiles = (Array.isArray(recJsons) ? recJsons : []).filter(function(f){
       return f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
     }).sort(function(a,b){return b.name.localeCompare(a.name);}).slice(0,3);
 
@@ -1210,6 +1246,133 @@ function renderRecentRecords(recs) {
       +'</div>';
   }).join('');
   document.getElementById('recentList').innerHTML = html;
+}
+
+// ============================================================
+// PAST RECORDS EDIT MODAL
+// ============================================================
+var PAST_TASK_DEFS_BY_DOW = {
+  6: [{key:'shadowing',    label:'シャドーイング'},
+      {key:'vocab',        label:'単語復習'},
+      {key:'weeklyReport', label:'週次レポート'},
+      {key:'dialogue',     label:'スクリプト作成（対話）'},
+      {key:'monologue',    label:'独り言 10分'}],
+  0: [{key:'shadowing',    label:'シャドーイング'},
+      {key:'vocab',        label:'単語復習'},
+      {key:'monologue',    label:'独り言 10分'}],
+  1: [{key:'shadowing',    label:'シャドーイング 録音'},
+      {key:'monologue',    label:'独り言 10分'}],
+  2: [{key:'shadowing',    label:'シャドーイング 録音'},
+      {key:'monologue',    label:'独り言 10分'}],
+  3: [{key:'dialogue',     label:'対話練習'},
+      {key:'monologue',    label:'独り言 10分'}],
+  4: [{key:'dialogue',     label:'対話練習'},
+      {key:'monologue',    label:'独り言 10分'}],
+  5: [{key:'vocab',        label:'単語復習'},
+      {key:'monologue',    label:'独り言 10分'}]
+};
+
+var _pastRecordsData = {};
+
+function openPastRecordsModal() {
+  var modal = document.getElementById('pastRecordsModal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  document.getElementById('pastRecordsContent').innerHTML =
+    '<div style="text-align:center;padding:20px"><div class="spinner"></div></div>';
+  _pastRecordsData = {};
+  var fetchP = GH_TOKEN ? apiGet('data/progress.json') : Promise.resolve(null);
+  fetchP.then(function(d) {
+    if (d && d.content) {
+      try {
+        var obj = JSON.parse(decodeB64(d.content));
+        _pastRecordsData = obj.dailyTasks || {};
+      } catch(e) {}
+    }
+    renderPastRecordsModal();
+  }).catch(function() { renderPastRecordsModal(); });
+}
+
+function closePastRecordsModal() {
+  var modal = document.getElementById('pastRecordsModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function renderPastRecordsModal() {
+  var el = document.getElementById('pastRecordsContent');
+  if (!el) return;
+  var now = new Date();
+  var html = '';
+  for (var i = 0; i < 14; i++) {
+    var d = new Date(now);
+    d.setDate(d.getDate() - i);
+    var ds   = d.toISOString().split('T')[0];
+    var dow  = d.getDay();
+    var defs = PAST_TASK_DEFS_BY_DOW[dow] || [];
+    var dayData = _pastRecordsData[ds] || {};
+    var manuals = Array.isArray(dayData._manualKeys) ? dayData._manualKeys : [];
+    html += '<div class="prm-day">'
+      + '<div class="prm-day-header">' + escHtml(ds)
+      + '（' + DAY_JA[dow] + '）' + (i === 0 ? ' — 今日' : '') + '</div>';
+    defs.forEach(function(t) {
+      var done     = !!dayData[t.key];
+      var isManual = manuals.indexOf(t.key) !== -1;
+      html += '<div class="prm-task">'
+        + '<div class="prm-check' + (done ? ' done' : '') + '">'
+        + (done ? '<i data-lucide="check" style="width:11px;height:11px;color:#fff;stroke-width:3"></i>' : '')
+        + '</div>'
+        + '<span class="prm-task-name">' + escHtml(t.label) + '</span>'
+        + (isManual ? '<span class="prm-manual-badge"><i data-lucide="user-check" style="width:11px;height:11px"></i></span>' : '')
+        + '<button class="prm-edit-btn" onclick="togglePastTask(\'' + ds + '\',\'' + t.key + '\')">'
+        + '<i data-lucide="pencil" style="width:14px;height:14px"></i>'
+        + '</button></div>';
+    });
+    html += '</div>';
+  }
+  el.innerHTML = html;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function togglePastTask(dateStr, key) {
+  if (!_pastRecordsData[dateStr]) _pastRecordsData[dateStr] = {};
+  var dayData = _pastRecordsData[dateStr];
+  dayData[key] = !dayData[key];
+  if (!Array.isArray(dayData._manualKeys)) dayData._manualKeys = [];
+  if (dayData._manualKeys.indexOf(key) === -1) dayData._manualKeys.push(key);
+  if (dateStr === todayStr) {
+    dailyTaskState[key] = dayData[key];
+    renderTodayCard(new Date().getDay());
+    renderWeekAchievement();
+    renderBadges();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+  renderPastRecordsModal();
+  savePastRecords(dateStr);
+}
+
+function savePastRecords(dateStr) {
+  if (!GH_TOKEN) { showDashToast('GHトークン未設定'); return; }
+  clearTimeout(savePastRecords._t);
+  savePastRecords._t = setTimeout(function() {
+    apiGet('data/progress.json').then(function(d) {
+      if (!d) { showDashToast('保存失敗'); return; }
+      try {
+        var obj = JSON.parse(decodeB64(d.content));
+        if (!obj.dailyTasks) obj.dailyTasks = {};
+        Object.keys(_pastRecordsData).forEach(function(k) {
+          obj.dailyTasks[k] = _pastRecordsData[k];
+        });
+        var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
+        fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/progress.json', {
+          method: 'PUT',
+          headers: {'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+          body: JSON.stringify({message:'📝 記録修正: '+dateStr, content:encoded, sha:d.sha})
+        }).then(function(r) {
+          showDashToast(r && r.ok ? '保存しました' : '保存に失敗しました', r && r.ok ? 'ok' : '');
+        }).catch(function() { showDashToast('保存エラー'); });
+      } catch(e) { showDashToast('保存エラー'); }
+    }).catch(function() { showDashToast('保存タイムアウト'); });
+  }, 800);
 }
 
 function renderSchedule() {
