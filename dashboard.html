@@ -256,7 +256,7 @@ a { color: inherit; text-decoration: none; }
         </div>
         <div class="quick-label">単語帳</div>
       </a>
-      <a href="https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6" target="_blank" rel="noopener" class="quick-btn">
+      <a href="#" onclick="openLearningChat();return false;" class="quick-btn">
         <div class="quick-icon" style="background:rgba(56,189,248,.15)">
           <i data-lucide="message-circle" style="width:22px;height:22px;color:var(--blue)"></i>
         </div>
@@ -337,7 +337,6 @@ var GH_TOKEN = _p.get('gh') || '';
 var GEM_KEY  = _p.get('k')  || '';
 var GH_OWNER = 'famio-eng';
 var GH_REPO  = 'English-Learning';
-var CLAUDE_CHAT = 'https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6';
 var GEM_MODELS = [
   'gemini-2.5-flash',
   'gemini-2.0-flash',
@@ -377,6 +376,17 @@ function makeLink(base) {
   return base + '?k=' + encodeURIComponent(GEM_KEY) + '&gh=' + encodeURIComponent(GH_TOKEN);
 }
 
+var CLAUDE_CHAT_ID = 'f186ccad-2aea-417f-94c5-43b1f5e393f6';
+function openLearningChat() {
+  var appUrl = 'claude://chat/' + CLAUDE_CHAT_ID;
+  var webUrl = 'https://claude.ai/chat/' + CLAUDE_CHAT_ID;
+  var t = Date.now();
+  var timer = setTimeout(function() {
+    if (Date.now() - t < 2500) window.open(webUrl, '_blank');
+  }, 2000);
+  window.location.href = appUrl;
+}
+
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -393,14 +403,14 @@ var DAILY_PLAN = {
   2: { title: '今日やること — シャドーイング練習',
        buttons: [{label:'シャドーイングを始める', target:'./shadowing.html', cls:'btn-primary', icon:'mic'}] },
   3: { title: '今日やること — Pimsleur式対話練習',
-       buttons: [{label:'学習用チャットを開く', target:CLAUDE_CHAT, cls:'btn-blue', icon:'message-circle', noParam:true}] },
+       buttons: [{label:'学習用チャットを開く', onclick:'openLearningChat()', cls:'btn-blue', icon:'message-circle'}] },
   4: { title: '今日やること — Pimsleur式対話練習',
-       buttons: [{label:'学習用チャットを開く', target:CLAUDE_CHAT, cls:'btn-blue', icon:'message-circle', noParam:true}] },
+       buttons: [{label:'学習用チャットを開く', onclick:'openLearningChat()', cls:'btn-blue', icon:'message-circle'}] },
   5: { title: '今日やること — 単語復習',
        buttons: [{label:'単語帳を開く', target:'./vocab.html', cls:'btn-green', icon:'book-open'}] },
   6: { title: '今日やること — 振り返り＋スクリプト作成＋初回練習',
        buttons: [{label:'週次レポートを生成', onclick:'openWeeklyReport()', cls:'btn-accent', icon:'bar-chart-2'},
-                 {label:'学習用チャットを開く', target:CLAUDE_CHAT, cls:'btn-blue', icon:'message-circle', noParam:true},
+                 {label:'学習用チャットを開く', onclick:'openLearningChat()', cls:'btn-blue', icon:'message-circle'},
                  {label:'シャドーイングを始める', target:'./shadowing.html', cls:'btn-primary', icon:'mic'}] }
 };
 

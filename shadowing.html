@@ -483,7 +483,7 @@ var readOk = 0;
 var shadOk = 0;
 var unlocked = ['pick', 'progress'];
 var scriptProgress = {};
-var pickSort = 'asc';
+var pickSort = 'desc';
 var pickFilter = 'all';
 var showBreath = false;
 var isRec = false;
@@ -509,6 +509,17 @@ function loadScriptProgress() {
       try {
         var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
         scriptProgress = obj.scriptProgress || {};
+        if (obj.shadowSettings) {
+          var ss = obj.shadowSettings;
+          if (ss.pickSort) pickSort = ss.pickSort;
+          if (typeof ss.rate === 'number') rate = ss.rate;
+          if (typeof ss.showBreath === 'boolean') showBreath = ss.showBreath;
+          if (ss.scriptId) {
+            for (var i = 0; i < SCRIPTS.length; i++) {
+              if (SCRIPTS[i].id === ss.scriptId) { current = SCRIPTS[i]; break; }
+            }
+          }
+        }
         renderTab('pick');
       } catch(e) {}
     }).catch(function(){});
@@ -537,6 +548,43 @@ function saveScriptProgress() {
       });
     }).catch(function(){});
 }
+
+var _saveUserSettingsTimer = null;
+function saveUserSettings() {
+  if (!GH_TOKEN) return;
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      var existing = {};
+      if (d && d.content) {
+        try { existing = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g, ''))))); } catch(e) {}
+      }
+      existing.shadowSettings = {
+        scriptId: current ? current.id : '',
+        pickSort: pickSort,
+        rate: rate,
+        showBreath: showBreath
+      };
+      var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: '⚙️ shadow settings: ' + new Date().toISOString().split('T')[0],
+          content: encoded,
+          sha: d ? d.sha : undefined
+        })
+      });
+    }).catch(function(){});
+}
+
+function saveUserSettingsDebounced() {
+  clearTimeout(_saveUserSettingsTimer);
+  _saveUserSettingsTimer = setTimeout(saveUserSettings, 1500);
+}
+
+function setPickSort(s) { pickSort = s; saveUserSettingsDebounced(); renderTab('pick'); }
 
 function markDailyTask(taskKey) {
   if (!GH_TOKEN) return;
@@ -667,8 +715,8 @@ function renderPick(c) {
 
   var controls = '<div class="pick-controls">'
     + '<span style="font-size:12px;color:var(--text2);font-weight:600">並び替え:</span>'
-    + '<div class="pick-chip' + (pickSort === 'asc' ? ' active' : '') + '" onclick="pickSort=\'asc\';renderTab(\'pick\')">↑ 登録日昇順</div>'
-    + '<div class="pick-chip' + (pickSort === 'desc' ? ' active' : '') + '" onclick="pickSort=\'desc\';renderTab(\'pick\')">↓ 登録日降順</div>'
+    + '<div class="pick-chip' + (pickSort === 'asc' ? ' active' : '') + '" onclick="setPickSort(\'asc\')">↑ 登録日昇順</div>'
+    + '<div class="pick-chip' + (pickSort === 'desc' ? ' active' : '') + '" onclick="setPickSort(\'desc\')">↓ 登録日降順</div>'
     + '<span style="font-size:12px;color:var(--text2);font-weight:600;margin-left:4px">絞込:</span>'
     + ['all', 'uncleared', 'cleared'].map(function(f) {
         var lbl = f === 'all' ? '全て' : f === 'uncleared' ? '未クリア' : 'クリア済';
@@ -702,6 +750,7 @@ function selectScript(id) {
     if (SCRIPTS[i].id === id) { current = SCRIPTS[i]; break; }
   }
   unlocked = ['pick', 'progress'];
+  saveUserSettings();
   ['meaning','reading','shadowing'].forEach(function(t) {
     var el = document.getElementById('tab-' + t);
     if (el) el.classList.add('locked');
@@ -823,6 +872,7 @@ function renderShadowing(c) {
 
 function toggleBreath() {
   showBreath = !showBreath;
+  saveUserSettings();
   stopAll();
   var tog = document.getElementById('breathToggle');
   if (tog) tog.classList.toggle('on', showBreath);
@@ -1265,6 +1315,7 @@ function stopAll() {
 
 function setRate(r) {
   rate = r;
+  saveUserSettingsDebounced();
   document.querySelectorAll('.speed-btn').forEach(function(b) {
     b.classList.toggle('active', parseFloat(b.getAttribute('data-r')) === r);
   });

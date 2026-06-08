@@ -243,7 +243,7 @@ var sOk = 0, sTotal = 0, sStreak = 0, sMaxStreak = 0;
 var phaseMode = 'select';
 var activeFilters = [];
 var selectedScripts = null; // null = all scripts
-var listSort = {col: 'nextReview', dir: 'asc'};
+var listSort = {col: 'added', dir: 'desc'};
 var listScriptFilter = '';
 var listStatusFilter = '';
 var synth = window.speechSynthesis;
@@ -333,6 +333,12 @@ function loadSharedProgress() {
           selectedScripts = obj.vocabSelectedScripts;
           if (currentTab === 'study' && phaseMode === 'select' && words.length > 0) renderModeSelect();
         }
+        if (obj.vocabSettings) {
+          var vs = obj.vocabSettings;
+          if (vs.listSort) listSort = vs.listSort;
+          if (vs.listScriptFilter !== undefined) listScriptFilter = vs.listScriptFilter;
+          if (Array.isArray(vs.activeFilters)) activeFilters = vs.activeFilters;
+        }
       } catch(e) {}
     }).catch(function(){});
 }
@@ -360,6 +366,42 @@ function saveSelectedScripts() {
       });
     }).catch(function(){});
 }
+
+var _saveVocabSettingsTimer = null;
+function saveVocabSettings() {
+  if (!GH_TOKEN) return;
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
+  fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      var existing = {};
+      if (d && d.content) {
+        try { existing = JSON.parse(atob(d.content.replace(/\n/g, ''))); } catch(e) {}
+      }
+      existing.vocabSettings = {
+        listSort: listSort,
+        listScriptFilter: listScriptFilter,
+        activeFilters: activeFilters
+      };
+      var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: {'Authorization': 'Bearer ' + GH_TOKEN, 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          message: '⚙️ vocab display settings: ' + new Date().toISOString().split('T')[0],
+          content: encoded,
+          sha: d ? d.sha : undefined
+        })
+      });
+    }).catch(function(){});
+}
+
+function saveVocabSettingsDebounced() {
+  clearTimeout(_saveVocabSettingsTimer);
+  _saveVocabSettingsTimer = setTimeout(saveVocabSettings, 1500);
+}
+
+function setListScriptFilter(sid) { listScriptFilter = sid; saveVocabSettingsDebounced(); renderList(); }
 
 // ============================================================
 // GITHUB
@@ -914,8 +956,8 @@ function renderList() {
   // Sort
   var sc = listSort.col, sd = listSort.dir;
   filtered.sort(function(a, b) {
-    var av = sc==='word' ? (a.word||'') : sc==='streak' ? (a.streak||0) : (a.nextReview||'');
-    var bv = sc==='word' ? (b.word||'') : sc==='streak' ? (b.streak||0) : (b.nextReview||'');
+    var av = sc==='word' ? (a.word||'') : sc==='streak' ? (a.streak||0) : sc==='added' ? (a.added||'') : (a.nextReview||'');
+    var bv = sc==='word' ? (b.word||'') : sc==='streak' ? (b.streak||0) : sc==='added' ? (b.added||'') : (b.nextReview||'');
     if (av < bv) return sd==='asc' ? -1 : 1;
     if (av > bv) return sd==='asc' ? 1 : -1;
     return 0;
@@ -935,9 +977,9 @@ function renderList() {
     return words.some(function(w){ return w.scriptId===sid; });
   });
   var scriptRow = '<div class="list-filter-row">'
-    + '<div class="filter-chip'+(listScriptFilter===''?' active':'')+'" onclick="listScriptFilter=\'\';renderList()">📄 全スクリプト</div>'
+    + '<div class="filter-chip'+(listScriptFilter===''?' active':'')+'" onclick="setListScriptFilter(\'\')">📄 全スクリプト</div>'
     + usedScripts.map(function(sid){
-        return '<div class="filter-chip'+(listScriptFilter===sid?' active':'')+'" onclick="listScriptFilter=\''+sid+'\';renderList()">'+SCRIPT_TITLES[sid]+'</div>';
+        return '<div class="filter-chip'+(listScriptFilter===sid?' active':'')+'" onclick="setListScriptFilter(\''+sid+'\')">'+SCRIPT_TITLES[sid]+'</div>';
       }).join('')
     + '</div>';
 
@@ -976,6 +1018,7 @@ function renderList() {
       + '<td class="td-word">'+escHtml(w.word||'')+'</td>'
       + '<td class="td-meaning">'+escHtml(w.meaning||'')+'</td>'
       + '<td class="td-level">'+lvBadges+'</td>'
+      + '<td style="white-space:nowrap;font-size:12px;color:var(--text2)">'+escHtml(w.added||'')+'</td>'
       + '<td style="white-space:nowrap;color:'+dueColor+'">'+dueLabel+'</td>'
       + '<td style="white-space:nowrap;font-size:12px">'+status+'</td>'
       + '</tr>';
@@ -985,6 +1028,7 @@ function renderList() {
     + '<div class="list-table-wrap"><table class="list-table">'
     + '<thead><tr>'
     + th('word','単語')+'<th>意味</th><th>難易度</th>'
+    + th('added','登録日')
     + th('nextReview','次回復習')
     + th('streak','状態')
     + '</tr></thead>'
@@ -995,13 +1039,15 @@ function renderList() {
 function toggleListSort(col) {
   if (listSort.col === col) listSort.dir = listSort.dir==='asc' ? 'desc' : 'asc';
   else { listSort.col = col; listSort.dir = 'asc'; }
+  saveVocabSettingsDebounced();
   renderList();
 }
 
-function setFilter(lv) { activeFilters = lv ? [lv] : []; renderList(); }
+function setFilter(lv) { activeFilters = lv ? [lv] : []; saveVocabSettingsDebounced(); renderList(); }
 function toggleFilter(lv) {
   var idx = activeFilters.indexOf(lv);
   if (idx >= 0) activeFilters.splice(idx, 1); else activeFilters.push(lv);
+  saveVocabSettingsDebounced();
   renderList();
 }
 
