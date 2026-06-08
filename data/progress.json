@@ -75,6 +75,9 @@
       "_m_vocab": true,
       "weeklyReport": true,
       "_m_weeklyReport": true
+    },
+    "2026-06-08": {
+      "shadowing": true
     }
   }
 }
