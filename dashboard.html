@@ -338,7 +338,12 @@ var GEM_KEY  = _p.get('k')  || '';
 var GH_OWNER = 'famio-eng';
 var GH_REPO  = 'English-Learning';
 var CLAUDE_CHAT = 'https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6';
-var GEM_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+var GEM_MODELS = [
+  'gemini-2.5-flash',
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-lite'
+];
+var GEM_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
 
 // ============================================================
 // WEEKLY SCHEDULE (静的ハードコード — API依存なし)
@@ -1037,14 +1042,8 @@ function collectWeeklyData() {
 }
 
 async function callGeminiWithFallback(payload) {
-  var models = [
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite'
-  ];
-  var baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
-  for (var i = 0; i < models.length; i++) {
-    var url = baseUrl + models[i] + ':generateContent?key=' + GEM_KEY;
+  for (var i = 0; i < GEM_MODELS.length; i++) {
+    var url = GEM_BASE + GEM_MODELS[i] + ':generateContent?key=' + GEM_KEY;
     try {
       var res = await fetch(url, {
         method: 'POST',
@@ -1052,20 +1051,22 @@ async function callGeminiWithFallback(payload) {
         body: JSON.stringify(payload)
       });
       var data = await res.json();
-      var isRateLimit = res.status === 429 || (data.error && data.error.code === 429);
+      var isRateLimit = res.status === 429 ||
+        (data.error && (data.error.code === 429 ||
+        (data.error.message && data.error.message.indexOf('429') >= 0)));
       if (isRateLimit) {
-        console.log(models[i] + ' 429 rate limited, trying: ' + (models[i + 1] || 'no more models'));
+        console.log('[Gemini] ' + GEM_MODELS[i] + ' rate limited, trying next...');
         continue;
       }
-      console.log('[Dashboard] Gemini success with model: ' + models[i]);
-      return {data: data, model: models[i], status: res.status};
+      console.log('[Gemini] success with ' + GEM_MODELS[i]);
+      return {data: data, model: GEM_MODELS[i], status: res.status};
     } catch(e) {
-      console.log(models[i] + ' error: ' + e.message);
-      if (i === models.length - 1) throw e;
+      console.log('[Gemini] ' + GEM_MODELS[i] + ' error: ' + e.message);
+      if (i === GEM_MODELS.length - 1) throw e;
       continue;
     }
   }
-  throw new Error('全モデルがレート制限に達しました。しばらく待ってから再試行してください。');
+  throw new Error('全モデルがレート制限に達しました。明日再試行してください。');
 }
 
 function callGeminiDash(parts) {
