@@ -17,11 +17,11 @@
       "shadCleared": true
     },
     "pentest-alignment": {
-      "lastScore": 70,
+      "lastScore": 65,
       "lastDate": "2026-06-08",
       "readCleared": true,
       "readOk": 2,
-      "shadOk": 3,
+      "shadOk": 4,
       "shadCleared": true
     }
   },
