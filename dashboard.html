@@ -310,6 +310,34 @@ var GH_REPO  = 'English-Learning';
 var CLAUDE_CHAT = 'https://claude.ai/chat/f186ccad-2aea-417f-94c5-43b1f5e393f6';
 var GEM_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
+// ============================================================
+// WEEKLY SCHEDULE (静的ハードコード — API依存なし)
+// ============================================================
+var WEEKLY_SCHEDULE = [
+  {days:[6], dayLabel:'土', tasks:[
+    {icon:'file-text', text:'スクリプト作成'},
+    {icon:'mic',       text:'シャドーイング 初回練習'},
+    {icon:'book-open', text:'単語帳 初回学習'}
+  ]},
+  {days:[0], dayLabel:'日', tasks:[
+    {icon:'mic',       text:'シャドーイング ×3'},
+    {icon:'book-open', text:'単語復習（SM-2）'}
+  ]},
+  {days:[1,2], dayLabel:'月・火', tasks:[
+    {icon:'mic',       text:'シャドーイング 録音'},
+    {icon:'zap',       text:'AI評価'}
+  ]},
+  {days:[3,4], dayLabel:'水・木', tasks:[
+    {icon:'message-circle', text:'Pimsleur式対話練習'}
+  ]},
+  {days:[5], dayLabel:'金', tasks:[
+    {icon:'book-open', text:'SM-2 単語復習'}
+  ]},
+  {days:[0,1,2,3,4,5,6], dayLabel:'毎日', tasks:[
+    {icon:'volume-2',  text:'独り言 10分'}
+  ]}
+];
+
 function makeLink(base) {
   return base + '?k=' + encodeURIComponent(GEM_KEY) + '&gh=' + encodeURIComponent(GH_TOKEN);
 }
@@ -1183,34 +1211,6 @@ function renderRecentRecords(recs) {
   }).join('');
   document.getElementById('recentList').innerHTML = html;
 }
-
-// ============================================================
-// WEEKLY SCHEDULE (静的ハードコード — API依存なし)
-// ============================================================
-var WEEKLY_SCHEDULE = [
-  {days:[6], dayLabel:'土', tasks:[
-    {icon:'file-text', text:'スクリプト作成'},
-    {icon:'mic',       text:'シャドーイング 初回練習'},
-    {icon:'book-open', text:'単語帳 初回学習'}
-  ]},
-  {days:[0], dayLabel:'日', tasks:[
-    {icon:'mic',       text:'シャドーイング ×3'},
-    {icon:'book-open', text:'単語復習（SM-2）'}
-  ]},
-  {days:[1,2], dayLabel:'月・火', tasks:[
-    {icon:'mic',       text:'シャドーイング 録音'},
-    {icon:'zap',       text:'AI評価'}
-  ]},
-  {days:[3,4], dayLabel:'水・木', tasks:[
-    {icon:'message-circle', text:'Pimsleur式対話練習'}
-  ]},
-  {days:[5], dayLabel:'金', tasks:[
-    {icon:'book-open', text:'SM-2 単語復習'}
-  ]},
-  {days:[0,1,2,3,4,5,6], dayLabel:'毎日', tasks:[
-    {icon:'volume-2',  text:'独り言 10分'}
-  ]}
-];
 
 function renderSchedule() {
   var el = document.getElementById('scheduleTable');
