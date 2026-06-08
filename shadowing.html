@@ -971,6 +971,35 @@ function autoSaveRecording(mode) {
   reader.readAsDataURL(blob);
 }
 
+async function callGeminiWithFallback(payload) {
+  var models = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-lite'
+  ];
+  var baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
+  for (var i = 0; i < models.length; i++) {
+    var url = baseUrl + models[i] + ':generateContent?key=' + GEM_KEY;
+    try {
+      var res = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      var data = await res.json();
+      if (res.status === 429) {
+        console.log(models[i] + ' rate limited, trying next model...');
+        continue;
+      }
+      return {data: data, model: models[i], status: res.status};
+    } catch(e) {
+      if (i === models.length - 1) throw e;
+      continue;
+    }
+  }
+  throw new Error('全モデルがレート制限に達しました。しばらく待ってから再試行してください。');
+}
+
 function evalRec(mode) {
   autoSaveRecording(mode); // バックグラウンドで録音をGitHubに保存
   var fa = document.getElementById('fbArea');
@@ -1022,13 +1051,11 @@ function evalRec(mode) {
     };
 
     var _httpStatus = 0;
-    fetch(GEM_URL + '?key=' + GEM_KEY, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    }).then(function(res) {
-      _httpStatus = res.status;
-      return res.json();
+    callGeminiWithFallback(payload)
+    .then(function(result) {
+      _httpStatus = result.status;
+      console.log('[AI評価] Gemini model used:', result.model);
+      return result.data;
     }).then(function(data) {
       if (data.error) {
         var apiCode = data.error.status || String(data.error.code || _httpStatus);
@@ -1710,15 +1737,12 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
         ]}],
         generationConfig: {temperature: 0.3}
       };
-      return fetch(GEM_URL + '?key=' + GEM_KEY, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload)
-      });
+      return callGeminiWithFallback(payload);
     })
-    .then(function(res) {
-      _rCtx.httpStatus = res.status;
-      return res.json();
+    .then(function(result) {
+      _rCtx.httpStatus = result.status;
+      console.log('[AI再評価] Gemini model used:', result.model);
+      return result.data;
     })
     .then(function(data) {
       if (data.error) {

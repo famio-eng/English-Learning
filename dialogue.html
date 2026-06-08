@@ -713,20 +713,43 @@ function retrySession() {
 // ============================================================
 // GEMINI
 // ============================================================
+async function callGeminiWithFallback(payload) {
+  var models = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-lite'
+  ];
+  var baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
+  for (var i = 0; i < models.length; i++) {
+    var url = baseUrl + models[i] + ':generateContent?key=' + GEM_KEY;
+    try {
+      var res = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      var data = await res.json();
+      if (res.status === 429) {
+        console.log(models[i] + ' rate limited, trying next model...');
+        continue;
+      }
+      return {data: data, model: models[i], status: res.status};
+    } catch(e) {
+      if (i === models.length - 1) throw e;
+      continue;
+    }
+  }
+  throw new Error('全モデルがレート制限に達しました。しばらく待ってから再試行してください。');
+}
+
 function callGemini(parts) {
   if (!GEM_KEY) return Promise.resolve(null);
-  var _httpStatus = 0;
-  return fetch(GEM_URL + '?key=' + GEM_KEY, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096 } })
-  })
-  .then(function(r) {
-    _httpStatus = r.status;
-    if (r.status === 503) throw new Error('GEMINI_503');
-    return r.json();
-  })
-  .then(function(d) {
+  var payload = { contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096 } };
+  return callGeminiWithFallback(payload).then(function(result) {
+    var _httpStatus = result.status;
+    console.log('[Dialogue] Gemini model used:', result.model);
+    if (_httpStatus === 503) throw new Error('GEMINI_503');
+    var d = result.data;
     if (d.error) {
       var apiCode = d.error.status || String(d.error.code || _httpStatus);
       var apiMsg  = (d.error.message || '').split('\n')[0].substring(0, 120);
