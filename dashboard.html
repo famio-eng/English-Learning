@@ -125,6 +125,15 @@ a { color: inherit; text-decoration: none; }
 .wr-list li::before{content:'•';color:var(--accent);flex-shrink:0}
 .wr-highlight{background:rgba(124,111,247,.07);border:1px solid rgba(124,111,247,.18);border-radius:10px;padding:12px;font-size:13px;line-height:1.6;font-weight:600}
 .wr-phrase{display:inline-block;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:3px 9px;font-size:12px;font-weight:700;margin:2px}
+/* Weekly schedule */
+.sched-table{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.sched-row{display:flex}
+.sched-row+.sched-row{border-top:1px solid var(--border)}
+.sched-row.today-row{background:rgba(124,111,247,.07)}
+.sched-day{min-width:52px;padding:10px 4px;font-size:12px;font-weight:800;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4;color:var(--text2)}
+.sched-row.today-row .sched-day{color:var(--accent)}
+.sched-tasks{flex:1;padding:8px 10px}
+.sched-task{display:flex;align-items:center;gap:6px;padding:2px 0;font-size:12px;font-weight:600;color:var(--text)}
 </style>
 </head>
 <body>
@@ -208,6 +217,12 @@ a { color: inherit; text-decoration: none; }
     <div style="margin-top:12px;padding:10px 12px;background:var(--card2);border-radius:10px;border-left:3px solid var(--accent);font-size:13px;color:var(--text);font-weight:600;line-height:1.5">
       スピーキングの瞬発力と基本ビジネス表現の定着
     </div>
+  </div>
+
+  <!-- Weekly schedule -->
+  <div class="section card" id="scheduleCard">
+    <div class="card-title">今週のスケジュール</div>
+    <div id="scheduleTable"></div>
   </div>
 
   <!-- Quick links -->
@@ -362,6 +377,7 @@ var vocabDueCount  = null; // null=未取得, 0+=件数
     now.getFullYear() + '年' + MONTH_JA[now.getMonth()] + now.getDate() + '日（' + DAY_JA[day] + '）';
   renderTodayCard(day);
   renderWeekAchievement();
+  renderSchedule();
   updateQuickLinks();
   updatePhase(now);
   loadVocabDueCount();
@@ -1166,6 +1182,57 @@ function renderRecentRecords(recs) {
       +'</div>';
   }).join('');
   document.getElementById('recentList').innerHTML = html;
+}
+
+// ============================================================
+// WEEKLY SCHEDULE (静的ハードコード — API依存なし)
+// ============================================================
+var WEEKLY_SCHEDULE = [
+  {days:[6], dayLabel:'土', tasks:[
+    {icon:'file-text', text:'スクリプト作成'},
+    {icon:'mic',       text:'シャドーイング 初回練習'},
+    {icon:'book-open', text:'単語帳 初回学習'}
+  ]},
+  {days:[0], dayLabel:'日', tasks:[
+    {icon:'mic',       text:'シャドーイング ×3'},
+    {icon:'book-open', text:'単語復習（SM-2）'}
+  ]},
+  {days:[1,2], dayLabel:'月・火', tasks:[
+    {icon:'mic',       text:'シャドーイング 録音'},
+    {icon:'zap',       text:'AI評価'}
+  ]},
+  {days:[3,4], dayLabel:'水・木', tasks:[
+    {icon:'message-circle', text:'Pimsleur式対話練習'}
+  ]},
+  {days:[5], dayLabel:'金', tasks:[
+    {icon:'book-open', text:'SM-2 単語復習'}
+  ]},
+  {days:[0,1,2,3,4,5,6], dayLabel:'毎日', tasks:[
+    {icon:'volume-2',  text:'独り言 10分'}
+  ]}
+];
+
+function renderSchedule() {
+  var el = document.getElementById('scheduleTable');
+  if (!el) return;
+  var today = new Date().getDay();
+  var html = '<div class="sched-table">';
+  WEEKLY_SCHEDULE.forEach(function(row) {
+    var isToday = row.days.indexOf(today) !== -1;
+    html += '<div class="sched-row' + (isToday ? ' today-row' : '') + '">'
+      + '<div class="sched-day">' + escHtml(row.dayLabel) + '</div>'
+      + '<div class="sched-tasks">';
+    row.tasks.forEach(function(t) {
+      html += '<div class="sched-task">'
+        + '<i data-lucide="' + t.icon + '" style="width:13px;height:13px;flex-shrink:0;color:'
+        + (isToday ? 'var(--accent)' : 'var(--text3)') + '"></i>'
+        + escHtml(t.text) + '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 </script>
 </body>
