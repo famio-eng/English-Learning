@@ -1153,7 +1153,26 @@ function evalRec(mode) {
       contents: [{
         parts: [
           {
-            text: 'You are an English pronunciation coach for a Japanese business professional.\nEvaluate this audio recording. Mode: ' + mode + '.\nTarget script: "' + scriptText.substring(0,150) + '"\n\nScore based on:\n- Pronunciation accuracy (especially difficult words: electrosurgical, regulatory, endoscopic)\n- Natural rhythm and stress\n- Fluency and pacing\n- Clarity\n\nReturn ONLY valid JSON, no markdown:\n{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n- score: 0-100 based on actual performance\n- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n- Write ALL values in Japanese\n- Reference specific words from the script in feedback\n- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress). Example: \"European: eu-RO-pe-an。ROに強勢。\"\n- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n- Never write comparisons like \"AではなくA\" where both sides are identical'
+            text: 'You are an English pronunciation coach evaluating a Japanese business professional.\n'
+            + 'This speaker is a Japanese native learning business English.\n'
+            + 'Mode: ' + mode + '. Script: "' + scriptText.substring(0,150) + '"\n\n'
+            + 'Scoring criteria for Japanese learners:\n'
+            + '- 90+: Near-native, excellent rhythm and pronunciation\n'
+            + '- 80-89: Very good, minor accent issues only\n'
+            + '- 70-79: Good, understandable with some Japanese accent\n'
+            + '- 60-69: Communicates but needs work on specific sounds\n'
+            + '- Below 60: Difficult to understand\n\n'
+            + 'A Japanese speaker who can be clearly understood by native English speakers\n'
+            + 'in a business context should score 70 or above.\n'
+            + 'Do NOT penalize for Japanese accent if the message is clear.\n\n'
+            + 'Return ONLY valid JSON, no markdown:\n'
+            + '{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点（どの単語をどう直すか。音節表記例: eu-RO-pe-an）","改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n'
+            + '- score: 0-100 per the criteria above\n'
+            + '- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n'
+            + '- Write ALL values in Japanese\n'
+            + '- For pronunciation improvements: word: syl-LA-ble (uppercase = stress). Example: \"European: eu-RO-pe-an。ROに強勢。\"\n'
+            + '- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n'
+            + '- Never write comparisons like \"AではなくA\" where both sides are identical'
           },
           {
             inline_data: {
