@@ -91,5 +91,11 @@
       "_m_dialogue": true,
       "dialogue": true
     }
+  },
+  "shadowSettings": {
+    "scriptId": "510k-readiness",
+    "pickSort": "desc",
+    "rate": 0.7,
+    "showBreath": false
   }
 }
