@@ -462,6 +462,69 @@ var SCRIPTS = [
       ]
     }
   }
+  ,
+  {
+    id: '510k-readiness',
+    title: '510k申請に向けた準備状況の確認',
+    date: '2026-06-08',
+    tip: 'PMDA / 510k / GSOP / labeling requirement の発音を正確に。2つのトピックを明確に区別して話す。',
+    raw: "Thank you for your time today. First, I'd like to express my appreciation for your support during the PMDA inspection.\n\nI have two topics I'd like to discuss regarding our readiness level for the 510k submission.\n\nThe first is GSOP compliance. We have recently completed an estimate of the effort required. Based on this, I'd like to walk through the pros and cons and align on how far we should go with compliance, given that we are already close to submission.\n\nThe second is the new FDA labeling requirement. We have decided to address this, but have not yet determined how much needs to be completed before initiating the 510k submission. I'd like to discuss the impact on our schedule and cost, and get your guidance on the scope.",
+    breathGroups: [
+      "Thank you for your time today.",
+      "First,",
+      "I'd like to express my appreciation",
+      "for your support",
+      "during the PMDA inspection.",
+      "I have two topics",
+      "I'd like to discuss",
+      "regarding our readiness level",
+      "for the 510k submission.",
+      "The first is GSOP compliance.",
+      "We have recently completed",
+      "an estimate of the effort required.",
+      "Based on this,",
+      "I'd like to walk through",
+      "the pros and cons",
+      "and align on how far we should go",
+      "with compliance,",
+      "given that we are already",
+      "close to submission.",
+      "The second is",
+      "the new FDA labeling requirement.",
+      "We have decided to address this,",
+      "but have not yet determined",
+      "how much needs to be completed",
+      "before initiating the 510k submission.",
+      "I'd like to discuss",
+      "the impact on our schedule and cost,",
+      "and get your guidance on the scope."
+    ],
+    vocab: [
+      {word:'express my appreciation', pron:'/ɪkˈspres maɪ əˌpriːʃiˈeɪʃən/', meaning:'感謝の気持ちを伝える', example:"I'd like to express my appreciation for your support."},
+      {word:'readiness level', pron:'/ˈrɛdinəs ˈlɛvəl/', meaning:'準備状況・準備レベル', example:"I'd like to discuss our readiness level for the submission."},
+      {word:'walk through the pros and cons', pron:'/wɔːk θruː ðə proʊz ænd kɒnz/', meaning:'メリット・デメリットを整理して説明する', example:"I'd like to walk through the pros and cons of each approach."},
+      {word:'align on', pron:'/əˈlaɪn ɒn/', meaning:'〜について合意する・認識を合わせる', example:"I'd like to align on how far we should go with compliance."},
+      {word:'labeling requirement', pron:'/ˈleɪbəlɪŋ rɪˈkwaɪərmənt/', meaning:'ラベリング要件（規制上の表示要件）', example:'We need to address the new FDA labeling requirement.'},
+      {word:'get your guidance on the scope', pron:'/ɡɛt jɔːr ˈɡaɪdəns ɒn ðə skoʊp/', meaning:'対応範囲についてご指導いただく', example:"I'd like to get your guidance on the scope of this work."}
+    ],
+    analyzed: {
+      sentences: [
+        {en:"Thank you for your time today. First, I'd like to express my appreciation for your support during the PMDA inspection.", ja:"本日はお時間をいただきありがとうございます。まず、PMDA査察中のご支援に感謝申し上げます。"},
+        {en:"I have two topics I'd like to discuss regarding our readiness level for the 510k submission.", ja:"510k申請に向けた準備状況について、2点ご相談したいことがあります。"},
+        {en:"The first is GSOP compliance. We have recently completed an estimate of the effort required.", ja:"1点目はGSOP準拠についてです。必要な工数の見積もりを最近完了しました。"},
+        {en:"Based on this, I'd like to walk through the pros and cons and align on how far we should go with compliance, given that we are already close to submission.", ja:"これを踏まえて、申請が間近に迫っている中でどこまでの準拠を目指すべきか、メリット・デメリットを整理してご確認いただきたいと思います。"},
+        {en:"The second is the new FDA labeling requirement. We have decided to address this, but have not yet determined how much needs to be completed before initiating the 510k submission.", ja:"2点目はFDAの新しいラベリング要件についてです。対応することは決定しましたが、510k申請を開始する前にどこまで完了させる必要があるか、まだ決まっていません。"},
+        {en:"I'd like to discuss the impact on our schedule and cost, and get your guidance on the scope.", ja:"スケジュールとコストへの影響について議論し、対応範囲についてご指導いただきたいと思います。"}
+      ],
+      pronunciationTips: [
+        "PMDA: ピー・エム・ディー・エー。各文字を明確に発音。",
+        "510k: five-ten-k（ファイブ・テン・ケー）。日本語読みしない。",
+        "compliance: com-PLI-ance。PLIにアクセント。",
+        "labeling requirement: LAY-bel-ing re-QUIRE-ment。LAYとQUIREにアクセント。",
+        "pros and cons: プロズ・アンド・コンズ。sを忘れずに。"
+      ]
+    }
+  }
 ];
 
 // ============================================================
@@ -1552,7 +1615,7 @@ function saveRecord() {
 // ============================================================
 // PAST EVALUATIONS
 // ============================================================
-var SCRIPT_TITLES_IDX = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告', 'pentest-alignment':'ペネトレーションテスト方針の確認'};
+var SCRIPT_TITLES_IDX = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告', 'pentest-alignment':'ペネトレーションテスト方針の確認', '510k-readiness':'510k申請に向けた準備状況の確認'};
 var evalExpandCount = {}; // scriptId → shown count
 
 function loadPastEvaluations() {
