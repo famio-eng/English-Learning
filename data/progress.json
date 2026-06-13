@@ -23,6 +23,12 @@
       "readOk": 2,
       "shadOk": 4,
       "shadCleared": true
+    },
+    "510k-readiness": {
+      "lastScore": 65,
+      "lastDate": "2026-06-13",
+      "readOk": 0,
+      "shadOk": 0
     }
   },
   "vocabSelectedScripts": [
