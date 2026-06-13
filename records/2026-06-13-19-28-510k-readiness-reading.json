@@ -1,0 +1,29 @@
+{
+  "date": "2026-06-13",
+  "time": "19:28",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 85,
+  "passed": true,
+  "scoreLabel": "非常に良い",
+  "strengths": [
+    "全体的なリズムとイントネーションが自然で、非常に聞き取りやすいです。",
+    "「express my appreciation」や「PMDA inspection」など、長いフレーズでも単語の区切りと強弱が適切です。",
+    "「readiness level」や「GSOP compliance」といった専門用語も明瞭に発音されており、ビジネスシーンでの理解を妨げません。",
+    "「estimate of the effort required」のように、複数の単語が続く場合でも、それぞれの単語がはっきりと聞き取れます。",
+    "「impact on our schedule and cost」といったビジネスで重要な情報も、明確に伝わります。"
+  ],
+  "improvements": [
+    "「Thank」: 'th' の音を、舌先を軽く前歯の間に挟んで発音する練習をしましょう。(THANK) → (SANK) のように聞こえる箇所がありました。",
+    "「First」: 'r' の音を、舌を丸めて喉の奥で響かせるように意識すると、より自然になります。(FIRST) → (FUST) のように聞こえる箇所がありました。",
+    "「Through」: 'th' の音を、「Thank」と同様に舌先を意識して発音しましょう。(THROUGH) → (SROUGH) のように聞こえる箇所がありました。",
+    "「Regarding」: 'r' の音を、よりはっきりと発音する練習をしましょう。(re-GAR-ding) → (re-GAH-ding) のように聞こえる箇所がありました。"
+  ],
+  "nextStepAdvice": "次の練習では、'th' の音（例: Thank, Through）を意識して、舌の動きを鏡で確認しながら発音してみましょう。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-13T10:54:17.846Z",
+  "source": "dashboard"
+}
