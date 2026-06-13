@@ -1,0 +1,24 @@
+{
+  "date": "2026-06-13",
+  "time": "19:26",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 78,
+  "passed": true,
+  "scoreLabel": "素晴らしいです！",
+  "strengths": [
+    "「510k」の数字とアルファベットが非常に明瞭で、聞き取りやすいです。",
+    "「submission」の単語全体のアクセントとリズムが適切で、自然な発音でした。",
+    "全体的に言葉がはっきりと発音されており、メッセージが明確に伝わります。"
+  ],
+  "improvements": [
+    "「for the」の「the」の発音がやや弱く、「ダ」に近い音に聞こえる箇所がありました。舌を前歯の裏に軽く触れさせて「th」の摩擦音を意識すると、よりクリアになります。"
+  ],
+  "nextStepAdvice": "「the」のような機能語は、文脈によって発音の強弱が変わりますが、今回は少し不明瞭に聞こえました。舌を前歯の裏に軽く触れさせ、息を流すことで「th」の音を意識的に出す練習をしてみてください。例えば、「the apple」「the car」など、様々な単語の前で「the」を発音する練習を繰り返すと効果的です。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-13T10:42:44.896Z",
+  "source": "dashboard"
+}
