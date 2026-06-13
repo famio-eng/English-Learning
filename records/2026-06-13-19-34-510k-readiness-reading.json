@@ -1,0 +1,26 @@
+{
+  "date": "2026-06-13",
+  "time": "19:34",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 75,
+  "passed": true,
+  "scoreLabel": "Good",
+  "strengths": [
+    "「PMDA」の略語が明確に発音されており、ビジネス文脈での理解を助けています。",
+    "「submission」の語尾の「-tion」がクリアで、単語の区切りがはっきりしています。",
+    "全体的に、話すスピードが適切で、聞き取りやすいです。"
+  ],
+  "improvements": [
+    "「express」: ex-PRESS (「エクスプレス」ではなく、「イクスプレス」のように、最初の音節を弱く、2番目を強く発音するとより自然です。)",
+    "「required」: re-QUIRED (「リクワイアード」ではなく、「リクワイヤード」のように、「-quired」の部分をより滑らかに発音すると良いでしょう。)",
+    "「initiating」: i-NI-shi-a-ting (「イニシエイティング」ではなく、「イニシエイティング」のように、3番目の音節にストレスを置くとより自然です。)"
+  ],
+  "nextStepAdvice": "単語のストレスの位置を意識して発音練習をしましょう。特に、多音節の単語でストレスの位置がずれると、聞き取りにくくなることがあります。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-13T10:54:26.643Z",
+  "source": "dashboard"
+}
