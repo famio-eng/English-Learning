@@ -18,20 +18,21 @@
     },
     "pentest-alignment": {
       "lastScore": 65,
-      "lastDate": "2026-06-07",
+      "lastDate": "2026-06-08",
       "readCleared": true,
       "readOk": 2,
-      "shadOk": 3,
+      "shadOk": 4,
       "shadCleared": true
     }
   },
   "vocabSelectedScripts": [
     "short",
-    "sop-status-report"
+    "sop-status-report",
+    "pentest-alignment"
   ],
   "dailyTasks": {
     "2026-05-30": {
-      "memo": "疲れていたのと、アプリの不具合によって進まなかった"
+      "memo": "ç²ãã¦ããã®ã¨ãã¢ããªã®ä¸å·åã«ãã£ã¦é²ã¾ãªãã£ã"
     },
     "2026-05-31": {
       "shadowing": true,
@@ -43,7 +44,7 @@
       "vocabDoneCount": 3
     },
     "2026-06-02": {
-      "memo": "仕事が長引いて時間気力がなかった"
+      "memo": "ä»äºãé·å¼ãã¦æéæ°åããªãã£ã"
     },
     "2026-06-03": {
       "dialogue": false,
@@ -58,13 +59,37 @@
     "2026-06-05": {
       "vocab": true,
       "vocabDoneCount": 0,
-      "memo": "出かけていて時間がなかった"
+      "memo": "åºããã¦ãã¦æéããªãã£ã"
     },
     "2026-06-07": {
       "_m_shadowing": true,
       "shadowing": true,
       "_m_vocab": true,
       "vocab": true
+    },
+    "2026-06-06": {
+      "dialogue": true,
+      "_m_dialogue": true,
+      "shadowing": true,
+      "_m_shadowing": true,
+      "vocab": true,
+      "_m_vocab": true,
+      "weeklyReport": true,
+      "_m_weeklyReport": true
+    },
+    "2026-06-08": {
+      "shadowing": true
+    },
+    "2026-06-09": {
+      "memo": "仕事が遅くまで続いた"
+    },
+    "2026-06-12": {
+      "memo": "仕事が遅くまで続いた"
+    },
+    "2026-06-13": {
+      "weeklyReport": true,
+      "_m_dialogue": true,
+      "dialogue": true
     }
   }
 }
