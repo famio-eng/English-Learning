@@ -1,0 +1,27 @@
+{
+  "date": "2026-06-13",
+  "time": "19:36",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 75,
+  "passed": true,
+  "scoreLabel": "Good",
+  "strengths": [
+    "「inspection」や「submission」など、多くの多音節語の単語ストレスが適切です。",
+    "「discuss」や「impact」など、子音の多くが明瞭に発音されています。",
+    "話すペースが丁寧で、メッセージの理解を助けています。"
+  ],
+  "improvements": [
+    "「Thank」の無声の'th'音: THank (舌を軽く噛んで息を出す練習をしましょう)",
+    "「this」の有声の'th'音: THis (舌を軽く噛んで声を出す練習をしましょう)",
+    "「for」の'r'音: FOR (舌を丸めて口の奥で発音する練習をしましょう)",
+    "文全体のイントネーションとリズム: より自然な抑揚と単語のつながりを意識する"
+  ],
+  "nextStepAdvice": "次の練習では、「th」の音（無声と有声の両方）を意識して発音してみましょう。舌を前歯の間に軽く挟んで息を出す、または声を出す練習をすると良いでしょう。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-13T10:54:50.297Z",
+  "source": "dashboard"
+}
