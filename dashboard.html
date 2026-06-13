@@ -1622,13 +1622,25 @@ function analyzeOneFile(fileInfo, retryCount) {
     var title     = SCRIPT_NAMES[fileInfo.scriptId] || fileInfo.scriptId;
     var modeLabel = fileInfo.mode === 'reading' ? 'reading' : 'shadowing';
     var passThreshold = fileInfo.mode === 'reading' ? 70 : 75;
-    var prompt = 'You are an English pronunciation coach.\n'
-      + 'Listen to this audio recording of English business speaking practice.\n'
-      + 'Mode: ' + modeLabel + '. Script excerpt: "' + title + '"\n\n'
-      + 'Return ONLY this JSON, no markdown:\n'
-      + '{"score":0,"passed":false,"scoreLabel":"Keep Going","strengths":["良かった点"],"improvements":["改善点"],"nextStepAdvice":"アドバイス","canAdvance":false}\n\n'
-      + 'Score 0-100. passed=true if score>=' + passThreshold + '.\n'
-      + 'Write ALL feedback in Japanese. Be specific.';
+    var prompt = 'You are an English pronunciation coach evaluating a Japanese business professional.\n'
+      + 'This speaker is a Japanese native learning business English.\n'
+      + 'Mode: ' + modeLabel + '. Script: "' + title + '"\n\n'
+      + 'Scoring criteria for Japanese learners:\n'
+      + '- 90+: Near-native, excellent rhythm and pronunciation\n'
+      + '- 80-89: Very good, minor accent issues only\n'
+      + '- 70-79: Good, understandable with some Japanese accent\n'
+      + '- 60-69: Communicates but needs work on specific sounds\n'
+      + '- Below 60: Difficult to understand\n\n'
+      + 'A Japanese speaker who can be clearly understood by native English speakers\n'
+      + 'in a business context should score 70 or above.\n'
+      + 'Do NOT penalize for Japanese accent if the message is clear.\n\n'
+      + 'Return ONLY valid JSON, no markdown:\n'
+      + '{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点（どの単語をどう直すか。音節表記例: eu-RO-pe-an）","改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n'
+      + '- score: 0-100 per the criteria above\n'
+      + '- passed=true and canAdvance=true if score>=' + passThreshold + '\n'
+      + '- Write ALL values in Japanese\n'
+      + '- For pronunciation improvements: word: syl-LA-ble (uppercase = stress)\n'
+      + '- Katakana-only explanations are forbidden; pairing with syllable notation is OK';
     console.log('[Gemini送信]', fileInfo.name, '| mime:', mimeType, '| b64 length:', b64.length);
     var _payload = {
       contents: [{parts:[{text:prompt},{inlineData:{mimeType:mimeType, data:b64}}]}],
