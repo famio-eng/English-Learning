@@ -87,7 +87,9 @@
       "memo": "仕事が遅くまで続いた"
     },
     "2026-06-13": {
-      "weeklyReport": true
+      "weeklyReport": true,
+      "_m_dialogue": true,
+      "dialogue": true
     }
   }
 }
