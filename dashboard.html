@@ -92,6 +92,10 @@ a { color: inherit; text-decoration: none; }
 .rec-date { font-size: 12px; color: var(--text2); font-weight: 600; margin-top: 2px; }
 .rec-score { font-size: 18px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
 .see-all { display: block; text-align: center; font-size: 13px; font-weight: 700; color: var(--accent); margin-top: 12px; }
+.ua-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.ua-item:last-child{border:none}
+.ua-check-box{width:22px;height:22px;border:2px solid var(--border);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:2px}
+.ua-check-box.checked{background:var(--accent);border-color:var(--accent)}
 /* Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .modal-overlay.hidden { display: none; }
@@ -282,8 +286,26 @@ a { color: inherit; text-decoration: none; }
     <div class="card-title">直近の練習記録</div>
     <div id="recentList"><div class="spinner"></div></div>
     <a id="seeAllLink" href="./shadowing.html" class="see-all" style="display:none">すべて見る →</a>
+    <div id="unanalyzedBtnWrap" style="display:none;margin-top:10px">
+      <button onclick="openUnanalyzedModal()" class="btn btn-secondary" style="font-size:13px">
+        <i data-lucide="file-audio" style="width:15px;height:15px"></i>未分析録音を確認
+      </button>
+    </div>
   </div>
 
+</div>
+
+<!-- Unanalyzed Recordings Modal -->
+<div class="modal-overlay hidden" id="unanalyzedModal">
+  <div class="modal" style="max-width:480px;max-height:88vh;overflow-y:auto;padding:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:17px;font-weight:800">🎵 未分析の録音</div>
+      <button onclick="closeUnanalyzedModal()" style="background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px">✕</button>
+    </div>
+    <div id="unanalyzedContent"></div>
+    <div id="unanalyzedProgress" style="display:none;margin-top:10px"></div>
+    <div id="unanalyzedActions" style="margin-top:12px"></div>
+  </div>
 </div>
 
 <!-- Yesterday modal -->
@@ -457,6 +479,7 @@ var vocabDueCount  = null; // null=未取得, 0+=件数
   if (GH_TOKEN) {
     loadDashboardData(now);
     loadDailyTasks();
+    document.getElementById('unanalyzedBtnWrap').style.display = 'block';
   } else {
     setNoToken();
   }
@@ -881,7 +904,9 @@ function buildScoreChart(scores) {
 // ============================================================
 var SCRIPT_NAMES = {
   'short':'自己紹介 ショート版', 'casual':'自己紹介 カジュアル版',
-  'formal':'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告'
+  'formal':'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告',
+  'pentest-alignment':'ペネトレーションテスト方針の確認',
+  '510k-readiness':'510k申請に向けた準備状況の確認'
 };
 
 function loadDashboardData(now) {
@@ -1416,60 +1441,256 @@ function savePastRecords(dateStr) {
 }
 
 // ============================================================
+// UNANALYZED RECORDINGS
+// ============================================================
+var uaFiles = [];
+var uaSelected = {};
+
+function openUnanalyzedModal() {
+  var modal = document.getElementById('unanalyzedModal');
+  modal.classList.remove('hidden');
+  document.getElementById('unanalyzedContent').innerHTML =
+    '<div style="text-align:center;padding:20px"><div class="spinner"></div></div>';
+  document.getElementById('unanalyzedActions').innerHTML = '';
+  document.getElementById('unanalyzedProgress').style.display = 'none';
+
+  if (!GH_TOKEN) {
+    document.getElementById('unanalyzedContent').innerHTML =
+      '<div style="color:var(--text2);font-size:13px">GHトークンが必要です</div>';
+    return;
+  }
+
+  Promise.all([
+    apiGet('recordings').catch(function(){return null;}),
+    apiGet('records').catch(function(){return null;})
+  ]).then(function(results) {
+    var recFiles = Array.isArray(results[0]) ? results[0] : [];
+    var recJsons = Array.isArray(results[1]) ? results[1] : [];
+
+    var analyzed = {};
+    recJsons.forEach(function(f) {
+      if (f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json') {
+        analyzed[f.name.replace(/\.json$/, '')] = true;
+      }
+    });
+
+    uaFiles = recFiles.filter(function(f) {
+      if (!f.name) return false;
+      var m = f.name.match(/^(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(.+)-(reading|shadowing)\.[a-z0-9]+$/i);
+      if (!m) return false;
+      return !analyzed[f.name.replace(/\.[^.]+$/, '')];
+    }).map(function(f) {
+      var m = f.name.match(/^(\d{4}-\d{2}-\d{2})-(\d{2})-(\d{2})-(.+)-(reading|shadowing)\.[a-z0-9]+$/i);
+      var ext = (f.name.match(/\.([a-z0-9]+)$/i) || ['', 'webm'])[1].toLowerCase();
+      var mimeMap = {m4a:'audio/mp4', mp4:'audio/mp4', webm:'audio/webm', ogg:'audio/ogg', mp3:'audio/mpeg', aac:'audio/aac', wav:'audio/wav'};
+      return {name:f.name, date:m[1], time:m[2]+':'+m[3], scriptId:m[4], mode:m[5], mimeType:mimeMap[ext]||'audio/webm'};
+    });
+
+    uaSelected = {};
+    if (!uaFiles.length) {
+      document.getElementById('unanalyzedContent').innerHTML =
+        '<div style="font-size:13px;color:var(--text2);text-align:center;padding:16px">未分析の録音はありません ✓</div>';
+      return;
+    }
+    renderUaList();
+  }).catch(function(err) {
+    document.getElementById('unanalyzedContent').innerHTML =
+      '<div style="color:var(--text2);font-size:13px">読み込みエラー: ' + escHtml(String(err)) + '</div>';
+  });
+}
+
+function renderUaList() {
+  var selCount = Object.keys(uaSelected).filter(function(k){return uaSelected[k];}).length;
+  var html = '<div style="font-size:13px;color:var(--text2);margin-bottom:8px">未分析の録音 ' + uaFiles.length + '件</div>';
+  uaFiles.forEach(function(f, i) {
+    var chk   = !!uaSelected[i];
+    var title = SCRIPT_NAMES[f.scriptId] || f.scriptId;
+    var mode  = f.mode === 'reading' ? '音読' : 'シャドーイング';
+    html += '<div class="ua-item" onclick="toggleUaCheck(' + i + ')">'
+      + '<div class="ua-check-box' + (chk ? ' checked' : '') + '">'
+      + (chk ? '<i data-lucide="check" style="width:12px;height:12px;color:#fff;stroke-width:3"></i>' : '')
+      + '</div>'
+      + '<div style="flex:1">'
+      + '<div style="font-size:13px;font-weight:700">' + escHtml(f.date) + ' ' + escHtml(f.time) + '</div>'
+      + '<div style="font-size:12px;color:var(--text2);margin-top:2px">' + escHtml(title) + ' / ' + escHtml(mode) + '</div>'
+      + '</div></div>';
+  });
+  document.getElementById('unanalyzedContent').innerHTML = html;
+
+  var actHtml = '<div style="display:flex;gap:6px;margin-bottom:8px">'
+    + '<button onclick="selectAllUa(true)" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px">全選択</button>'
+    + '<button onclick="selectAllUa(false)" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px">全解除</button>'
+    + '</div>';
+  if (selCount > 0) {
+    actHtml += '<button onclick="startBatchAnalysis()" class="btn btn-primary">'
+      + '<i data-lucide="zap" style="width:15px;height:15px"></i>'
+      + '選択した録音を分析（' + selCount + '件）</button>';
+  }
+  document.getElementById('unanalyzedActions').innerHTML = actHtml;
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function toggleUaCheck(idx) {
+  uaSelected[idx] = !uaSelected[idx];
+  renderUaList();
+}
+
+function selectAllUa(val) {
+  uaFiles.forEach(function(_, i) { uaSelected[i] = val; });
+  renderUaList();
+}
+
+function closeUnanalyzedModal() {
+  document.getElementById('unanalyzedModal').classList.add('hidden');
+}
+
+function startBatchAnalysis() {
+  var indices = [];
+  uaFiles.forEach(function(_, i) { if (uaSelected[i]) indices.push(i); });
+  if (!indices.length) { showDashToast('録音を選択してください'); return; }
+  if (!GEM_KEY)        { showDashToast('GEM_KEYが必要です'); return; }
+
+  document.getElementById('unanalyzedActions').innerHTML = '';
+  var progEl = document.getElementById('unanalyzedProgress');
+  progEl.style.display = 'block';
+  var total = indices.length;
+  var done  = 0;
+
+  function updateProg(msg) {
+    progEl.innerHTML = '<div style="text-align:center;font-size:13px;color:var(--text2)"><div class="spinner" style="display:inline-block;margin-right:6px"></div>' + escHtml(msg) + '</div>';
+  }
+
+  function next(pos) {
+    if (pos >= indices.length) {
+      progEl.innerHTML = '<div style="text-align:center;font-size:13px;color:var(--green)">分析完了 ' + done + '/' + total + '件 ✓</div>';
+      document.getElementById('unanalyzedActions').innerHTML =
+        '<button onclick="closeUnanalyzedModal()" class="btn btn-secondary" style="font-size:13px">閉じる</button>';
+      if (done > 0) loadDashboardData(new Date());
+      return;
+    }
+    updateProg('分析中... ' + (done + 1) + '/' + total + '件');
+    analyzeOneFile(uaFiles[indices[pos]], 0).then(function() {
+      done++;
+      setTimeout(function() { next(pos + 1); }, 2000);
+    }).catch(function(err) {
+      console.error('[分析エラー]', uaFiles[indices[pos]].name, err);
+      progEl.innerHTML = '<div style="text-align:center;font-size:12px;color:var(--amber)">⚠ ' + escHtml(String(err.message || err)) + '</div>';
+      setTimeout(function() { next(pos + 1); }, 3000);
+    });
+  }
+
+  next(0);
+}
+
+// ============================================================
 // ANALYZE ONE FILE (未分析録音のAI評価)
 // ============================================================
-function analyzeOneFile(recordingUrl, scriptText, mode) {
-  return fetch(recordingUrl)
-    .then(function(r) { return r.blob(); })
-    .then(function(blob) {
-      return new Promise(function(resolve, reject) {
-        var reader = new FileReader();
-        reader.onload = function() {
-          resolve({b64: reader.result.split(',')[1], mtype: blob.type || 'audio/mp4'});
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
+function analyzeOneFile(fileInfo, retryCount) {
+  var AUDIO_MIME = {m4a:'audio/mp4', mp4:'audio/mp4', webm:'audio/webm', ogg:'audio/ogg', mp3:'audio/mpeg', aac:'audio/aac', wav:'audio/wav'};
+  var ext      = (fileInfo.name.match(/\.([a-z0-9]+)$/i) || ['','webm'])[1].toLowerCase();
+  var mimeType = AUDIO_MIME[ext] || 'audio/webm';
+
+  return apiGet('recordings/' + fileInfo.name).then(function(d) {
+    if (!d) throw new Error('ファイル情報取得失敗');
+    if (d.content) {
+      var b64 = d.content.replace(/\n/g, '');
+      console.log('[音声取得] GitHub content API | mime:', mimeType,
+        '| size:', Math.round(b64.length * 3 / 4 / 1024) + 'KB',
+        '| b64[:100]:', b64.slice(0, 100));
+      return b64;
+    } else if (d.download_url) {
+      return fetch(d.download_url).then(function(r) {
+        var ct = r.headers.get('content-type') || '(unknown)';
+        return r.arrayBuffer().then(function(buf) {
+          var bytes = new Uint8Array(buf);
+          console.log('[音声取得] download_url | content-type:', ct,
+            '| size:', Math.round(bytes.length / 1024) + 'KB | mime:', mimeType);
+          var binary = '';
+          var chunk = 8192;
+          for (var i = 0; i < bytes.length; i += chunk) {
+            binary += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + chunk, bytes.length)));
+          }
+          var b64 = btoa(binary);
+          console.log('[音声取得] b64[:100]:', b64.slice(0, 100));
+          return b64;
+        });
       });
-    })
-    .then(function(audio) {
-      var sizeKb = Math.round(audio.b64.length * 3 / 4 / 1024);
-      console.log('[analyzeOneFile] mime_type:', audio.mtype, '| size:', sizeKb + 'KB');
-      var parts = [
-        {text: 'You are an English pronunciation coach for a Japanese business professional.\n'
-          + 'Evaluate this audio recording. Mode: ' + (mode || 'shadowing') + '.\n'
-          + 'Target script: "' + (scriptText || '').substring(0, 300) + '"\n\n'
-          + 'Score based on:\n'
-          + '- Pronunciation accuracy\n'
-          + '- Natural rhythm and stress\n'
-          + '- Fluency and pacing\n'
-          + '- Clarity\n\n'
-          + 'Return ONLY valid JSON, no markdown:\n'
-          + '{"score":0,"passed":false,"scoreLabel":"Good",'
-          + '"strengths":["具体的な良かった点（スクリプトの単語を引用）"],'
-          + '"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],'
-          + '"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n'
-          + '- score: 0-100 based on actual performance\n'
-          + '- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n'
-          + '- Write ALL values in Japanese\n'
-          + '- Reference specific words from the script in feedback\n'
-          + '- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress)\n'
-          + '- Katakana-only explanations are forbidden; pairing with syllable notation is OK'},
-        {inline_data: {mime_type: audio.mtype, data: audio.b64}}
-      ];
-      var payload = {
-        contents: [{ parts: parts }],
-        generationConfig: { temperature: 0.3, maxOutputTokens: 4096 }
-      };
-      return callGeminiWithFallback(payload).then(function(result) {
-        var d = result.data;
-        console.log('[analyzeOneFile] Gemini model used:', result.model);
-        if (d.error) throw new Error('Gemini ' + d.error.code + ': ' + d.error.message);
-        if (!d.candidates || !d.candidates[0]) throw new Error('レスポンスなし');
-        var text = (d.candidates[0].content.parts || [])
-          .map(function(p){ return p.text || ''; }).join('');
-        return text;
-      });
+    } else {
+      throw new Error('ダウンロードURL未取得');
+    }
+  }).then(function(b64) {
+    var title     = SCRIPT_NAMES[fileInfo.scriptId] || fileInfo.scriptId;
+    var modeLabel = fileInfo.mode === 'reading' ? 'reading' : 'shadowing';
+    var passThreshold = fileInfo.mode === 'reading' ? 70 : 75;
+    var prompt = 'You are an English pronunciation coach.\n'
+      + 'Listen to this audio recording of English business speaking practice.\n'
+      + 'Mode: ' + modeLabel + '. Script excerpt: "' + title + '"\n\n'
+      + 'Return ONLY this JSON, no markdown:\n'
+      + '{"score":0,"passed":false,"scoreLabel":"Keep Going","strengths":["良かった点"],"improvements":["改善点"],"nextStepAdvice":"アドバイス","canAdvance":false}\n\n'
+      + 'Score 0-100. passed=true if score>=' + passThreshold + '.\n'
+      + 'Write ALL feedback in Japanese. Be specific.';
+    console.log('[Gemini送信]', fileInfo.name, '| mime:', mimeType, '| b64 length:', b64.length);
+    var _payload = {
+      contents: [{parts:[{text:prompt},{inlineData:{mimeType:mimeType, data:b64}}]}],
+      generationConfig: {temperature:0.3, maxOutputTokens:4096}
+    };
+    return callGeminiWithFallback(_payload).then(function(result) {
+      var d = result.data;
+      if (d.error) throw new Error('Gemini ' + result.status + ': ' + (d.error.message || ''));
+      var raw = (((d.candidates || [])[0] || {}).content || {}).parts;
+      var text = raw ? raw.map(function(p){ return p.text || ''; }).join('') : '';
+      console.log('[Gemini生レスポンス]', fileInfo.name, '\n', text);
+      var cleaned = text.replace(/```(?:json)?\n?/gi, '').replace(/\n?```/g, '').trim();
+      var matched = cleaned.match(/\{[\s\S]*\}/);
+      var parsed = {};
+      if (matched) {
+        try { parsed = JSON.parse(matched[0]); }
+        catch(e) { console.warn('[JSONパース失敗]', e.message, '\n', cleaned); }
+      }
+      var hasData = (parsed.score > 0)
+        || (parsed.strengths    && parsed.strengths.length    > 0)
+        || (parsed.improvements && parsed.improvements.length > 0);
+      if (!hasData) {
+        throw new Error('空のレスポンス — スコア・フィードバック未取得。raw="' + text.slice(0, 200) + '"');
+      }
+      return saveAnalysisRecord(fileInfo, parsed, mimeType);
     });
+  });
+}
+
+function saveAnalysisRecord(fileInfo, result, mimeType) {
+  var record = {
+    date:           fileInfo.date,
+    time:           fileInfo.time,
+    scriptId:       fileInfo.scriptId,
+    scriptTitle:    SCRIPT_NAMES[fileInfo.scriptId] || fileInfo.scriptId,
+    mode:           fileInfo.mode,
+    score:          result.score != null ? result.score : null,
+    passed:         result.passed  || false,
+    scoreLabel:     result.scoreLabel  || null,
+    strengths:      result.strengths   || [],
+    improvements:   result.improvements || [],
+    nextStepAdvice: result.nextStepAdvice || null,
+    canAdvance:     result.canAdvance  || false,
+    cefrLevel:      result.cefrLevel   || null,
+    mimeType:       mimeType           || fileInfo.mimeType || null,
+    analyzedAt:     new Date().toISOString(),
+    source:         'dashboard'
+  };
+  var baseName = fileInfo.name.replace(/\.[^.]+$/, '');
+  var filePath  = 'records/' + baseName + '.json';
+  var encoded   = btoa(unescape(encodeURIComponent(JSON.stringify(record, null, 2))));
+  return apiGet(filePath).then(function(existing) {
+    var body = {message:'📊 分析結果: '+fileInfo.date+' '+fileInfo.scriptId, content:encoded};
+    if (existing && existing.sha) body.sha = existing.sha;
+    return fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+filePath, {
+      method:'PUT',
+      headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+  }).then(function(r) {
+    if (r && !r.ok) throw new Error('保存失敗 HTTP ' + r.status);
+  });
 }
 
 function renderSchedule() {
