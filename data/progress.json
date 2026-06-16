@@ -96,6 +96,10 @@
       "weeklyReport": true,
       "_m_dialogue": true,
       "dialogue": true
+    },
+    "2026-06-16": {
+      "vocab": true,
+      "vocabDoneCount": 15
     }
   },
   "shadowSettings": {
