@@ -20,10 +20,10 @@
         "electrosurgical unit (ESU)",
         "RF energy output"
       ],
-      "interval": 7.7440000000000015,
-      "nextReview": "2026-06-15",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 130.77619083837448,
+      "nextReview": "2026-10-14",
+      "reviewCount": 8,
+      "streak": 8,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -47,10 +47,10 @@
         "endoscopic procedure",
         "endoscopic device"
       ],
-      "interval": 7.7440000000000015,
-      "nextReview": "2026-06-15",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 130.77619083837448,
+      "nextReview": "2026-10-14",
+      "reviewCount": 8,
+      "streak": 8,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -75,11 +75,11 @@
         "regulatory submission",
         "FDA clearance"
       ],
-      "interval": 3.097600000000001,
-      "nextReview": "2026-06-10",
-      "reviewCount": 5,
-      "streak": 3,
-      "missCount": 0,
+      "interval": 14.26649354600449,
+      "nextReview": "2026-06-19",
+      "reviewCount": 10,
+      "streak": 4,
+      "missCount": 1,
       "lastMissed": "2026-05-27"
     },
     {
@@ -102,10 +102,10 @@
         "hold a PMP certification",
         "certified project manager"
       ],
-      "interval": 7.7440000000000015,
-      "nextReview": "2026-06-15",
-      "reviewCount": 3,
-      "streak": 3,
+      "interval": 130.77619083837448,
+      "nextReview": "2026-10-14",
+      "reviewCount": 8,
+      "streak": 8,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -133,12 +133,12 @@
         "drive results",
         "drive change"
       ],
-      "interval": 0.5760000000000001,
-      "nextReview": "2026-06-08",
-      "reviewCount": 3,
+      "interval": 3.944400135599322,
+      "nextReview": "2026-06-20",
+      "reviewCount": 11,
       "streak": 0,
-      "missCount": 2,
-      "lastMissed": "2026-06-07"
+      "missCount": 4,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w006",
@@ -160,12 +160,12 @@
         "new to the role",
         "new to the team"
       ],
-      "interval": 2.2,
-      "nextReview": "2026-06-09",
-      "reviewCount": 4,
+      "interval": 18.553075200000006,
+      "nextReview": "2026-07-05",
+      "reviewCount": 10,
       "streak": 2,
-      "missCount": 1,
-      "lastMissed": "2026-05-26"
+      "missCount": 3,
+      "lastMissed": "2026-06-04"
     },
     {
       "id": "w007",
@@ -191,12 +191,12 @@
         "application process",
         "regulatory submission"
       ],
-      "interval": 2.1120000000000005,
-      "nextReview": "2026-06-09",
-      "reviewCount": 3,
-      "streak": 1,
-      "missCount": 1,
-      "lastMissed": "2026-05-26"
+      "interval": 8.21750028249859,
+      "nextReview": "2026-06-24",
+      "reviewCount": 10,
+      "streak": 3,
+      "missCount": 3,
+      "lastMissed": "2026-06-03"
     },
     {
       "id": "w008",
@@ -225,9 +225,9 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 2,
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -253,9 +253,9 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 2,
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -281,9 +281,9 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-05-26",
-      "reviewCount": 2,
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -307,11 +307,11 @@
         "key milestone",
         "project milestone"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -335,11 +335,11 @@
         "a remarkable feat",
         "an impressive feat"
       ],
-      "interval": 0.6,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -364,11 +364,11 @@
         "manage all the moving parts",
         "a lot of moving parts"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -392,11 +392,11 @@
         "strategic initiative",
         "business initiative"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -424,10 +424,10 @@
         "transparent communication",
         "transparent process"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-05-28",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -455,11 +455,11 @@
         "substantive role",
         "substantive change"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -483,11 +483,11 @@
         "evolving landscape",
         "navigate the landscape"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -511,10 +511,10 @@
         "conduct clinical validation",
         "clinical trial"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-05-28",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
+      "streak": 0,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -539,11 +539,11 @@
         "engage stakeholders",
         "key stakeholders"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -567,11 +567,11 @@
         "embrace a growth mindset",
         "foster a growth mindset"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -596,11 +596,11 @@
         "diligent work",
         "technical diligence"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-05-27",
-      "reviewCount": 1,
+      "interval": 1,
+      "nextReview": "2026-05-25",
+      "reviewCount": 0,
       "streak": 0,
-      "missCount": 1,
+      "missCount": 0,
       "lastMissed": "2026-05-26"
     },
     {
@@ -624,12 +624,12 @@
         "issue a Declaration of Conformity",
         "European Declaration of Conformity"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 2,
-      "streak": 1,
-      "missCount": 1,
-      "lastMissed": "2026-05-31"
+      "interval": 2.6168524800000013,
+      "nextReview": "2026-06-19",
+      "reviewCount": 10,
+      "streak": 0,
+      "missCount": 5,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w023",
@@ -652,12 +652,12 @@
         "meet the exclusion criteria",
         "outlined in the SOP"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 2,
-      "streak": 1,
-      "missCount": 1,
-      "lastMissed": "2026-05-31"
+      "interval": 4.605660364800003,
+      "nextReview": "2026-06-21",
+      "reviewCount": 7,
+      "streak": 0,
+      "missCount": 2,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w024",
@@ -678,11 +678,11 @@
         "proceed in parallel with",
         "work in parallel"
       ],
-      "interval": 3.097600000000001,
-      "nextReview": "2026-06-10",
-      "reviewCount": 2,
-      "streak": 2,
-      "missCount": 0,
+      "interval": 14.266493546004492,
+      "nextReview": "2026-06-30",
+      "reviewCount": 7,
+      "streak": 3,
+      "missCount": 1,
       "lastMissed": "2026-06-03"
     },
     {
@@ -704,10 +704,10 @@
         "estimate the scope of work",
         "scope of effort"
       ],
-      "interval": 3.097600000000001,
-      "nextReview": "2026-06-10",
-      "reviewCount": 2,
-      "streak": 2,
+      "interval": 29.721861554176026,
+      "nextReview": "2026-07-05",
+      "reviewCount": 6,
+      "streak": 6,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -733,11 +733,11 @@
         "incorporate requirements",
         "incorporate changes into"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 2,
-      "streak": 1,
-      "missCount": 1,
+      "interval": 16.887421337600014,
+      "nextReview": "2026-07-03",
+      "reviewCount": 9,
+      "streak": 6,
+      "missCount": 3,
       "lastMissed": "2026-05-31"
     },
     {
@@ -759,10 +759,10 @@
         "addressed in the sustaining phase",
         "post-launch sustaining"
       ],
-      "interval": 3.097600000000001,
-      "nextReview": "2026-06-10",
-      "reviewCount": 2,
-      "streak": 2,
+      "interval": 29.721861554176026,
+      "nextReview": "2026-07-05",
+      "reviewCount": 6,
+      "streak": 6,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -785,10 +785,10 @@
         "prepare the test protocol",
         "review the test protocol"
       ],
-      "interval": 3.097600000000001,
-      "nextReview": "2026-06-10",
-      "reviewCount": 2,
-      "streak": 2,
+      "interval": 29.721861554176026,
+      "nextReview": "2026-07-05",
+      "reviewCount": 6,
+      "streak": 6,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -811,10 +811,10 @@
         "Please feel free to ask",
         "Please feel free to contact me"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 2,
-      "streak": 1,
+      "interval": 16.887421337600014,
+      "nextReview": "2026-07-03",
+      "reviewCount": 7,
+      "streak": 6,
       "missCount": 1,
       "lastMissed": "2026-05-31"
     },
@@ -839,10 +839,10 @@
         "conduct a penetration test",
         "penetration testing"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-09",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 3.097600000000001,
+      "nextReview": "2026-06-19",
+      "reviewCount": 2,
+      "streak": 2,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -867,12 +867,12 @@
         "align on the approach",
         "align with your standards"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-06-08",
-      "reviewCount": 1,
+      "interval": 0.2304,
+      "nextReview": "2026-06-16",
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 1,
-      "lastMissed": "2026-06-07"
+      "missCount": 2,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w032",
@@ -896,12 +896,12 @@
         "in-house team",
         "in-house development"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-09",
-      "reviewCount": 1,
-      "streak": 1,
-      "missCount": 0,
-      "lastMissed": ""
+      "interval": 0.8448000000000001,
+      "nextReview": "2026-06-17",
+      "reviewCount": 2,
+      "streak": 0,
+      "missCount": 1,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w033",
@@ -922,12 +922,12 @@
         "ensure independence",
         "maintain independence"
       ],
-      "interval": 0.48,
-      "nextReview": "2026-06-08",
-      "reviewCount": 1,
+      "interval": 0.2304,
+      "nextReview": "2026-06-16",
+      "reviewCount": 2,
       "streak": 0,
-      "missCount": 1,
-      "lastMissed": "2026-06-07"
+      "missCount": 2,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w034",
@@ -949,11 +949,11 @@
         "prevent unauthorized access"
       ],
       "interval": 0.1,
-      "nextReview": "2026-06-07",
-      "reviewCount": 2,
+      "nextReview": "2026-06-16",
+      "reviewCount": 3,
       "streak": 0,
-      "missCount": 2,
-      "lastMissed": "2026-06-07"
+      "missCount": 3,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w035",
@@ -975,11 +975,11 @@
         "exposed to external networks"
       ],
       "interval": 0.1,
-      "nextReview": "2026-06-07",
-      "reviewCount": 2,
+      "nextReview": "2026-06-16",
+      "reviewCount": 3,
       "streak": 0,
-      "missCount": 2,
-      "lastMissed": "2026-06-07"
+      "missCount": 3,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w036",
@@ -1000,12 +1000,12 @@
         "We'd appreciate your confirmation",
         "We'd appreciate your feedback"
       ],
-      "interval": 1.7600000000000002,
-      "nextReview": "2026-06-09",
-      "reviewCount": 1,
-      "streak": 1,
-      "missCount": 0,
-      "lastMissed": ""
+      "interval": 0.8448000000000001,
+      "nextReview": "2026-06-17",
+      "reviewCount": 2,
+      "streak": 0,
+      "missCount": 1,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w037",
@@ -1015,11 +1015,17 @@
       "example": "I'd like to express my appreciation for your support.",
       "source": "510k申請に向けた準備状況の確認",
       "scriptId": "510k-readiness",
-      "level": ["ビジネス英語", "TOEIC700"],
+      "added": "2026-06-08",
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
       "otherMeanings": [],
       "usageTips": "Thank youより丁寧でフォーマルな感謝表現。会議冒頭や重要な場面で使う。",
-      "collocations": ["express my appreciation for", "express our gratitude"],
-      "added": "2026-06-08",
+      "collocations": [
+        "express my appreciation for",
+        "express our gratitude"
+      ],
       "interval": 1,
       "nextReview": "2026-06-08",
       "reviewCount": 0,
@@ -1035,11 +1041,18 @@
       "example": "I'd like to discuss our readiness level for the submission.",
       "source": "510k申請に向けた準備状況の確認",
       "scriptId": "510k-readiness",
-      "level": ["ビジネス英語", "TOEIC800"],
+      "added": "2026-06-08",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
       "otherMeanings": [],
       "usageTips": "プロジェクト管理・規制対応で頻出。どの程度準備が整っているかを示す。",
-      "collocations": ["readiness level", "assess readiness", "submission readiness"],
-      "added": "2026-06-08",
+      "collocations": [
+        "readiness level",
+        "assess readiness",
+        "submission readiness"
+      ],
       "interval": 1,
       "nextReview": "2026-06-08",
       "reviewCount": 0,
@@ -1055,11 +1068,17 @@
       "example": "I'd like to walk through the pros and cons of each approach.",
       "source": "510k申請に向けた準備状況の確認",
       "scriptId": "510k-readiness",
-      "level": ["ビジネス英語", "ネイティブ日常"],
+      "added": "2026-06-08",
+      "level": [
+        "ビジネス英語",
+        "ネイティブ日常"
+      ],
       "otherMeanings": [],
       "usageTips": "会議での提案・説明で頻出。walk throughは「順を追って説明する」の意味。",
-      "collocations": ["walk through the pros and cons", "pros and cons of"],
-      "added": "2026-06-08",
+      "collocations": [
+        "walk through the pros and cons",
+        "pros and cons of"
+      ],
       "interval": 1,
       "nextReview": "2026-06-08",
       "reviewCount": 0,
@@ -1075,11 +1094,18 @@
       "example": "I'd like to align on how far we should go with compliance.",
       "source": "510k申請に向けた準備状況の確認",
       "scriptId": "510k-readiness",
-      "level": ["ビジネス英語", "TOEIC800"],
+      "added": "2026-06-08",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
       "otherMeanings": [],
       "usageTips": "SOP対応課題スクリプトでも登場した重要表現。繰り返し使って定着させる。",
-      "collocations": ["align on the approach", "align on scope", "align on priorities"],
-      "added": "2026-06-08",
+      "collocations": [
+        "align on the approach",
+        "align on scope",
+        "align on priorities"
+      ],
       "interval": 1,
       "nextReview": "2026-06-08",
       "reviewCount": 0,
@@ -1095,11 +1121,18 @@
       "example": "We need to address the new FDA labeling requirement.",
       "source": "510k申請に向けた準備状況の確認",
       "scriptId": "510k-readiness",
-      "level": ["ビジネス英語", "TOEIC900+"],
+      "added": "2026-06-08",
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
       "otherMeanings": [],
       "usageTips": "医療機器・食品業界で頻出。FDAのラベリング規制は厳格で頻繁に更新される。",
-      "collocations": ["labeling requirement", "FDA labeling", "meet labeling requirements"],
-      "added": "2026-06-08",
+      "collocations": [
+        "labeling requirement",
+        "FDA labeling",
+        "meet labeling requirements"
+      ],
       "interval": 1,
       "nextReview": "2026-06-08",
       "reviewCount": 0,
@@ -1115,11 +1148,18 @@
       "example": "I'd like to get your guidance on the scope of this work.",
       "source": "510k申請に向けた準備状況の確認",
       "scriptId": "510k-readiness",
-      "level": ["ビジネス英語", "TOEIC700"],
+      "added": "2026-06-08",
+      "level": [
+        "ビジネス英語",
+        "TOEIC700"
+      ],
       "otherMeanings": [],
       "usageTips": "上司・専門家への確認依頼で使う丁寧な表現。get guidance on〜で覚える。",
-      "collocations": ["get your guidance on", "seek guidance", "guidance on scope"],
-      "added": "2026-06-08",
+      "collocations": [
+        "get your guidance on",
+        "seek guidance",
+        "guidance on scope"
+      ],
       "interval": 1,
       "nextReview": "2026-06-08",
       "reviewCount": 0,
