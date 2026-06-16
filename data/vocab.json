@@ -867,10 +867,10 @@
         "align on the approach",
         "align with your standards"
       ],
-      "interval": 0.2304,
-      "nextReview": "2026-06-16",
-      "reviewCount": 2,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-06-17",
+      "reviewCount": 3,
+      "streak": 1,
       "missCount": 2,
       "lastMissed": "2026-06-16"
     },
@@ -922,10 +922,10 @@
         "ensure independence",
         "maintain independence"
       ],
-      "interval": 0.2304,
-      "nextReview": "2026-06-16",
-      "reviewCount": 2,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-06-17",
+      "reviewCount": 3,
+      "streak": 1,
       "missCount": 2,
       "lastMissed": "2026-06-16"
     },
@@ -950,9 +950,9 @@
       ],
       "interval": 0.1,
       "nextReview": "2026-06-16",
-      "reviewCount": 3,
+      "reviewCount": 4,
       "streak": 0,
-      "missCount": 3,
+      "missCount": 4,
       "lastMissed": "2026-06-16"
     },
     {
@@ -974,10 +974,10 @@
         "externally exposed ports",
         "exposed to external networks"
       ],
-      "interval": 0.1,
-      "nextReview": "2026-06-16",
-      "reviewCount": 3,
-      "streak": 0,
+      "interval": 1,
+      "nextReview": "2026-06-17",
+      "reviewCount": 4,
+      "streak": 1,
       "missCount": 3,
       "lastMissed": "2026-06-16"
     },
@@ -1026,12 +1026,12 @@
         "express my appreciation for",
         "express our gratitude"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-06-16",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w038",
@@ -1053,12 +1053,12 @@
         "assess readiness",
         "submission readiness"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-06-16",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w039",
@@ -1079,12 +1079,12 @@
         "walk through the pros and cons",
         "pros and cons of"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-06-16",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-06-16"
     },
     {
       "id": "w040",
@@ -1106,10 +1106,10 @@
         "align on scope",
         "align on priorities"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-06-18",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1133,10 +1133,10 @@
         "FDA labeling",
         "meet labeling requirements"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-06-18",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1160,12 +1160,12 @@
         "seek guidance",
         "guidance on scope"
       ],
-      "interval": 1,
-      "nextReview": "2026-06-08",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-06-16",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-06-16"
     }
   ]
 }
