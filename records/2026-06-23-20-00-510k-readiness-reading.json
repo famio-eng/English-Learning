@@ -1,0 +1,29 @@
+{
+  "date": "2026-06-23",
+  "time": "20:00",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 72,
+  "passed": true,
+  "scoreLabel": "Good",
+  "strengths": [
+    "「Thank you for your time today」：冒頭の挨拶が明瞭で、聞き取りやすいです。",
+    "「510k submission」：数字と略語の発音が非常にクリアで、ビジネスコンテキストにおいて重要です。",
+    "「FDA labeling requirement」：専門用語が正確に発音されており、内容が伝わりやすいです。",
+    "全体的に、話す速度が適切で、聞き手が内容を理解するための十分な時間があります。"
+  ],
+  "improvements": [
+    "through: THROO (舌を歯の間に軽く挟み、息を「スルー」と出す練習をしましょう。現在は「スルー」に近い音です。)",
+    "level: LEV-el (「L」と「V」の音を明確に区別し、「レヴェル」と発音しましょう。現在は「レベウ」のように聞こえます。)",
+    "compliance: kum-PLY-uns (単語のストレスを「プライ」の部分に置き、母音を曖昧に発音する練習をしましょう。現在は「コンプライアンス」のように全ての音節が均等に聞こえます。)",
+    "determined: dee-TER-mind (語尾の「d」の音をはっきりと発音し、ストレスを「ター」に置きましょう。現在は「ディターミン」のように語尾が不明瞭です。)",
+    "schedule: SKED-jool (「スケ」ではなく「シェ」に近い音で始め、「ケジュール」ではなく「スケジュール」と発音しましょう。現在は「スケジューレ」のように聞こえます。)"
+  ],
+  "nextStepAdvice": "英語の単語の強勢（ストレス）を意識して発音し、文全体の自然なリズムを作る練習をしましょう。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-23T12:55:00.459Z",
+  "source": "dashboard"
+}
