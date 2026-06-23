@@ -1,0 +1,27 @@
+{
+  "date": "2026-06-23",
+  "time": "20:04",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 76,
+  "passed": true,
+  "scoreLabel": "Good",
+  "strengths": [
+    "「appreciation」（アプリーシエイション）や「inspection」（インスペクション）など、複数の音節を持つ単語の多くが明瞭に発音されており、ストレスも適切でした。",
+    "全体的に聞き取りやすいペースで話されており、メッセージが明確に伝わりました。"
+  ],
+  "improvements": [
+    "「Thank」: 'th' の音を、舌を前歯の間に軽く挟んで息を出す [θ] の音で発音しましょう。現在は「sank」のように聞こえます。",
+    "「through」: 同様に 'th' の音を [θ] で発音し、「sroo」ではなく「THROO」と発音しましょう。",
+    "「level」: 'v' の音を、下唇を軽く上の歯に当てて振動させる [v] の音で発音しましょう。現在は「reberu」のように聞こえ、語尾の 'l' も弱いです。LE-vel（レヴェル）",
+    "「today」: 単語のストレスを「to-DAY」のように後ろの音節に置くように意識しましょう。現在は「TO-day」のように聞こえる箇所がありました。",
+    "「discuss」: 単語のストレスを「dis-CUSS」のように後ろの音節に置くように意識しましょう。現在は「DIS-cuss」のように聞こえる箇所がありました。"
+  ],
+  "nextStepAdvice": "特に「th」の音（[θ] と [ð]）と「v」の音（[v]）の正しい発音を意識して練習し、これらの音が自然に出るようにしましょう。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-23T12:55:28.342Z",
+  "source": "dashboard"
+}
