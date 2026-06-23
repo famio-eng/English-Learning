@@ -1088,28 +1088,33 @@ function autoSaveRecording(mode) {
 function callGeminiWithFallback(payload) {
   function tryModel(i) {
     if (i >= GEM_MODELS.length) {
-      return Promise.reject(new Error('全モデルが利用できません。しばらく待ってから再試行してください。'));
+      return Promise.reject(new Error('全モデルが利用できません。自己評価で進んでください。'));
     }
     var url = GEM_BASE + GEM_MODELS[i] + ':generateContent?key=' + GEM_KEY;
+    console.log('[Gemini] trying: ' + GEM_MODELS[i]);
     return fetch(url, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload)
     }).then(function(r) {
       return r.json().then(function(d) {
-        var isRateLimit = r.status === 429 ||
-          (d.error && (d.error.code === 429 ||
-          (d.error.message && d.error.message.indexOf('429') >= 0)));
-        var is503 = r.status === 503 ||
-          (d.error && (d.error.code === 503 ||
-          (d.error.message && d.error.message.indexOf('503') >= 0)));
-        if (isRateLimit || is503) {
-          console.log('[Gemini] ' + GEM_MODELS[i] + ' unavailable, trying next...');
+        if (r.status === 429 || r.status === 503) {
+          console.log('[Gemini] ' + GEM_MODELS[i] + ' status ' + r.status + ', trying next...');
           return tryModel(i + 1);
         }
-        console.log('[Gemini] success with ' + GEM_MODELS[i]);
+        if (d.error) {
+          var code = d.error.code;
+          if (code === 429 || code === 503) {
+            console.log('[Gemini] ' + GEM_MODELS[i] + ' error ' + code + ', trying next...');
+            return tryModel(i + 1);
+          }
+        }
+        console.log('[Gemini] success: ' + GEM_MODELS[i]);
         return {data: d, model: GEM_MODELS[i], status: r.status};
       });
+    }).catch(function(e) {
+      console.log('[Gemini] ' + GEM_MODELS[i] + ' fetch error, trying next...');
+      return tryModel(i + 1);
     });
   }
   return tryModel(0);
