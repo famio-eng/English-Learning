@@ -1079,7 +1079,11 @@ function collectWeeklyData() {
 async function callGeminiWithFallback(payload) {
   var models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
   var base = 'https://generativelanguage.googleapis.com/v1beta/models/';
-  var lastErr = null;
+
+  function wait(ms) {
+    return new Promise(function(resolve) { setTimeout(resolve, ms); });
+  }
+
   for (var i = 0; i < models.length; i++) {
     var url = base + models[i] + ':generateContent?key=' + GEM_KEY;
     console.log('[Gemini] trying: ' + models[i]);
@@ -1104,15 +1108,15 @@ async function callGeminiWithFallback(payload) {
         }
       }
       if (shouldFallback) {
-        console.log('[Gemini] ' + models[i] + ' unavailable (status=' + r.status + '), trying next...');
-        lastErr = new Error(models[i] + ' unavailable');
+        console.log('[Gemini] ' + models[i] + ' unavailable, waiting 2s then trying next...');
+        await wait(2000);
         continue;
       }
       console.log('[Gemini] success: ' + models[i]);
       return {data: d, model: models[i], status: r.status};
     } catch(e) {
-      console.log('[Gemini] ' + models[i] + ' error: ' + e.message + ', trying next...');
-      lastErr = e;
+      console.log('[Gemini] ' + models[i] + ' error: ' + e.message + ', waiting 2s...');
+      await wait(2000);
       continue;
     }
   }
