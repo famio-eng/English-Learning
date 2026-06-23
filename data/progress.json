@@ -110,6 +110,6 @@
     "scriptId": "510k-readiness",
     "pickSort": "desc",
     "rate": 0.7,
-    "showBreath": false
+    "showBreath": true
   }
 }
