@@ -1095,11 +1095,13 @@ function callGeminiWithFallback(payload) {
         }
         if (d.error) {
           var code = d.error.code;
-          var msg = d.error.message || '';
+          var msg = (d.error.message || '').toLowerCase();
           if (code === 429 || code === 503 ||
-              msg.indexOf('429') >= 0 || msg.indexOf('503') >= 0 ||
-              msg.indexOf('quota') >= 0 || msg.indexOf('RESOURCE_EXHAUSTED') >= 0) {
-            console.log('[Gemini] ' + GEM_MODELS[i] + ' error ' + code + ', trying next...');
+              msg.indexOf('quota') >= 0 ||
+              msg.indexOf('resource_exhausted') >= 0 ||
+              msg.indexOf('unavailable') >= 0 ||
+              msg.indexOf('overloaded') >= 0) {
+            console.log('[Gemini] ' + GEM_MODELS[i] + ' error code=' + code + ', trying next...');
             return tryModel(i + 1);
           }
         }
@@ -1107,7 +1109,7 @@ function callGeminiWithFallback(payload) {
         return {data: d, model: GEM_MODELS[i], status: r.status};
       });
     }).catch(function(e) {
-      console.log('[Gemini] ' + GEM_MODELS[i] + ' fetch error, trying next...');
+      console.log('[Gemini] ' + GEM_MODELS[i] + ' fetch error: ' + e.message + ', trying next...');
       return tryModel(i + 1);
     });
   }
