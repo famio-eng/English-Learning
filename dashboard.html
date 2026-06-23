@@ -1076,32 +1076,42 @@ function collectWeeklyData() {
   });
 }
 
-async function callGeminiWithFallback(payload) {
-  for (var i = 0; i < GEM_MODELS.length; i++) {
-    var url = GEM_BASE + GEM_MODELS[i] + ':generateContent?key=' + GEM_KEY;
-    try {
-      var res = await fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload)
-      });
-      var data = await res.json();
-      var isRateLimit = res.status === 429 ||
-        (data.error && (data.error.code === 429 ||
-        (data.error.message && data.error.message.indexOf('429') >= 0)));
-      if (isRateLimit) {
-        console.log('[Gemini] ' + GEM_MODELS[i] + ' rate limited, trying next...');
-        continue;
-      }
-      console.log('[Gemini] success with ' + GEM_MODELS[i]);
-      return {data: data, model: GEM_MODELS[i], status: res.status};
-    } catch(e) {
-      console.log('[Gemini] ' + GEM_MODELS[i] + ' error: ' + e.message);
-      if (i === GEM_MODELS.length - 1) throw e;
-      continue;
+function callGeminiWithFallback(payload) {
+  function tryModel(i) {
+    if (i >= GEM_MODELS.length) {
+      return Promise.reject(new Error('全モデルが利用できません。自己評価で進んでください。'));
     }
+    var url = GEM_BASE + GEM_MODELS[i] + ':generateContent?key=' + GEM_KEY;
+    console.log('[Gemini] trying: ' + GEM_MODELS[i]);
+    return fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    }).then(function(r) {
+      return r.json().then(function(d) {
+        if (r.status === 429 || r.status === 503) {
+          console.log('[Gemini] ' + GEM_MODELS[i] + ' HTTP ' + r.status + ', trying next...');
+          return tryModel(i + 1);
+        }
+        if (d.error) {
+          var code = d.error.code;
+          var msg = d.error.message || '';
+          if (code === 429 || code === 503 ||
+              msg.indexOf('429') >= 0 || msg.indexOf('503') >= 0 ||
+              msg.indexOf('quota') >= 0 || msg.indexOf('RESOURCE_EXHAUSTED') >= 0) {
+            console.log('[Gemini] ' + GEM_MODELS[i] + ' error ' + code + ', trying next...');
+            return tryModel(i + 1);
+          }
+        }
+        console.log('[Gemini] success: ' + GEM_MODELS[i]);
+        return {data: d, model: GEM_MODELS[i], status: r.status};
+      });
+    }).catch(function(e) {
+      console.log('[Gemini] ' + GEM_MODELS[i] + ' fetch error, trying next...');
+      return tryModel(i + 1);
+    });
   }
-  throw new Error('全モデルがレート制限に達しました。明日再試行してください。');
+  return tryModel(0);
 }
 
 function callGeminiDash(parts) {
