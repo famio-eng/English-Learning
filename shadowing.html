@@ -585,6 +585,11 @@ function loadScriptProgress() {
           }
         }
         renderTab('pick');
+        if (current) {
+          var sp = scriptProgress[current.id] || {};
+          if (sp.readOk >= 1) { unlock('meaning'); unlock('reading'); }
+          if (sp.shadOk >= 1) { unlock('meaning'); unlock('reading'); unlock('shadowing'); }
+        }
       } catch(e) {}
     }).catch(function(){});
 }
