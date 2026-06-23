@@ -197,7 +197,8 @@ var GH_TOKEN  = _params.get('gh') || '';
 var GEM_KEY   = _params.get('k')  || '';
 var GH_OWNER  = 'famio-eng';
 var GH_REPO   = 'English-Learning';
-var GEM_URL   = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+var GEM_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+var GEM_BASE   = 'https://generativelanguage.googleapis.com/v1beta/models/';
 
 // ============================================================
 // SCRIPTS DATA
@@ -1084,36 +1085,34 @@ function autoSaveRecording(mode) {
   reader.readAsDataURL(blob);
 }
 
-async function callGeminiWithFallback(payload) {
-  var models = [
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite'
-  ];
-  var baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
-  for (var i = 0; i < models.length; i++) {
-    var url = baseUrl + models[i] + ':generateContent?key=' + GEM_KEY;
-    try {
-      var res = await fetch(url, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload)
-      });
-      var data = await res.json();
-      var isRateLimit = res.status === 429 || (data.error && data.error.code === 429);
-      if (isRateLimit) {
-        console.log(models[i] + ' 429 rate limited, trying: ' + (models[i + 1] || 'no more models'));
-        continue;
-      }
-      console.log('[Shadowing] Gemini success with model: ' + models[i]);
-      return {data: data, model: models[i], status: res.status};
-    } catch(e) {
-      console.log(models[i] + ' error: ' + e.message);
-      if (i === models.length - 1) throw e;
-      continue;
+function callGeminiWithFallback(payload) {
+  function tryModel(i) {
+    if (i >= GEM_MODELS.length) {
+      return Promise.reject(new Error('全モデルが利用できません。しばらく待ってから再試行してください。'));
     }
+    var url = GEM_BASE + GEM_MODELS[i] + ':generateContent?key=' + GEM_KEY;
+    return fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    }).then(function(r) {
+      return r.json().then(function(d) {
+        var isRateLimit = r.status === 429 ||
+          (d.error && (d.error.code === 429 ||
+          (d.error.message && d.error.message.indexOf('429') >= 0)));
+        var is503 = r.status === 503 ||
+          (d.error && (d.error.code === 503 ||
+          (d.error.message && d.error.message.indexOf('503') >= 0)));
+        if (isRateLimit || is503) {
+          console.log('[Gemini] ' + GEM_MODELS[i] + ' unavailable, trying next...');
+          return tryModel(i + 1);
+        }
+        console.log('[Gemini] success with ' + GEM_MODELS[i]);
+        return {data: d, model: GEM_MODELS[i], status: r.status};
+      });
+    });
   }
-  throw new Error('全モデルがレート制限に達しました。しばらく待ってから再試行してください。');
+  return tryModel(0);
 }
 
 function evalRec(mode) {
@@ -1182,7 +1181,7 @@ function evalRec(mode) {
           }
         ]
       }],
-      generationConfig: {temperature: 0.3}
+      generationConfig: {temperature: 0.3, maxOutputTokens: 4096}
     };
 
     var _httpStatus = 0;
