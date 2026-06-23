@@ -1,0 +1,27 @@
+{
+  "date": "2026-06-23",
+  "time": "21:57",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 75,
+  "passed": true,
+  "scoreLabel": "Good",
+  "strengths": [
+    "「submission」や「inspection」など、/ʃ/（sh）の音が明確で聞き取りやすいです。",
+    "全体的に落ち着いたペースで話されており、メッセージが理解しやすいです。",
+    "ビジネス英語の語彙を適切に使用しています。"
+  ],
+  "improvements": [
+    "R音: 「required」（re-KWAIR-d）や「regarding」（re-GAR-ding）など、Rの音が弱く、母音のように聞こえることがあります。舌を奥に引いて、喉の奥で音を出すように意識しましょう。",
+    "V音: 「level」（LE-vel）や「given」（GI-ven）など、Vの音がB音に近くなることがあります。上の歯を下唇に軽く触れさせて発音する練習をしましょう。",
+    "TH音: 「through」（THROO）や「Thank you」（THANK you）など、THの音がS音に近くなることがあります。舌先を上下の歯の間に軽く挟んで発音する練習をしましょう。",
+    "語尾の子音: 「support」（su-PORT）や「cost」（COST）など、語尾の子音が不明瞭になることがあります。子音をはっきりと発音し、音を最後まで響かせるように意識しましょう。"
+  ],
+  "nextStepAdvice": "次の練習では、特に「R音」の改善に集中し、単語の途中にあるR（例: \"during\", \"required\"）を意識して発音してみましょう。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-23T13:57:10.099Z",
+  "source": "dashboard"
+}
