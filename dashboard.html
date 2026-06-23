@@ -1076,37 +1076,22 @@ function collectWeeklyData() {
   });
 }
 
-function callGeminiWithFallback(payload) {
-  function tryModel(i) {
-    if (i >= GEM_MODELS.length) {
-      return Promise.reject(new Error('全モデルが利用できません。自己評価で進んでください。'));
-    }
-    var url = GEM_BASE + GEM_MODELS[i] + ':generateContent?key=' + GEM_KEY;
-    console.log('[Gemini] trying: ' + GEM_MODELS[i]);
-
-    // Step 1: fetch + JSON。ネットワーク/parseエラーはここで吸収し常にresolveする
-    var fetchP = fetch(url, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload)
-    }).then(function(r) {
-      return r.json().then(function(d) { return {ok: true, r: r, d: d}; });
-    }).catch(function(e) {
-      console.log('[Gemini] ' + GEM_MODELS[i] + ' request error: ' + e.message);
-      return {ok: false};
-    });
-
-    // Step 2: 判定。.catch()なし → tryModel(i+1)のrejectはそのまま上位へ伝播
-    return fetchP.then(function(res) {
-      if (!res.ok) {
-        console.log('[Gemini] ' + GEM_MODELS[i] + ' request failed, trying next...');
-        return tryModel(i + 1);
-      }
-      var r = res.r, d = res.d;
-      if (r.status === 429 || r.status === 503) {
-        console.log('[Gemini] ' + GEM_MODELS[i] + ' HTTP ' + r.status + ', trying next...');
-        return tryModel(i + 1);
-      }
+async function callGeminiWithFallback(payload) {
+  var models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+  var base = 'https://generativelanguage.googleapis.com/v1beta/models/';
+  var lastErr = null;
+  for (var i = 0; i < models.length; i++) {
+    var url = base + models[i] + ':generateContent?key=' + GEM_KEY;
+    console.log('[Gemini] trying: ' + models[i]);
+    try {
+      var r = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      });
+      var d = await r.json();
+      var shouldFallback = false;
+      if (r.status === 429 || r.status === 503) shouldFallback = true;
       if (d.error) {
         var code = d.error.code;
         var msg = (d.error.message || '').toLowerCase();
@@ -1115,15 +1100,23 @@ function callGeminiWithFallback(payload) {
             msg.indexOf('resource_exhausted') >= 0 ||
             msg.indexOf('unavailable') >= 0 ||
             msg.indexOf('overloaded') >= 0) {
-          console.log('[Gemini] ' + GEM_MODELS[i] + ' error code=' + code + ', trying next...');
-          return tryModel(i + 1);
+          shouldFallback = true;
         }
       }
-      console.log('[Gemini] success: ' + GEM_MODELS[i]);
-      return {data: d, model: GEM_MODELS[i], status: r.status};
-    });
+      if (shouldFallback) {
+        console.log('[Gemini] ' + models[i] + ' unavailable (status=' + r.status + '), trying next...');
+        lastErr = new Error(models[i] + ' unavailable');
+        continue;
+      }
+      console.log('[Gemini] success: ' + models[i]);
+      return {data: d, model: models[i], status: r.status};
+    } catch(e) {
+      console.log('[Gemini] ' + models[i] + ' error: ' + e.message + ', trying next...');
+      lastErr = e;
+      continue;
+    }
   }
-  return tryModel(0);
+  throw new Error('全モデルが利用できません。しばらく待ってから再試行してください。');
 }
 
 function callGeminiDash(parts) {
