@@ -104,6 +104,10 @@
     },
     "2026-06-22": {
       "memo": "仕事が激務だった"
+    },
+    "2026-06-23": {
+      "vocab": true,
+      "vocabDoneCount": 17
     }
   },
   "shadowSettings": {
