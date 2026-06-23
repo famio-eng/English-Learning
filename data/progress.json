@@ -107,7 +107,7 @@
     }
   },
   "shadowSettings": {
-    "scriptId": "510k-readiness",
+    "scriptId": "sop-status-report",
     "pickSort": "desc",
     "rate": 0.7,
     "showBreath": true
