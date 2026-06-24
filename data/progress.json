@@ -27,8 +27,9 @@
     "510k-readiness": {
       "lastScore": 65,
       "lastDate": "2026-06-13",
-      "readOk": 0,
-      "shadOk": 0
+      "readOk": 1,
+      "shadOk": 0,
+      "readCleared": true
     }
   },
   "vocabSelectedScripts": [
