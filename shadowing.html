@@ -584,12 +584,20 @@ function loadScriptProgress() {
             }
           }
         }
-        renderTab('pick');
         if (current) {
           var sp = scriptProgress[current.id] || {};
-          if (sp.readOk >= 1 || sp.readCleared) { unlock('meaning'); unlock('reading'); }
-          if (sp.shadOk >= 1 || sp.shadCleared) { unlock('meaning'); unlock('reading'); unlock('shadowing'); }
+          if (sp.readOk >= 1 || sp.readCleared) {
+            unlock('meaning');
+            unlock('reading');
+            unlock('shadowing');
+          }
+          if (sp.shadOk >= 1 || sp.shadCleared) {
+            unlock('meaning');
+            unlock('reading');
+            unlock('shadowing');
+          }
         }
+        renderTab('pick');
       } catch(e) {}
     }).catch(function(){});
 }
@@ -830,6 +838,7 @@ function selectScript(id) {
   if (sp.readOk >= 1 || sp.readCleared) {
     unlock('meaning');
     unlock('reading');
+    unlock('shadowing');
   }
   if (sp.shadOk >= 1 || sp.shadCleared) {
     unlock('meaning');
