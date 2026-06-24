@@ -716,8 +716,20 @@ if (!GEM_KEY) {
 // ============================================================
 function switchTab(tab) {
   if (['meaning','reading','shadowing'].indexOf(tab) >= 0 && unlocked.indexOf(tab) < 0) {
-    showToast('前のステップをクリアしてください', false);
-    return;
+    // progressデータを直接確認して必要なら再unlock
+    if (current) {
+      var _sp = scriptProgress[current.id] || {};
+      if (_sp.readOk >= 1 || _sp.readCleared) {
+        unlock('meaning'); unlock('reading'); unlock('shadowing');
+      }
+      if (_sp.shadOk >= 1 || _sp.shadCleared) {
+        unlock('meaning'); unlock('reading'); unlock('shadowing');
+      }
+    }
+    if (unlocked.indexOf(tab) < 0) {
+      showToast('前のステップをクリアしてください', false);
+      return;
+    }
   }
   stopAll();
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
