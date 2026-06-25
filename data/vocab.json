@@ -1195,6 +1195,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w044",
+      "word": "augmented",
+      "pron": "/ɔːɡˈmɛntɪd/",
+      "meaning": "拡張された、増強された",
+      "example": "Our company is investing heavily in augmented reality solutions to enhance customer experience.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-06-25",
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
+      "usageTips": "既存のものを技術などで「拡張・増強する」文脈で使われます。",
+      "collocations": [
+        "augmented reality (AR)",
+        "augmented intelligence (AI)",
+        "augmented analytics",
+        "augmented workforce",
+        "augmented experience"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-06-25",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
