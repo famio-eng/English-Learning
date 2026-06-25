@@ -1,0 +1,24 @@
+{
+  "date": "2026-06-23",
+  "time": "20:10",
+  "scriptId": "510k-readiness",
+  "scriptTitle": "510k申請に向けた準備状況の確認",
+  "mode": "reading",
+  "score": 78,
+  "passed": true,
+  "scoreLabel": "Good",
+  "strengths": [
+    "全体的な流暢さと発話の明瞭さがあり、メッセージが非常に伝わりやすいです。",
+    "多くの単語で正しい音節ストレスが置かれており、特に「appreciation (アプリーシエイション)」、「submission (サブミッション)」、「completed (コンプリーテッド)」などの発音が非常にクリアでした。"
+  ],
+  "improvements": [
+    "R音 (/r/): 「for (フォー)」、「first (ファースト)」、「required (リクワイアード)」、「during (デュアリング)」など、多くの単語でR音が非常に軽く、ほとんど聞こえない場合があります。舌を奥に引いて発音するR音を意識しましょう。例: re-KWYRD",
+    "TH音 (/θ/): 「Thank (サンク)」が「sank (サンク)」のように聞こえる箇所がありました。舌先を上下の歯の間に軽く挟んで発音するTH音を練習しましょう。例: THAYNK"
+  ],
+  "nextStepAdvice": "次の練習では、R音 (/r/) の発音に集中しましょう。特に単語の途中や語尾に来るR音を意識して、舌を奥に引く動きを練習してください。例えば、「for」、「first」、「required」などの単語で、はっきりとR音が聞こえるように発音してみましょう。",
+  "canAdvance": true,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": "2026-06-25T07:28:38.034Z",
+  "source": "dashboard"
+}
