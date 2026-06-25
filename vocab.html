@@ -189,6 +189,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
       <div class="header-actions">
         <button class="btn btn-secondary" id="ghSaveBtn" onclick="saveToGitHub()" style="display:none" title="GitHubに保存">💾</button>
         <button class="btn btn-secondary" onclick="loadVocab()" title="再読み込み">🔄</button>
+        <button class="btn btn-secondary" onclick="openAddWordModal()" title="単語を追加" style="font-size:13px;padding:8px 12px">＋ 単語</button>
         <button class="btn btn-secondary" id="backBtn" onclick="backToMode()" style="display:none">← 戻る</button>
       </div>
     </div>
@@ -203,6 +204,39 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- Add Word Modal -->
+<div class="modal-overlay" id="addWordModal" style="display:none" onclick="closeAddWordModal()">
+  <div class="modal-sheet" onclick="event.stopPropagation()" style="padding-bottom:env(safe-area-inset-bottom)">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">＋ 単語を追加</div>
+      <button class="modal-close" onclick="closeAddWordModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px">単語・熟語 <span style="color:var(--red)">*</span></div>
+          <input id="aw-word" type="text" placeholder="例: align on" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:15px;color:var(--text);outline:none">
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px">意味（日本語）<span style="font-weight:400;color:var(--text3)"> — 空欄の場合はAIが生成</span></div>
+          <input id="aw-meaning" type="text" placeholder="例: ～について合意する" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:15px;color:var(--text);outline:none">
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px">例文（英語）<span style="font-weight:400;color:var(--text3)"> — 空欄の場合はAIが生成</span></div>
+          <input id="aw-example" type="text" placeholder="例: We need to align on the scope." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:15px;color:var(--text);outline:none">
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px">スクリプト名/出典 <span style="font-weight:400;color:var(--text3)">（任意）</span></div>
+          <input id="aw-source" type="text" placeholder="例: 510k-readiness" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:15px;color:var(--text);outline:none">
+        </div>
+        <div id="aw-status" style="font-size:13px;color:var(--text2);min-height:18px"></div>
+        <button onclick="submitAddWord()" id="aw-submit" class="btn btn-primary" style="width:100%;font-size:15px">追加する</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Word detail modal -->
 <div class="modal-overlay" id="wordModal" style="display:none" onclick="closeWordDetail()">
@@ -763,10 +797,7 @@ function renderCard() {
   // Detail section OUTSIDE the flip card (no overlap with buttons)
   var detailHtml = buildDetailHtml(w);
   var detailSection = '<div id="detailSection" style="'+(flipped?'':'display:none')+'">'
-    + (detailHtml
-        ? '<button class="detail-toggle-btn" onclick="toggleDetail()" id="detailToggle">▼ 詳細を見る</button>'
-          + '<div id="cardDetail" style="display:none">'+detailHtml+'</div>'
-        : '')
+    + (detailHtml ? detailHtml : '')
     + '</div>';
 
   var metaHtml = '<div class="review-meta">復習'+(w.reviewCount||0)+'回'
@@ -1120,6 +1151,129 @@ function showWordDetail(id) {
 
 function closeWordDetail() {
   document.getElementById('wordModal').style.display = 'none';
+}
+
+// ============================================================
+// ADD WORD MODAL
+// ============================================================
+function openAddWordModal() {
+  var m = document.getElementById('addWordModal');
+  if (!m) return;
+  document.getElementById('aw-word').value = '';
+  document.getElementById('aw-meaning').value = '';
+  document.getElementById('aw-example').value = '';
+  document.getElementById('aw-source').value = '';
+  document.getElementById('aw-status').textContent = '';
+  var btn = document.getElementById('aw-submit');
+  if (btn) { btn.disabled = false; btn.textContent = '追加する'; }
+  m.style.display = 'flex';
+}
+
+function closeAddWordModal() {
+  var m = document.getElementById('addWordModal');
+  if (m) m.style.display = 'none';
+}
+
+async function submitAddWord() {
+  var wordVal = (document.getElementById('aw-word').value || '').trim();
+  if (!wordVal) { document.getElementById('aw-status').textContent = '単語を入力してください'; return; }
+  var meaningVal = (document.getElementById('aw-meaning').value || '').trim();
+  var exampleVal = (document.getElementById('aw-example').value || '').trim();
+  var sourceVal  = (document.getElementById('aw-source').value || '').trim();
+  var btn = document.getElementById('aw-submit');
+  var st  = document.getElementById('aw-status');
+  btn.disabled = true;
+
+  var pron = '', level = [], usageTips = '', collocations = [];
+
+  if ((!meaningVal || !exampleVal) && GEM_KEY) {
+    st.textContent = '⏳ AIが情報を生成中...';
+    try {
+      var prompt = '以下の英単語/熟語について情報をJSONで返してください。説明は不要、JSONのみ：\n'
+        + wordVal + '\n'
+        + '{"pron":"発音記号","meaning":"日本語の意味（簡潔に）","example":"自然な英語例文","level":["難易度カテゴリ（Business/Formal/Casual/Medical等）"],"usageTips":"使い方のコツ（日本語1文）","collocations":["よく使う表現1","よく使う表現2"]}';
+      var payload = {contents:[{parts:[{text: prompt}]}],generationConfig:{temperature:0.3,maxOutputTokens:512}};
+      var base = 'https://generativelanguage.googleapis.com/v1beta/models/';
+      var models = ['gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+      var raw = null;
+      for (var i = 0; i < models.length; i++) {
+        try {
+          var resp = await fetch(base + models[i] + ':generateContent?key=' + GEM_KEY, {
+            method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
+          });
+          var rj = await resp.json();
+          if (!rj.error) { raw = rj; break; }
+        } catch(e) {}
+      }
+      if (raw) {
+        var txt = ((raw.candidates||[])[0]||{}).content;
+        txt = txt ? (txt.parts||[])[0].text : '';
+        var m = txt.match(/\{[\s\S]*\}/);
+        if (m) {
+          var parsed = JSON.parse(m[0]);
+          if (!meaningVal) meaningVal = parsed.meaning || '';
+          if (!exampleVal) exampleVal = parsed.example || '';
+          pron = parsed.pron || '';
+          level = parsed.level || [];
+          usageTips = parsed.usageTips || '';
+          collocations = parsed.collocations || [];
+        }
+      }
+    } catch(e) {}
+    st.textContent = '';
+  }
+
+  // Build new word object
+  var today = new Date().toISOString().split('T')[0];
+  var maxId = 0;
+  words.forEach(function(w) {
+    var n = parseInt((w.id || '').replace(/\D/g,''), 10);
+    if (!isNaN(n) && n > maxId) maxId = n;
+  });
+  var newId = 'w' + String(maxId + 1).padStart(3, '0');
+  var newWord = {
+    id: newId, word: wordVal, pron: pron, meaning: meaningVal,
+    example: exampleVal, source: sourceVal, scriptId: sourceVal || 'custom',
+    added: today, level: level, usageTips: usageTips, collocations: collocations,
+    otherMeanings: [], interval: 1, nextReview: today,
+    reviewCount: 0, streak: 0, missCount: 0, lastMissed: ''
+  };
+
+  if (!GH_TOKEN) {
+    words.push(newWord);
+    st.textContent = '✓ 追加しました（GitHubへの保存にはトークンが必要です）';
+    btn.disabled = false; btn.textContent = '追加する';
+    closeAddWordModal(); showToast('単語を追加しました', true);
+    return;
+  }
+
+  st.textContent = '⏳ GitHubに保存中...';
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json';
+  try {
+    var ghResp = await fetch(apiUrl, {headers:{'Authorization':'Bearer '+GH_TOKEN}});
+    var ghData = await ghResp.json();
+    var existing = [];
+    if (ghData.content) {
+      try { existing = JSON.parse(decodeURIComponent(escape(atob(ghData.content.replace(/\n/g,''))))).words || []; } catch(e) {}
+    }
+    existing.push(newWord);
+    var vocabObj = {words: existing};
+    var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(vocabObj, null, 2))));
+    var putResp = await fetch(apiUrl, {method:'PUT',
+      headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+      body: JSON.stringify({message:'📚 単語追加: '+wordVal, content:encoded, sha:ghData.sha})
+    });
+    if (putResp.ok) {
+      words.push(newWord);
+      closeAddWordModal();
+      showToast('「'+wordVal+'」を追加しました', true);
+    } else {
+      st.textContent = '保存失敗 HTTP ' + putResp.status;
+    }
+  } catch(e) {
+    st.textContent = '保存エラー: ' + e.message;
+  }
+  btn.disabled = false; btn.textContent = '追加する';
 }
 
 // ============================================================

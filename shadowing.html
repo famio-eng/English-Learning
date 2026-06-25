@@ -829,7 +829,7 @@ function renderPick(c) {
       + '</div>';
   }).join('') || '<div style="text-align:center;padding:24px;color:var(--text2)">該当なし</div>';
 
-  var btn = current ? '<button class="btn btn-primary" style="margin-top:4px" onclick="startPractice()">→ 練習スタート</button>' : '';
+  var btn = '';
   c.innerHTML = '<div style="max-width:600px;margin:0 auto"><div class="sec-title">📂 スクリプトを選択</div>' + controls + cards + btn + '</div>';
 }
 
@@ -857,10 +857,6 @@ function selectScript(id) {
     unlock('reading');
     unlock('shadowing');
   }
-  renderTab('pick');
-}
-
-function startPractice() {
   unlock('meaning');
   switchTab('meaning');
 }
