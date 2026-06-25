@@ -1174,6 +1174,32 @@ function closeAddWordModal() {
   if (m) m.style.display = 'none';
 }
 
+async function callGeminiWithFallback(payload) {
+  var models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+  var base = 'https://generativelanguage.googleapis.com/v1beta/models/';
+  function wait(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
+  for (var i = 0; i < models.length; i++) {
+    var url = base + models[i] + ':generateContent?key=' + GEM_KEY;
+    try {
+      var r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+      var d = await r.json();
+      var shouldFallback = false;
+      if (r.status === 429 || r.status === 503) shouldFallback = true;
+      if (d.error) {
+        var code = d.error.code;
+        var msg = (d.error.message || '').toLowerCase();
+        if (code === 429 || code === 503 ||
+            msg.indexOf('quota') >= 0 || msg.indexOf('resource_exhausted') >= 0 ||
+            msg.indexOf('unavailable') >= 0 || msg.indexOf('overloaded') >= 0) shouldFallback = true;
+      }
+      if (shouldFallback) { console.log('[Gemini] '+models[i]+' unavailable, waiting 2s...'); await wait(2000); continue; }
+      console.log('[Gemini] success: '+models[i]);
+      return {data: d, model: models[i], status: r.status};
+    } catch(e) { console.log('[Gemini] '+models[i]+' error: '+e.message); await wait(2000); continue; }
+  }
+  throw new Error('Gemini API利用不可');
+}
+
 async function submitAddWord() {
   var wordVal = (document.getElementById('aw-word').value || '').trim();
   if (!wordVal) { document.getElementById('aw-status').textContent = '単語を入力してください'; return; }
@@ -1189,37 +1215,26 @@ async function submitAddWord() {
   if ((!meaningVal || !exampleVal) && GEM_KEY) {
     st.textContent = '⏳ AIが情報を生成中...';
     try {
-      var prompt = '以下の英単語/熟語について情報をJSONで返してください。説明は不要、JSONのみ：\n'
-        + wordVal + '\n'
-        + '{"pron":"発音記号","meaning":"日本語の意味（簡潔に）","example":"自然な英語例文","level":["難易度カテゴリ（Business/Formal/Casual/Medical等）"],"usageTips":"使い方のコツ（日本語1文）","collocations":["よく使う表現1","よく使う表現2"]}';
-      var payload = {contents:[{parts:[{text: prompt}]}],generationConfig:{temperature:0.3,maxOutputTokens:512}};
-      var base = 'https://generativelanguage.googleapis.com/v1beta/models/';
-      var models = ['gemini-2.0-flash', 'gemini-2.0-flash-lite'];
-      var raw = null;
-      for (var i = 0; i < models.length; i++) {
-        try {
-          var resp = await fetch(base + models[i] + ':generateContent?key=' + GEM_KEY, {
-            method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)
-          });
-          var rj = await resp.json();
-          if (!rj.error) { raw = rj; break; }
-        } catch(e) {}
+      var prompt = '以下の英単語/熟語についてビジネス英語学習者向けの情報をJSONのみで返してください。説明文は不要です。\n'
+        + '単語: ' + wordVal + '\n\n'
+        + '{"pron":"IPA発音記号","meaning":"日本語の意味（簡潔に）","example":"ビジネスシーンでの英語例文","level":["難易度カテゴリ（ビジネス英語/TOEIC800/TOEIC900+/医療等）"],"usageTips":"使い方のコツ（日本語1文）","collocations":["よく使う表現1","よく使う表現2"]}';
+      var payload = {contents:[{parts:[{text: prompt}]}], generationConfig:{temperature:0.3, maxOutputTokens:512}};
+      var result = await callGeminiWithFallback(payload);
+      var txt = ((result.data.candidates||[])[0]||{}).content;
+      txt = txt ? ((txt.parts||[])[0]||{}).text || '' : '';
+      console.log('[AddWord] Gemini raw:', txt);
+      var jsonMatch = txt.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        var parsed = JSON.parse(jsonMatch[0]);
+        if (!meaningVal) meaningVal = parsed.meaning || '';
+        if (!exampleVal) exampleVal = parsed.example || '';
+        pron = parsed.pron || '';
+        level = Array.isArray(parsed.level) ? parsed.level : [];
+        usageTips = parsed.usageTips || '';
+        collocations = Array.isArray(parsed.collocations) ? parsed.collocations : [];
+        console.log('[AddWord] parsed:', {meaningVal, exampleVal, pron, level});
       }
-      if (raw) {
-        var txt = ((raw.candidates||[])[0]||{}).content;
-        txt = txt ? (txt.parts||[])[0].text : '';
-        var m = txt.match(/\{[\s\S]*\}/);
-        if (m) {
-          var parsed = JSON.parse(m[0]);
-          if (!meaningVal) meaningVal = parsed.meaning || '';
-          if (!exampleVal) exampleVal = parsed.example || '';
-          pron = parsed.pron || '';
-          level = parsed.level || [];
-          usageTips = parsed.usageTips || '';
-          collocations = parsed.collocations || [];
-        }
-      }
-    } catch(e) {}
+    } catch(e) { console.error('[AddWord] Gemini error:', e); }
     st.textContent = '';
   }
 
