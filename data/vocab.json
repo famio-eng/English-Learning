@@ -1170,15 +1170,24 @@
     {
       "id": "w043",
       "word": "substantially",
-      "pron": "",
-      "meaning": "",
-      "example": "",
-      "source": "",
-      "scriptId": "custom",
+      "pron": "/səbˈstænʃəli/",
+      "meaning": "大幅に・実質的に・かなりの程度",
+      "example": "The new design substantially reduces the risk of patient injury.",
+      "source": "510k-readiness",
+      "scriptId": "510k-readiness",
       "added": "2026-06-25",
-      "level": [],
-      "usageTips": "",
-      "collocations": [],
+      "level": [
+        "ビジネス英語",
+        "TOEIC800",
+        "大学受験"
+      ],
+      "usageTips": "significantly / considerably とほぼ同義だが、規制・法律文書でより多用される格式表現。510k申請の「substantially equivalent（実質的に同等）」は最重要フレーズ。",
+      "collocations": [
+        "substantially equivalent",
+        "substantially reduce",
+        "substantially comply",
+        "substantially similar"
+      ],
       "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-06-25",
