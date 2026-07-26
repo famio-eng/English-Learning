@@ -1224,6 +1224,188 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w045",
+      "word": "in the final stretch",
+      "pron": "/ɪn ðə ˈfaɪnəl strɛtʃ/",
+      "meaning": "（プロジェクトなどの）終盤・大詰めで",
+      "example": "We're in the final stretch of the project.",
+      "source": "海外向け週次進捗報告（EU/US launch）",
+      "scriptId": "launch-status-update",
+      "added": "2026-07-26",
+      "level": [
+        "ビジネス英語",
+        "TOEIC750"
+      ],
+      "usageTips": "プロジェクトなどが完了に近づいている状態を表す。home stretchとほぼ同義。",
+      "collocations": [
+        "in the final stretch of",
+        "final stretch"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-26",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w046",
+      "word": "change control process",
+      "pron": "/tʃeɪndʒ kənˈtroʊl ˈprɑːsɛs/",
+      "meaning": "変更管理プロセス",
+      "example": "We've got one more step left in our change control process.",
+      "source": "海外向け週次進捗報告（EU/US launch）",
+      "scriptId": "launch-status-update",
+      "added": "2026-07-26",
+      "level": [
+        "ビジネス英語",
+        "TOEIC750"
+      ],
+      "usageTips": "製品や仕様の変更を正式な手順で管理するプロセス。規制対応の文脈でよく使われる。",
+      "collocations": [
+        "change control process",
+        "change management process"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-26",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w047",
+      "word": "hand off to",
+      "pron": "/hænd ɔːf tuː/",
+      "meaning": "〜に引き渡す・引き継ぐ",
+      "example": "We're on track to have everything ready to hand off to RA.",
+      "source": "海外向け週次進捗報告（EU/US launch）",
+      "scriptId": "launch-status-update",
+      "added": "2026-07-26",
+      "level": [
+        "ビジネス英語",
+        "TOEIC750"
+      ],
+      "usageTips": "業務やタスクを別の担当・チームに引き渡す時に使う。hand overとほぼ同義。",
+      "collocations": [
+        "hand off to",
+        "hand over to"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-26",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w048",
+      "word": "close out",
+      "pron": "/kloʊz aʊt/",
+      "meaning": "（残っているタスクなどを）完了させる・片付ける",
+      "example": "The last open item just got closed out.",
+      "source": "海外向け週次進捗報告（EU/US launch）",
+      "scriptId": "launch-status-update",
+      "added": "2026-07-26",
+      "level": [
+        "ビジネス英語",
+        "TOEIC750"
+      ],
+      "usageTips": "プロジェクト管理でタスクや案件を正式に完了させる時によく使う。",
+      "collocations": [
+        "close out an item",
+        "close out a task"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-26",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w049",
+      "word": "a steady stream of",
+      "pron": "/ə ˈstɛdi striːm ʌv/",
+      "meaning": "〜が絶え間なく続くこと",
+      "example": "We've been getting a steady stream of small issues.",
+      "source": "海外向け週次進捗報告（EU/US launch）",
+      "scriptId": "launch-status-update",
+      "added": "2026-07-26",
+      "level": [
+        "ビジネス英語",
+        "TOEIC750"
+      ],
+      "usageTips": "問い合わせやトラブルなどが途切れず次々と来る状況を表す定番表現。",
+      "collocations": [
+        "a steady stream of requests",
+        "a steady stream of issues"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-26",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w050",
+      "word": "putting out fires",
+      "pron": "/ˈpʊtɪŋ aʊt ˈfaɪərz/",
+      "meaning": "次々起こる小さいトラブルの対応に追われること",
+      "example": "They've kept us busy putting out fires here and there.",
+      "source": "海外向け週次進捗報告（EU/US launch）",
+      "scriptId": "launch-status-update",
+      "added": "2026-07-26",
+      "level": [
+        "ビジネス英語",
+        "TOEIC750"
+      ],
+      "usageTips": "文字通りは「火を消す」。転じて緊急の小さいトラブル対応に追われる様子を表すビジネス頻出イディオム。",
+      "collocations": [
+        "putting out fires",
+        "spend the day putting out fires"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-26",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w051",
+      "word": "home stretch",
+      "pron": "/hoʊm strɛtʃ/",
+      "meaning": "最後の追い込み・ラストスパート",
+      "example": "I think this is the home stretch.",
+      "source": "海外向け週次進捗報告（EU/US launch）",
+      "scriptId": "launch-status-update",
+      "added": "2026-07-26",
+      "level": [
+        "ビジネス英語",
+        "TOEIC750"
+      ],
+      "usageTips": "競馬の最終直線が語源。プロジェクトなどの終盤・仕上げの段階を表す。",
+      "collocations": [
+        "in the home stretch",
+        "the home stretch"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-26",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
