@@ -55,8 +55,8 @@ English-Learning/
 1. ChatGPT「英語学習」プロジェクトで壁打ち（「今週の教材を準備したい」で開始）
 2. まとまったらChatGPTが出力するテンプレート下書きをコピーし、GitHubのIssueとして投稿
 3. Claude Codeセッションで「Issueのやつ処理して」と伝える
-4. Claude Codeが英語化・発音記号・和訳・ブレスグループ分割を行い、shadowing.htmlとdata/vocab.jsonに反映してpush
-5. Issueをクローズ（gh認証設定後はClaude Code側で完結可能。未設定の間はGitHubアプリで手動クローズ）
+4. Claude Codeが英語化・発音記号・和訳・ブレスグループ分割を行った案を提示し、Famiが内容を確認・承認する
+5. 承認後、Claude Codeがshadowing.htmlとdata/vocab.jsonに反映してpushし、そのままIssueもクローズする（Famiの内容承認がゲートであり、push/クローズ自体は都度あらためて確認を取らない。gh認証設定後はClaude Code側で完結可能。未設定の間はIssueのクローズのみGitHubアプリで手動対応）
 
 ### Pimsleur学習法の導入
 - Anticipation: 日本語提示→数秒以内に英語で答える→確認、という形式をChatGPTとの通常会話練習に採用
