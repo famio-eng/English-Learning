@@ -2052,6 +2052,9 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
           obj.improvements = result.improvements || [];
           obj.nextStepAdvice = result.nextStepAdvice || '';
           if (result.scoreLabel) obj.scoreLabel = result.scoreLabel;
+          if (typeof result.score === 'number') obj.score = result.score;
+          if (typeof result.passed === 'boolean') obj.passed = result.passed;
+          if (typeof result.canAdvance === 'boolean') obj.canAdvance = result.canAdvance;
           var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(obj, null, 2))));
           return fetch(apiUrl, {
             method: 'PUT',

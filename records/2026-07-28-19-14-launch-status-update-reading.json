@@ -1,0 +1,19 @@
+{
+  "date": "2026-07-28",
+  "time": "19:14",
+  "scriptId": "launch-status-update",
+  "scriptTitle": "海外向け週次進捗報告（EU/US launch）",
+  "mode": "reading",
+  "score": null,
+  "passed": false,
+  "scoreLabel": null,
+  "strengths": [],
+  "improvements": [],
+  "nextStepAdvice": "",
+  "canAdvance": false,
+  "cefrLevel": null,
+  "mimeType": "audio/mp4",
+  "analyzedAt": null,
+  "recordingUrl": "https://raw.githubusercontent.com/famio-eng/English-Learning/main/recordings/2026-07-28-19-14-launch-status-update-reading.m4a",
+  "source": "manual-stub-pending-reeval"
+}
