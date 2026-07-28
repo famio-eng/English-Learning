@@ -6,20 +6,10 @@
   "mode": "reading",
   "score": null,
   "passed": false,
-  "scoreLabel": "改善が必要",
-  "strengths": [
-    "「quick」、「update」、「stand」、「track」、「ready」、「issues」、「push」、「done」など、いくつかの単語は明瞭に発音されています。",
-    "全体的な発音は理解可能です。",
-    "スクリプトを正確に読み上げています。"
-  ],
-  "improvements": [
-    "「th」の発音（有声・無声）：多くの単語で「s」や「z」のような音になっています。舌を上下の歯の間に軽く挟んで発音する練習が必要です。例: thanks: THANKS。THに強勢。the: THE。THに強勢。everything: E-ve-ry-THING。THINGのTHに強勢。there: THERE。THに強勢。that's: THAT'S。THATに強勢。things: THINGS。THに強勢。though: THOUGH。THに強勢。this: THIS。THに強勢。think: THINK。THに強勢。",
-    "「l」の発音：単語の終わりや子音クラスターで弱く不明瞭になる傾向があります。舌先を上の歯の裏にしっかりつけて発音する練習が必要です。例: final: FI-nal。FIに強勢。overall: O-ver-ALL。ALLに強勢。launches: LAUN-ches。LAUNに強勢。almost: AL-most。ALに強勢。control: con-TROL。TROLに強勢。well: WELL。small: SMALL。line: LINE。approval: ap-PROO-val。PROOに強勢。",
-    "「r」の発音：単語の途中や終わりで弱く不明瞭になる傾向があります。舌を口の奥に引き、どこにも触れないようにして発音する練習が必要です。例: everyone: E-ve-ry-one。Eに強勢。overall: O-ver-ALL。ALLに強勢。fires: FI-res。FIに強勢。",
-    "「v」の発音：時に「b」のような音になっています。下唇を上の歯に軽く当てて発音する練習が必要です。例: give: GIVE。over: O-ver。Oに強勢。moving: MO-ving。MOに強勢。",
-    "イントネーションとリズム：全体的に単調に聞こえる箇所があり、自然な抑揚が不足しています。文の中で伝えたい重要な単語を強調し、ピッチの変化をつけることで、より聞き取りやすくなります。"
-  ],
-  "nextStepAdvice": "次の練習では、「th」の発音（有声・無声の両方）に集中して練習してください。舌を上下の歯の間に軽く挟み、息を出す感覚を意識しましょう。特に「thanks」、「the」、「everything」、「there」などの頻出単語で意識的に練習すると効果的です。",
+  "scoreLabel": null,
+  "strengths": [],
+  "improvements": [],
+  "nextStepAdvice": "",
   "canAdvance": false,
   "cefrLevel": null,
   "mimeType": "audio/mp4",

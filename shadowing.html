@@ -1283,9 +1283,9 @@ function evalRec(mode) {
             + 'Do NOT penalize for Japanese accent if the message is clear.\n\n'
             + 'Return ONLY valid JSON, no markdown:\n'
             + '{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点（どの単語をどう直すか。音節表記例: eu-RO-pe-an）","改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n'
-            + '- score: 0-100 per the criteria above\n'
+            + '- score: REQUIRED. Must be a JSON number (not a string, not null, never omitted), an integer 0-100 per the criteria above\n'
             + '- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n'
-            + '- Write ALL values in Japanese\n'
+            + '- Write ALL values in Japanese except score/passed/canAdvance which are number/boolean\n'
             + '- For pronunciation improvements: word: syl-LA-ble (uppercase = stress). Example: \"European: eu-RO-pe-an。ROに強勢。\"\n'
             + '- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n'
             + '- Never write comparisons like \"AではなくA\" where both sides are identical'
@@ -1345,9 +1345,9 @@ function evalRec(mode) {
           try { result = JSON.parse(jsonMatch[0]); } catch(e2) { result = null; }
         }
       }
-      if (!result) {
-        console.error('[AI評価] JSON解析失敗。生レスポンス:\n' + txt.substring(0, 500));
-        var err3 = new Error('AIの応答を解析できませんでした。もう一度評価してください。');
+      if (!result || typeof result.score !== 'number') {
+        console.error('[AI評価] JSON解析失敗、またはscoreが数値でない。生レスポンス:\n' + txt.substring(0, 500));
+        var err3 = new Error('AIの応答が不完全でした（スコアなし）。もう一度評価してください。');
         err3.detail = 'HTTP: ' + _httpStatus + '\n生レスポンス:\n' + txt.substring(0, 300);
         throw err3;
       }
@@ -1994,7 +1994,7 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
       console.log('[AI再評価] mime_type:', _rCtx.mtype, '| size:', _rCtx.sizeKb + 'KB');
       var payload = {
         contents: [{parts: [
-          {text: 'You are an English pronunciation coach for a Japanese business professional.\nEvaluate this audio recording. Mode: ' + recMode + '.\nTarget script: "' + scriptText + '"\n\nScore based on:\n- Pronunciation accuracy\n- Natural rhythm and stress\n- Fluency and pacing\n- Clarity\n\nReturn ONLY valid JSON, no markdown:\n{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n- score: 0-100 based on actual performance\n- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n- Write ALL values in Japanese\n- Reference specific words from the script in feedback\n- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress). Example: "European: eu-RO-pe-an。ROに強勢。"\n- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n- Never write comparisons like "AではなくA" where both sides are identical'},
+          {text: 'You are an English pronunciation coach for a Japanese business professional.\nEvaluate this audio recording. Mode: ' + recMode + '.\nTarget script: "' + scriptText + '"\n\nScore based on:\n- Pronunciation accuracy\n- Natural rhythm and stress\n- Fluency and pacing\n- Clarity\n\nReturn ONLY valid JSON, no markdown:\n{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n- score: REQUIRED. Must be a JSON number (not a string, not null, never omitted), an integer 0-100 based on actual performance\n- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n- Write ALL values in Japanese except score/passed/canAdvance which are number/boolean\n- Reference specific words from the script in feedback\n- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress). Example: "European: eu-RO-pe-an。ROに強勢。"\n- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n- Never write comparisons like "AではなくA" where both sides are identical'},
           {inline_data: {mime_type: audio.mtype, data: audio.b64}}
         ]}],
         generationConfig: {temperature: 0.3}
@@ -2035,9 +2035,9 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
         var jsonMatch = clean.match(/\{[\s\S]*\}/);
         if (jsonMatch) { try { result = JSON.parse(jsonMatch[0]); } catch(e2) { result = null; } }
       }
-      if (!result) {
-        console.error('[AI再評価] JSON解析失敗。生レスポンス:\n' + txt.substring(0, 500));
-        var errJson = new Error('AIの応答を解析できませんでした。もう一度再評価してください。');
+      if (!result || typeof result.score !== 'number') {
+        console.error('[AI再評価] JSON解析失敗、またはscoreが数値でない。生レスポンス:\n' + txt.substring(0, 500));
+        var errJson = new Error('AIの応答が不完全でした（スコアなし）。もう一度再評価してください。');
         errJson.detail = '生レスポンス:\n' + txt.substring(0, 300);
         throw errJson;
       }
