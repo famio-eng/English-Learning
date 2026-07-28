@@ -4,12 +4,22 @@
   "scriptId": "launch-status-update",
   "scriptTitle": "海外向け週次進捗報告（EU/US launch）",
   "mode": "reading",
-  "score": null,
+  "score": 65,
   "passed": false,
-  "scoreLabel": null,
-  "strengths": [],
-  "improvements": [],
-  "nextStepAdvice": "",
+  "scoreLabel": "Fair",
+  "strengths": [
+    "全体的に明瞭で、聞き取りやすいです。",
+    "\"update\" や \"approval\" など、多くの単語で正しい音節に強勢を置けています。",
+    "\"hand it over\" のように、単語間のリンキングがスムーズな箇所があります。",
+    "\"stretch\" や \"stream\" のような子音クラスターも概ねクリアです。"
+  ],
+  "improvements": [
+    "\"th\" の発音: 最も頻繁に現れる改善点です。無声の /θ/ (例: \"thanks\", \"think\", \"nothing\", \"everything\") が /s/ に、有声の /ð/ (例: \"the\", \"there\", \"they\", \"though\", \"this\", \"that\") が /z/ に聞こえることが多いです。舌先を軽く前歯に触れさせ、息（または声）を出す練習をしましょう。\n    *   thanks: THANKS。THを意識。\n    *   everything: E-ve-ry-THING。THを意識。\n    *   there: THERE。THを意識。\n    *   this: THIS。THを意識。",
+    "\"g\" の発音: \"getting\" のように、語頭の \"g\" が少し弱く、\"k\" に近い音になることがあります。しっかりとした /g/ の音を意識しましょう。\n    *   getting: GET-ting。GEを意識。",
+    "\"l\" の発音: \"overall\" や \"almost\" のように、\"l\" の音が少し不明瞭になることがあります。舌先を上あごにつける動きを意識しましょう。\n    *   overall: O-ver-ALL。ALLを意識。",
+    "\"s\" の発音: \"launches\" や \"issues\" のように、語尾や語中の \"s\" の音が少し弱く、\"sh\" や \"z\" に聞こえることがあります。クリアな /s/ の音を意識しましょう。\n    *   launches: LAUN-ches。CHESのSを意識。"
+  ],
+  "nextStepAdvice": "まずは \"th\" の発音に集中して練習しましょう。無声の /θ/ と有声の /ð/ の両方について、舌の位置と息の出し方を意識して、鏡を見ながら練習すると効果的です。",
   "canAdvance": false,
   "cefrLevel": null,
   "mimeType": "audio/mp4",
