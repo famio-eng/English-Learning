@@ -1929,17 +1929,18 @@ function renderEvalItems(sid, items, showCount) {
       detail += '<div style="font-size:12px;color:var(--text2);margin-top:4px">📝 ' + escHtml(r.memo) + '</div>';
     }
     var hasAI = (r.strengths && r.strengths.length > 0) || (r.improvements && r.improvements.length > 0) || r.nextStepAdvice;
-    if (!hasAI) {
-      if (!r.recordingUrl && !r.memo) {
+    if (r.recordingUrl) {
+      // AI評価は不安定なことがあるため、既にフィードバックがあっても常に再評価できるようにする
+      var reEvalBtnId = 'reeval-' + uid;
+      detail += '<div style="margin-top:6px;display:flex;align-items:center;gap:8px">'
+        + (hasAI ? '' : '<span style="font-size:12px;color:var(--text3)">AIフィードバックなし</span>')
+        + '<button id="' + reEvalBtnId + '" class="btn btn-secondary btn-sm"'
+        + ' onclick="reEvalRecord(\'' + escHtml(r._filename) + '\',\'' + escHtml(r.scriptId||'') + '\',\'' + escHtml(r.mode||'') + '\',\'' + escHtml(r.recordingUrl) + '\',\'' + reEvalBtnId + '\')">'
+        + '🔄 ' + (hasAI ? '再評価し直す' : '再評価') + '</button>'
+        + '</div>';
+    } else if (!hasAI) {
+      if (!r.memo) {
         detail += '<div style="font-size:12px;color:var(--text3)">詳細データなし</div>';
-      } else if (r.recordingUrl) {
-        var reEvalBtnId = 'reeval-' + uid;
-        detail += '<div style="margin-top:6px;display:flex;align-items:center;gap:8px">'
-          + '<span style="font-size:12px;color:var(--text3)">AIフィードバックなし</span>'
-          + '<button id="' + reEvalBtnId + '" class="btn btn-secondary btn-sm"'
-          + ' onclick="reEvalRecord(\'' + escHtml(r._filename) + '\',\'' + escHtml(r.scriptId||'') + '\',\'' + escHtml(r.mode||'') + '\',\'' + escHtml(r.recordingUrl) + '\',\'' + reEvalBtnId + '\')">'
-          + '🔄 再評価</button>'
-          + '</div>';
       } else {
         detail += '<div style="font-size:12px;color:var(--text3);margin-top:4px">AIフィードバックなし</div>';
       }
