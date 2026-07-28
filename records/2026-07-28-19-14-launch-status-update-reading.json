@@ -6,10 +6,18 @@
   "mode": "reading",
   "score": null,
   "passed": false,
-  "scoreLabel": null,
-  "strengths": [],
-  "improvements": [],
-  "nextStepAdvice": "",
+  "scoreLabel": "良い",
+  "strengths": [
+    "個々の単語の発音が非常に明瞭で、聞き取りやすいです。「update」「milestones」「approval」など、ビジネスシーンで重要な単語が正確に発音されています。",
+    "全体的なペース配分が適切で、急ぎすぎず、遅すぎず、聞き手が内容を理解しやすい速度で話されています。",
+    "「overall」「submission」といった長めの単語の強勢が正しく置かれており、単語レベルでのリズム感が良いです。"
+  ],
+  "improvements": [
+    "stretch: STRETCH。Eの音をもっと口を横に引いて発音し、語尾のchをしっかり発音しましょう。",
+    "milestones: MILE-stones。語尾の「s」の音をもう少し明確に発音しましょう。",
+    "process: PRO-cess。語尾の「s」の音をもう少し明確に発音しましょう。"
+  ],
+  "nextStepAdvice": "次の練習では、文の区切りや意味のまとまりを意識し、単語を一つずつ区切るのではなく、滑らかに繋げて話すことを意識してください。特に、前置詞や冠詞などの機能語は軽く、名詞や動詞などの内容語ははっきりと発音することで、自然なリズムが生まれます。",
   "canAdvance": false,
   "cefrLevel": null,
   "mimeType": "audio/mp4",
