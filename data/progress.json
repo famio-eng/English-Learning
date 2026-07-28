@@ -34,8 +34,9 @@
     "launch-status-update": {
       "lastScore": 65,
       "lastDate": "2026-07-28",
-      "readOk": 0,
-      "shadOk": 0
+      "readOk": 1,
+      "shadOk": 0,
+      "readCleared": true
     }
   },
   "vocabSelectedScripts": [
