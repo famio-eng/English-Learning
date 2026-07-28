@@ -609,6 +609,8 @@ var SCRIPTS = [
 // ============================================================
 // STATE
 // ============================================================
+// AI評価のpassed/canAdvanceはこの閾値でJS側が確定させる(Geminiの自己申告は信用しない)
+var PASS_THRESHOLD = {reading: 65, shadowing: 70};
 var current = null;
 var rate = 0.7;
 var repeat = false;
@@ -1272,19 +1274,19 @@ function evalRec(mode) {
             text: 'You are an English pronunciation coach evaluating a Japanese business professional.\n'
             + 'This speaker is a Japanese native learning business English.\n'
             + 'Mode: ' + mode + '. Full script text the speaker is reading/shadowing:\n"' + scriptText + '"\n\n'
-            + 'Scoring criteria for Japanese learners:\n'
-            + '- 90+: Near-native, excellent rhythm and pronunciation\n'
-            + '- 80-89: Very good, minor accent issues only\n'
-            + '- 70-79: Good, understandable with some Japanese accent\n'
-            + '- 60-69: Communicates but needs work on specific sounds\n'
-            + '- Below 60: Difficult to understand\n\n'
-            + 'A Japanese speaker who can be clearly understood by native English speakers\n'
-            + 'in a business context should score 70 or above.\n'
-            + 'Do NOT penalize for Japanese accent if the message is clear.\n\n'
+            + 'Scoring criteria for Japanese learners (anchor on intelligibility, not native-level polish):\n'
+            + '- 85+: Excellent, near-native rhythm and pronunciation\n'
+            + '- 70-84: Good — message is clear and understandable, even with a noticeable Japanese accent or 1-3 recurring sound substitutions (e.g. th/v/r/l). This should be the typical/expected range for an intelligible reading, not a rare high score.\n'
+            + '- 55-69: Some effort needed to follow — several recurring issues, but the message still gets across overall\n'
+            + '- Below 55: A listener without the script would struggle to follow\n\n'
+            + 'Do NOT penalize for Japanese accent or for 1-3 recurring sound substitutions if the message is otherwise clear.\n'
+            + 'Consistency check (important): your score MUST match your own strengths text. '
+            + 'If anything in strengths says the speech is clear/easy to understand/good pace, the score must be 70 or above. '
+            + 'Never write positive strengths and then give a below-70 score — pick language and score that agree with each other.\n\n'
             + 'Return ONLY valid JSON, no markdown:\n'
             + '{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点（どの単語をどう直すか。音節表記例: eu-RO-pe-an）","改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n'
             + '- score: REQUIRED. Must be a JSON number (not a string, not null, never omitted), an integer 0-100 per the criteria above\n'
-            + '- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n'
+            + '- passed=true and canAdvance=true if score>=65(reading) or score>=70(shadowing)\n'
             + '- Write ALL values in Japanese except score/passed/canAdvance which are number/boolean\n'
             + '- For pronunciation improvements: word: syl-LA-ble (uppercase = stress). Example: \"European: eu-RO-pe-an。ROに強勢。\"\n'
             + '- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n'
@@ -1351,6 +1353,9 @@ function evalRec(mode) {
         err3.detail = 'HTTP: ' + _httpStatus + '\n生レスポンス:\n' + txt.substring(0, 300);
         throw err3;
       }
+      // passed/canAdvanceはGeminiの自己申告(プロンプトの指示に従わないことがある)を信用せず、JS側の閾値で確定させる
+      result.passed = result.score >= PASS_THRESHOLD[mode];
+      result.canAdvance = result.passed;
       showAIFeedback(result, mode);
     }).catch(function(e) {
       var fa2 = document.getElementById('fbArea');
@@ -1994,7 +1999,7 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
       console.log('[AI再評価] mime_type:', _rCtx.mtype, '| size:', _rCtx.sizeKb + 'KB');
       var payload = {
         contents: [{parts: [
-          {text: 'You are an English pronunciation coach for a Japanese business professional.\nEvaluate this audio recording. Mode: ' + recMode + '.\nTarget script: "' + scriptText + '"\n\nScore based on:\n- Pronunciation accuracy\n- Natural rhythm and stress\n- Fluency and pacing\n- Clarity\n\nReturn ONLY valid JSON, no markdown:\n{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n- score: REQUIRED. Must be a JSON number (not a string, not null, never omitted), an integer 0-100 based on actual performance\n- passed=true and canAdvance=true if score>=70(reading) or score>=75(shadowing)\n- Write ALL values in Japanese except score/passed/canAdvance which are number/boolean\n- Reference specific words from the script in feedback\n- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress). Example: "European: eu-RO-pe-an。ROに強勢。"\n- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n- Never write comparisons like "AではなくA" where both sides are identical'},
+          {text: 'You are an English pronunciation coach for a Japanese business professional.\nEvaluate this audio recording. Mode: ' + recMode + '.\nTarget script: "' + scriptText + '"\n\nScore based on:\n- Pronunciation accuracy\n- Natural rhythm and stress\n- Fluency and pacing\n- Clarity\n\nScoring criteria for Japanese learners (anchor on intelligibility, not native-level polish):\n- 85+: Excellent, near-native rhythm and pronunciation\n- 70-84: Good — message is clear and understandable, even with a noticeable Japanese accent or 1-3 recurring sound substitutions (e.g. th/v/r/l). This should be the typical/expected range for an intelligible reading, not a rare high score.\n- 55-69: Some effort needed to follow — several recurring issues, but the message still gets across overall\n- Below 55: A listener without the script would struggle to follow\n\nDo NOT penalize for Japanese accent or for 1-3 recurring sound substitutions if the message is otherwise clear.\nConsistency check (important): your score MUST match your own strengths text. If anything in strengths says the speech is clear/easy to understand/good pace, the score must be 70 or above. Never write positive strengths and then give a below-70 score — pick language and score that agree with each other.\n\nReturn ONLY valid JSON, no markdown:\n{"score":0,"passed":false,"scoreLabel":"Good","strengths":["具体的な良かった点（スクリプトの単語を引用）"],"improvements":["具体的な改善点1（どの単語をどう直すか）","具体的な改善点2"],"nextStepAdvice":"次の練習で1つだけ意識すること","canAdvance":false}\n\n- score: REQUIRED. Must be a JSON number (not a string, not null, never omitted), an integer 0-100 based on actual performance\n- passed=true and canAdvance=true if score>=65(reading) or score>=70(shadowing)\n- Write ALL values in Japanese except score/passed/canAdvance which are number/boolean\n- Reference specific words from the script in feedback\n- For pronunciation improvements, use this format: word: syl-LA-ble (uppercase = stress). Example: "European: eu-RO-pe-an。ROに強勢。"\n- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n- Never write comparisons like "AではなくA" where both sides are identical'},
           {inline_data: {mime_type: audio.mtype, data: audio.b64}}
         ]}],
         generationConfig: {temperature: 0.3}
@@ -2041,6 +2046,9 @@ function reEvalRecord(filename, scriptId, recMode, recordingUrl, btnId) {
         errJson.detail = '生レスポンス:\n' + txt.substring(0, 300);
         throw errJson;
       }
+      // passed/canAdvanceはGeminiの自己申告を信用せず、JS側の閾値で確定させる
+      result.passed = result.score >= PASS_THRESHOLD[recMode];
+      result.canAdvance = result.passed;
 
       var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/records/' + filename;
       return fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
