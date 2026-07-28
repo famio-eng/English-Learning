@@ -4,26 +4,22 @@
   "scriptId": "launch-status-update",
   "scriptTitle": "海外向け週次進捗報告（EU/US launch）",
   "mode": "reading",
-  "score": 50,
-  "passed": false,
-  "scoreLabel": "改善の余地あり",
+  "score": 72,
+  "passed": true,
+  "scoreLabel": "Good",
   "strengths": [
-    "スクリプトの単語の区切りは明確で、文章の構造が理解しやすいです。",
-    "\"Hi\", \"EU\", \"US\", \"RA\" など、一部の固有名詞や短い単語ははっきりと発音できています。",
-    "全体的に、話すスピードは聞き取りやすい速さで、急ぎすぎず、落ち着いて話せています。"
+    "メッセージ全体が非常に明瞭で理解しやすいです。スクリプトの内容を正確に伝えようとする意識が感じられます。",
+    "単語の区切りがはっきりしており、聞き取りやすいです。",
+    "\"key milestones\" や \"change control process\" など、いくつかのフレーズは自然なリズムで発音できています。"
   ],
   "improvements": [
-    "Thanks: THANKS。THの発音がSに近いので、舌先を上下の歯で軽く挟んで発音する練習をしましょう。",
-    "everyone: e-VRY-wun。Vの発音がBに近いので、下唇を軽く上の歯に当てて振動させる練習をしましょう。",
-    "joining: JOI-ning。母音が「ジョイニング」ではなく「ジョイニング」に近いので、\"oi\" の音をはっきりと発音し、JOIに強勢を置きましょう。",
-    "update: UP-date。UPに強勢を置き、母音をはっきりと発音しましょう。",
-    "process: PRO-cess。PROに強勢を置き、母音をはっきりと発音しましょう。",
-    "approval: ap-PROO-val。PROOに強勢を置き、Vの発音を意識しましょう。",
-    "issues: ISH-ooz。ISHに強勢を置き、\"oo\" の音をはっきりと発音しましょう。",
-    "文全体の自然なリズムとイントネーション: 単語一つ一つを区切って話す傾向があるため、文全体でのつながりや自然な抑揚が不足しています。特に句読点のない箇所での不自然なポーズを減らし、意味のまとまりで話すことを意識しましょう。"
+    "thの発音: \"thanks\", \"the\", \"that\", \"though\", \"this\", \"nothing\", \"there\" など、'th' の音が 's' や 'z'、'd' になる傾向があります。舌を上下の歯の間に軽く挟んで発音する練習をしましょう。",
+    "vの発音: \"everyone\", \"give\", \"overall\", \"approval\", \"over\", \"moving\", \"we've\" など、'v' の音が 'b' になる傾向があります。下唇を軽く上の歯に触れさせて振動させる意識で発音しましょう。",
+    "語尾の子音: \"stand\" の 'd' や \"just\" の 't' など、単語の語尾の子音が弱くなったり、脱落したりすることがあります。語尾の子音を意識してはっきりと発音する練習をしましょう。",
+    "Rhythm and Intonation: 全体的に少し平坦に聞こえる箇所があります。重要な単語やフレーズに強勢を置き、文全体の抑揚を意識することで、より自然な英語のリズムに近づきます。例えば、\"We are in the final STRETCH\" のように、強調したい部分を意識的に強く発音してみましょう。"
   ],
-  "nextStepAdvice": "次の練習では、特に 'th' (例: Thanks, that's, though) と 'v' (例: everyone, give, approval) の発音を意識して練習しましょう。舌や唇の正しい位置を意識することで、よりクリアな発音になります。",
-  "canAdvance": false,
+  "nextStepAdvice": "「th」と「v」の音の区別を意識して練習しましょう。これらの音を正しく発音できるようになることで、英語の明瞭さが大きく向上します。",
+  "canAdvance": true,
   "cefrLevel": null,
   "mimeType": "audio/mp4",
   "analyzedAt": null,
