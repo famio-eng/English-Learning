@@ -1406,6 +1406,26 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w052",
+      "word": "consolidate",
+      "pron": "",
+      "meaning": "",
+      "example": "",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-07-30",
+      "level": [],
+      "usageTips": "",
+      "collocations": [],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-30",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
