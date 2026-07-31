@@ -277,6 +277,7 @@ var sOk = 0, sTotal = 0, sStreak = 0, sMaxStreak = 0;
 var phaseMode = 'select';
 var activeFilters = [];
 var selectedScripts = null; // null = all scripts
+var knownScriptIds = null; // 既知のscriptId一覧。新規スクリプトの自動選択判定に使う
 var listSort = {col: 'added', dir: 'desc'};
 var listScriptFilter = '';
 var listStatusFilter = '';
@@ -354,27 +355,61 @@ function markDailyTask(taskKey, doneCount) {
 // ============================================================
 var GH_PROGRESS_PATH = 'data/progress.json';
 
+var progressLoadAttempted = false; // 保存済み設定の読み込みを試みた後にtrue(成功・失敗問わず)
+
 function loadSharedProgress() {
   if (!GH_TOKEN) return;
   var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + GH_PROGRESS_PATH;
   fetch(apiUrl, {headers: {'Authorization': 'Bearer ' + GH_TOKEN}})
     .then(function(r) { return r.ok ? r.json() : null; })
     .then(function(d) {
-      if (!d || !d.content) return;
-      try {
-        var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
-        if (obj.vocabSelectedScripts !== undefined) {
-          selectedScripts = obj.vocabSelectedScripts;
-          if (currentTab === 'study' && phaseMode === 'select' && words.length > 0) renderModeSelect();
-        }
-        if (obj.vocabSettings) {
-          var vs = obj.vocabSettings;
-          if (vs.listSort) listSort = vs.listSort;
-          if (vs.listScriptFilter !== undefined) listScriptFilter = vs.listScriptFilter;
-          if (Array.isArray(vs.activeFilters)) activeFilters = vs.activeFilters;
-        }
-      } catch(e) {}
-    }).catch(function(){});
+      if (d && d.content) {
+        try {
+          var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
+          if (obj.vocabSelectedScripts !== undefined) {
+            selectedScripts = obj.vocabSelectedScripts;
+            if (currentTab === 'study' && phaseMode === 'select' && words.length > 0) renderModeSelect();
+          }
+          if (Array.isArray(obj.vocabKnownScriptIds)) {
+            knownScriptIds = obj.vocabKnownScriptIds;
+          }
+          if (obj.vocabSettings) {
+            var vs = obj.vocabSettings;
+            if (vs.listSort) listSort = vs.listSort;
+            if (vs.listScriptFilter !== undefined) listScriptFilter = vs.listScriptFilter;
+            if (Array.isArray(vs.activeFilters)) activeFilters = vs.activeFilters;
+          }
+        } catch(e) {}
+      }
+      progressLoadAttempted = true;
+      reconcileSelectedScripts();
+    }).catch(function(){ progressLoadAttempted = true; reconcileSelectedScripts(); });
+}
+
+// 新しく追加されたscriptId(単語帳の絞り込みで選ばれたことがないもの)を自動的に選択状態に加える。
+// これをしないと、新しいスクリプトの単語がvocabSelectedScriptsの絞り込みから漏れて、
+// data/vocab.jsonには存在するのに単語帳アプリ上には出てこない、という不具合になる。
+function reconcileSelectedScripts() {
+  // progressLoadAttemptedがfalseのうちに実行すると、まだ読み込んでいない
+  // 保存済みselectedScripts/knownScriptIdsを空/nullで上書き保存してしまう
+  if (!GH_TOKEN || words.length === 0 || !progressLoadAttempted) return;
+  var allIds = words.map(function(w){ return w.scriptId || ''; })
+    .filter(function(v, i, a){ return v && a.indexOf(v) === i; });
+  if (knownScriptIds === null) {
+    // 初回はここまでの全scriptIdを「既知」として記録するだけ(新規追加とはみなさない)
+    knownScriptIds = allIds.slice();
+    saveSelectedScripts();
+    return;
+  }
+  var newIds = allIds.filter(function(id){ return knownScriptIds.indexOf(id) < 0; });
+  if (newIds.length === 0) return;
+  knownScriptIds = knownScriptIds.concat(newIds);
+  if (selectedScripts !== null) {
+    selectedScripts = selectedScripts.concat(newIds);
+  }
+  saveSelectedScripts();
+  showToast('新しいスクリプトの単語を追加しました: ' + newIds.join(', '), true);
+  if (currentTab === 'study' && phaseMode === 'select') renderModeSelect();
 }
 
 function saveSelectedScripts() {
@@ -388,6 +423,7 @@ function saveSelectedScripts() {
         try { existing = JSON.parse(atob(d.content.replace(/\n/g, ''))); } catch(e) {}
       }
       existing.vocabSelectedScripts = selectedScripts;
+      if (knownScriptIds !== null) existing.vocabKnownScriptIds = knownScriptIds;
       var encoded = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
       return fetch(apiUrl, {
         method: 'PUT',
@@ -512,6 +548,7 @@ function loadVocab() {
       });
       showToast('✓ ' + words.length + '単語を読み込みました', true);
       if (GH_TOKEN && getDue().length === 0) markDailyTask('vocab', 0);
+      reconcileSelectedScripts();
       renderTab(currentTab);
     })
     .catch(function(){
@@ -1211,9 +1248,17 @@ async function submitAddWord() {
   btn.disabled = true;
 
   var pron = '', level = [], usageTips = '', collocations = [];
+  var needsAI = !meaningVal || !exampleVal;
 
-  if ((!meaningVal || !exampleVal) && GEM_KEY) {
+  if (needsAI && !GEM_KEY) {
+    btn.disabled = false;
+    st.innerHTML = '<span style="color:var(--red)">⚠️ 意味・例文が未入力で、GeminiキーもURLにありません。手動で入力するか、URLに<code style="background:var(--bg3);padding:1px 4px;border-radius:4px">&k=キー</code>を追加してアクセスし直してください。</span>';
+    return;
+  }
+
+  if (needsAI) {
     st.textContent = '⏳ AIが情報を生成中...';
+    var aiOk = false;
     try {
       var prompt = '以下の英単語/熟語についてビジネス英語学習者向けの情報をJSONのみで返してください。説明文は不要です。\n'
         + '単語: ' + wordVal + '\n\n'
@@ -1233,8 +1278,15 @@ async function submitAddWord() {
         usageTips = parsed.usageTips || '';
         collocations = Array.isArray(parsed.collocations) ? parsed.collocations : [];
         console.log('[AddWord] parsed:', {meaningVal, exampleVal, pron, level});
+        aiOk = !!(meaningVal && exampleVal);
       }
     } catch(e) { console.error('[AddWord] Gemini error:', e); }
+
+    if (!aiOk) {
+      btn.disabled = false;
+      st.innerHTML = '<span style="color:var(--red)">⚠️ AIによる自動生成に失敗しました。もう一度試すか、意味・例文を手動で入力してください。</span>';
+      return;
+    }
     st.textContent = '';
   }
 

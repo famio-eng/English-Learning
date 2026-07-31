@@ -1410,15 +1410,23 @@
     {
       "id": "w052",
       "word": "consolidate",
-      "pron": "",
-      "meaning": "",
-      "example": "",
+      "pron": "/kənˈsɒlɪdeɪt/",
+      "meaning": "統合する・一つにまとめる",
+      "example": "We're planning to consolidate the two teams into a single department.",
       "source": "",
       "scriptId": "custom",
       "added": "2026-07-30",
-      "level": [],
-      "usageTips": "",
-      "collocations": [],
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "複数のもの(組織・データ・プロセスなど)を一つにまとめる文脈でよく使う。consolidate A into B(AをBに統合する)の形も頻出。",
+      "collocations": [
+        "consolidate resources",
+        "consolidate teams",
+        "consolidate data",
+        "consolidate power"
+      ],
       "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-07-30",

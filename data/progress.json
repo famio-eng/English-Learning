@@ -43,7 +43,17 @@
     "short",
     "sop-status-report",
     "pentest-alignment",
-    "510k-readiness"
+    "510k-readiness",
+    "launch-status-update"
+  ],
+  "vocabKnownScriptIds": [
+    "short",
+    "casual",
+    "formal",
+    "sop-status-report",
+    "pentest-alignment",
+    "510k-readiness",
+    "launch-status-update"
   ],
   "dailyTasks": {
     "2026-05-30": {
