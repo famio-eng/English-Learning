@@ -756,7 +756,7 @@ async function callGeminiWithFallback(payload) {
 
 function callGemini(parts) {
   if (!GEM_KEY) return Promise.resolve(null);
-  var payload = { contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096 } };
+  var payload = { contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096, thinkingConfig: { thinkingBudget: 0 } } };
   return callGeminiWithFallback(payload).then(function(result) {
     var _httpStatus = result.status;
     console.log('[Dialogue] Gemini model used:', result.model);

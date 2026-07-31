@@ -1157,7 +1157,7 @@ function callGeminiDash(parts) {
   if (!GEM_KEY) return Promise.resolve(null);
   var payload = {
     contents: [{ parts: parts }],
-    generationConfig: { temperature: 0.4, maxOutputTokens: 2048 }
+    generationConfig: { temperature: 0.4, maxOutputTokens: 2048, thinkingConfig: { thinkingBudget: 0 } }
   };
   return callGeminiWithFallback(payload).then(function(result) {
     console.log('[Dashboard] Gemini model used:', result.model);
@@ -1776,7 +1776,7 @@ function analyzeOneFile(fileInfo, retryCount) {
     console.log('[Gemini送信]', fileInfo.name, '| mime:', mimeType, '| b64 length:', b64.length);
     var _payload = {
       contents: [{parts:[{text:prompt},{inlineData:{mimeType:mimeType, data:b64}}]}],
-      generationConfig: {temperature:0.3, maxOutputTokens:4096}
+      generationConfig: {temperature:0.3, maxOutputTokens:4096, thinkingConfig: {thinkingBudget: 0}}
     };
     return callGeminiWithFallback(_payload).then(function(result) {
       var d = result.data;
