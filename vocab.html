@@ -1226,7 +1226,7 @@ function closeAddWordModal() {
 }
 
 async function callGeminiWithFallback(payload) {
-  var models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+  var models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-3.5-flash'];
   var base = 'https://generativelanguage.googleapis.com/v1beta/models/';
   function wait(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
   for (var i = 0; i < models.length; i++) {
@@ -1236,12 +1236,15 @@ async function callGeminiWithFallback(payload) {
       var d = await r.json();
       var shouldFallback = false;
       if (r.status === 429 || r.status === 503) shouldFallback = true;
+      if (r.status === 404) shouldFallback = true;
       if (d.error) {
         var code = d.error.code;
         var msg = (d.error.message || '').toLowerCase();
-        if (code === 429 || code === 503 ||
+        if (code === 429 || code === 503 || code === 404 ||
             msg.indexOf('quota') >= 0 || msg.indexOf('resource_exhausted') >= 0 ||
-            msg.indexOf('unavailable') >= 0 || msg.indexOf('overloaded') >= 0) shouldFallback = true;
+            msg.indexOf('unavailable') >= 0 || msg.indexOf('overloaded') >= 0 ||
+            msg.indexOf('not found') >= 0 || msg.indexOf('not supported') >= 0 ||
+            msg.indexOf('deprecated') >= 0) shouldFallback = true;
       }
       if (shouldFallback) { console.log('[Gemini] '+models[i]+' unavailable, waiting 2s...'); await wait(2000); continue; }
       console.log('[Gemini] success: '+models[i]);

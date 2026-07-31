@@ -716,8 +716,8 @@ function retrySession() {
 async function callGeminiWithFallback(payload) {
   var models = [
     'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite'
+    'gemini-2.5-flash-lite',
+    'gemini-3.5-flash'
   ];
   var baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
   for (var i = 0; i < models.length; i++) {
@@ -729,9 +729,18 @@ async function callGeminiWithFallback(payload) {
         body: JSON.stringify(payload)
       });
       var data = await res.json();
-      var isRateLimit = res.status === 429 || (data.error && data.error.code === 429);
-      if (isRateLimit) {
-        console.log(models[i] + ' 429 rate limited, trying: ' + (models[i + 1] || 'no more models'));
+      var shouldFallback = res.status === 429 || res.status === 503 || res.status === 404;
+      if (data.error) {
+        var errCode = data.error.code;
+        var errMsg = (data.error.message || '').toLowerCase();
+        if (errCode === 429 || errCode === 503 || errCode === 404 ||
+            errMsg.indexOf('quota') >= 0 || errMsg.indexOf('resource_exhausted') >= 0 ||
+            errMsg.indexOf('unavailable') >= 0 || errMsg.indexOf('overloaded') >= 0 ||
+            errMsg.indexOf('not found') >= 0 || errMsg.indexOf('not supported') >= 0 ||
+            errMsg.indexOf('deprecated') >= 0) shouldFallback = true;
+      }
+      if (shouldFallback) {
+        console.log(models[i] + ' unavailable, trying: ' + (models[i + 1] || 'no more models'));
         continue;
       }
       console.log('[Dialogue] Gemini success with model: ' + models[i]);
