@@ -1181,6 +1181,7 @@
         "TOEIC800",
         "大学受験"
       ],
+      "otherMeanings": [],
       "usageTips": "significantly / considerably とほぼ同義だが、規制・法律文書でより多用される格式表現。510k申請の「substantially equivalent（実質的に同等）」は最重要フレーズ。",
       "collocations": [
         "substantially equivalent",
@@ -1188,7 +1189,6 @@
         "substantially comply",
         "substantially similar"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-06-25",
       "reviewCount": 0,
@@ -1209,6 +1209,7 @@
         "ビジネス英語",
         "TOEIC900+"
       ],
+      "otherMeanings": [],
       "usageTips": "既存のものを技術などで「拡張・増強する」文脈で使われます。",
       "collocations": [
         "augmented reality (AR)",
@@ -1217,7 +1218,6 @@
         "augmented workforce",
         "augmented experience"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-06-25",
       "reviewCount": 0,
@@ -1238,18 +1238,18 @@
         "ビジネス英語",
         "TOEIC750"
       ],
+      "otherMeanings": [],
       "usageTips": "プロジェクトなどが完了に近づいている状態を表す。home stretchとほぼ同義。",
       "collocations": [
         "in the final stretch of",
         "final stretch"
       ],
-      "otherMeanings": [],
-      "interval": 1,
-      "nextReview": "2026-07-26",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-08-01",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-07-31"
     },
     {
       "id": "w046",
@@ -1264,16 +1264,16 @@
         "ビジネス英語",
         "TOEIC750"
       ],
+      "otherMeanings": [],
       "usageTips": "製品や仕様の変更を正式な手順で管理するプロセス。規制対応の文脈でよく使われる。",
       "collocations": [
         "change control process",
         "change management process"
       ],
-      "otherMeanings": [],
-      "interval": 1,
-      "nextReview": "2026-07-26",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-08-02",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1290,16 +1290,16 @@
         "ビジネス英語",
         "TOEIC750"
       ],
+      "otherMeanings": [],
       "usageTips": "業務やタスクを別の担当・チームに引き渡す時に使う。hand overとほぼ同義。",
       "collocations": [
         "hand off to",
         "hand over to"
       ],
-      "otherMeanings": [],
-      "interval": 1,
-      "nextReview": "2026-07-26",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 1.7600000000000002,
+      "nextReview": "2026-08-02",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1316,18 +1316,18 @@
         "ビジネス英語",
         "TOEIC750"
       ],
+      "otherMeanings": [],
       "usageTips": "プロジェクト管理でタスクや案件を正式に完了させる時によく使う。",
       "collocations": [
         "close out an item",
         "close out a task"
       ],
-      "otherMeanings": [],
-      "interval": 1,
-      "nextReview": "2026-07-26",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-08-01",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-07-31"
     },
     {
       "id": "w049",
@@ -1342,18 +1342,18 @@
         "ビジネス英語",
         "TOEIC750"
       ],
+      "otherMeanings": [],
       "usageTips": "問い合わせやトラブルなどが途切れず次々と来る状況を表す定番表現。",
       "collocations": [
         "a steady stream of requests",
         "a steady stream of issues"
       ],
-      "otherMeanings": [],
-      "interval": 1,
-      "nextReview": "2026-07-26",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-08-01",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-07-31"
     },
     {
       "id": "w050",
@@ -1368,18 +1368,18 @@
         "ビジネス英語",
         "TOEIC750"
       ],
+      "otherMeanings": [],
       "usageTips": "文字通りは「火を消す」。転じて緊急の小さいトラブル対応に追われる様子を表すビジネス頻出イディオム。",
       "collocations": [
         "putting out fires",
         "spend the day putting out fires"
       ],
-      "otherMeanings": [],
-      "interval": 1,
-      "nextReview": "2026-07-26",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-08-01",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-07-31"
     },
     {
       "id": "w051",
@@ -1394,18 +1394,18 @@
         "ビジネス英語",
         "TOEIC750"
       ],
+      "otherMeanings": [],
       "usageTips": "競馬の最終直線が語源。プロジェクトなどの終盤・仕上げの段階を表す。",
       "collocations": [
         "in the home stretch",
         "the home stretch"
       ],
-      "otherMeanings": [],
-      "interval": 1,
-      "nextReview": "2026-07-26",
-      "reviewCount": 0,
+      "interval": 0.48,
+      "nextReview": "2026-08-01",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-07-31"
     },
     {
       "id": "w052",
@@ -1420,6 +1420,7 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "複数のもの(組織・データ・プロセスなど)を一つにまとめる文脈でよく使う。consolidate A into B(AをBに統合する)の形も頻出。",
       "collocations": [
         "consolidate resources",
@@ -1427,7 +1428,6 @@
         "consolidate data",
         "consolidate power"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-07-30",
       "reviewCount": 0,
@@ -1449,6 +1449,7 @@
         "TOEIC800",
         "TOEIC900+"
       ],
+      "otherMeanings": [],
       "usageTips": "契約書や公式文書で、曖昧さなく特定の条件や指示を伝える際に使われます。",
       "collocations": [
         "expressly states",
@@ -1456,7 +1457,6 @@
         "expressly provides",
         "expressly agreed"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-07-31",
       "reviewCount": 0,
@@ -1477,6 +1477,7 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "需要や関心、勢いなどが徐々に減少する様子を表す際に使います。",
       "collocations": [
         "interest waned",
@@ -1485,7 +1486,6 @@
         "power waned",
         "support waned"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-07-31",
       "reviewCount": 0,
