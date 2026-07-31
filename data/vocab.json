@@ -1463,6 +1463,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w054",
+      "word": "waned",
+      "pron": "/weɪnd/",
+      "meaning": "衰える、減少する",
+      "example": "Customer interest in the legacy product waned significantly after the launch of the new version.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-07-31",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "需要や関心、勢いなどが徐々に減少する様子を表す際に使います。",
+      "collocations": [
+        "interest waned",
+        "demand waned",
+        "enthusiasm waned",
+        "power waned",
+        "support waned"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-31",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
