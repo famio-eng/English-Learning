@@ -286,7 +286,20 @@ var synth = window.speechSynthesis;
 // All defined level categories (determines mode-select display order)
 var ALL_LEVELS = ['中学英語','高校英語','大学受験','TOEIC600','TOEIC800','TOEIC900+','ネイティブ日常','ビジネス英語'];
 var HARD_LEVELS = ['TOEIC900+','ビジネス英語'];
+// 既知スクリプトのフォールバック名。新しいスクリプトはrebuildScriptTitles()でwords[].sourceから自動追加される
 var SCRIPT_TITLES = {short:'自己紹介 ショート版', casual:'自己紹介 カジュアル版', formal:'自己紹介 フォーマル版', 'sop-status-report':'SOP対応課題の状況報告', 'pentest-alignment':'ペネトレーションテスト方針の確認', '510k-readiness':'510k申請に向けた準備状況の確認'};
+
+// data/vocab.json の各単語が持つsource(スクリプトの日本語タイトル)から、
+// ハードコードを介さず動的にSCRIPT_TITLESを最新化する。これをしないと、
+// 新しいスクリプトを追加してもここが更新されず、単語帳の「復習対象スクリプト選択」
+// 等に新スクリプトの単語が出てこない不具合になる。
+function rebuildScriptTitles() {
+  words.forEach(function(w) {
+    if (w.scriptId && w.scriptId !== 'custom' && w.source) {
+      SCRIPT_TITLES[w.scriptId] = w.source;
+    }
+  });
+}
 
 // ============================================================
 // LOCAL STORAGE
@@ -546,6 +559,7 @@ function loadVocab() {
           missCount:   p.missCount   !== undefined ? p.missCount   : (w.missCount||0),
           lastMissed:  p.lastMissed  || w.lastMissed || ''};
       });
+      rebuildScriptTitles();
       showToast('✓ ' + words.length + '単語を読み込みました', true);
       if (GH_TOKEN && getDue().length === 0) markDailyTask('vocab', 0);
       reconcileSelectedScripts();
@@ -672,7 +686,7 @@ function renderModeSelect() {
   var dueCount = getDue().length;
 
   // Script cards
-  var scriptCards = ['short','casual','formal','sop-status-report','pentest-alignment'].map(function(sid){
+  var scriptCards = Object.keys(SCRIPT_TITLES).map(function(sid){
     var cnt = words.filter(function(w){ return w.scriptId === sid; }).length;
     if (cnt === 0) return '';
     var dueCnt = getDue().filter(function(w){ return w.scriptId === sid; }).length;
