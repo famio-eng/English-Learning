@@ -651,7 +651,7 @@ function loadScriptProgress() {
     .then(function(d) {
       if (!d || !d.content) return;
       try {
-        var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
+        var obj = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g, '')))));
         scriptProgress = obj.scriptProgress || {};
         if (obj.shadowSettings) {
           var ss = obj.shadowSettings;

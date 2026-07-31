@@ -378,7 +378,7 @@ function loadSharedProgress() {
     .then(function(d) {
       if (d && d.content) {
         try {
-          var obj = JSON.parse(atob(d.content.replace(/\n/g, '')));
+          var obj = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g, '')))));
           if (obj.vocabSelectedScripts !== undefined) {
             selectedScripts = obj.vocabSelectedScripts;
             if (currentTab === 'study' && phaseMode === 'select' && words.length > 0) renderModeSelect();
@@ -433,7 +433,7 @@ function saveSelectedScripts() {
     .then(function(d) {
       var existing = {};
       if (d && d.content) {
-        try { existing = JSON.parse(atob(d.content.replace(/\n/g, ''))); } catch(e) {}
+        try { existing = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g, ''))))); } catch(e) {}
       }
       existing.vocabSelectedScripts = selectedScripts;
       if (knownScriptIds !== null) existing.vocabKnownScriptIds = knownScriptIds;
@@ -459,7 +459,7 @@ function saveVocabSettings() {
     .then(function(d) {
       var existing = {};
       if (d && d.content) {
-        try { existing = JSON.parse(atob(d.content.replace(/\n/g, ''))); } catch(e) {}
+        try { existing = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g, ''))))); } catch(e) {}
       }
       existing.vocabSettings = {
         listSort: listSort,
