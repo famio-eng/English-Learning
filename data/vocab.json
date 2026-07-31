@@ -1434,6 +1434,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w053",
+      "word": "expressly",
+      "pron": "/ɪkˈspresli/",
+      "meaning": "明確に、はっきりと",
+      "example": "The contract expressly states that any changes must be approved in writing by both parties.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-07-31",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800",
+        "TOEIC900+"
+      ],
+      "usageTips": "契約書や公式文書で、曖昧さなく特定の条件や指示を伝える際に使われます。",
+      "collocations": [
+        "expressly states",
+        "expressly prohibits",
+        "expressly provides",
+        "expressly agreed"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-07-31",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
