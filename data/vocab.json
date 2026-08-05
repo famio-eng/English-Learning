@@ -1492,6 +1492,33 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w055",
+      "word": "take over",
+      "pron": "/teɪk ˈoʊvər/",
+      "meaning": "買収する、引き継ぐ",
+      "example": "Our company is planning to take over a smaller competitor to expand our market share.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-05",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "企業買収や事業の引き継ぎなど、責任や管理が移る状況で使われます。",
+      "collocations": [
+        "take over a company",
+        "take over the management",
+        "take over operations"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-05",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
