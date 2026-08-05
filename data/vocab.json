@@ -1519,6 +1519,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w056",
+      "word": "hand over",
+      "pron": "/hænd ˈoʊvər/",
+      "meaning": "引き継ぐ、譲渡する",
+      "example": "I need to hand over my responsibilities to the new project manager before I go on leave.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-05",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "職務や責任、物理的なものを他者に渡す際に使います。",
+      "collocations": [
+        "hand over responsibilities",
+        "hand over a project",
+        "hand over the reins",
+        "hand over documents"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-05",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
