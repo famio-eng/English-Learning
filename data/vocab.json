@@ -1547,6 +1547,33 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w057",
+      "word": "DDF",
+      "pron": "/ˌdiː diː ˈɛf/",
+      "meaning": "Device Developing File：設計・開発ファイル",
+      "example": "Our team is developing a DDF to automate the analysis of customer feedback.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-07",
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
+      "usageTips": "主にITやデータ分析の文脈で使われる略語です。",
+      "collocations": [
+        "DDF implementation",
+        "DDF architecture",
+        "DDF development"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
