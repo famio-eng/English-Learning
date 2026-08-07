@@ -1574,6 +1574,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w058",
+      "word": "MDF",
+      "pron": "/ˌem.diːˈef/",
+      "meaning": "Medical Device File：医療機器ファイル　※DHRの名称変更",
+      "example": "The furniture is made from high-quality MDF with a durable laminate finish.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-07",
+      "level": [
+        "ビジネス英語"
+      ],
+      "usageTips": "建築、家具、製造業の文脈でよく使われます。",
+      "collocations": [
+        "MDF board",
+        "MDF panel",
+        "laminated MDF",
+        "painted MDF",
+        "MDF core"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
