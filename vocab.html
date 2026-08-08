@@ -1186,6 +1186,20 @@ function showWordDetail(id) {
     return '<span class="modal-badge">'+escHtml(l)+'</span>';
   }).join('');
 
+  // 空欄項目を可視化する（AI補完の取りこぼしに気づけるように）
+  var missing = [];
+  if (!w.pron) missing.push('発音記号');
+  if (!w.meaning) missing.push('意味');
+  if (!w.example) missing.push('例文');
+  if (!(w.level||[]).length) missing.push('難易度');
+  if (!w.usageTips) missing.push('使い方のコツ');
+  if (!(w.collocations||[]).length) missing.push('よく使う表現');
+  var missingHtml = missing.length
+    ? '<div class="modal-section" style="border-left:3px solid var(--amber);padding-left:10px">'
+      + '<div class="modal-section-label" style="color:var(--amber)">⚠️ 未入力の項目</div>'
+      + '<div class="modal-section-body">'+escHtml(missing.join('、'))+'</div></div>'
+    : '';
+
   document.getElementById('modalTitle').textContent = w.word || '';
   document.getElementById('modalBody').innerHTML =
     '<div class="modal-pron">'+escHtml(w.pron||'')+'</div>'
@@ -1195,13 +1209,210 @@ function showWordDetail(id) {
     + '<button class="modal-speak-btn" onclick="speakWord(\''+wesc+'\')">🔊 発音を聞く</button>'
     + (w.usageTips ? '<div class="modal-section"><div class="modal-section-label">💡 使い方のコツ</div><div class="modal-section-body">'+escHtml(w.usageTips)+'</div></div>' : '')
     + (w.otherMeanings && w.otherMeanings.length > 0 ? '<div class="modal-section"><div class="modal-section-label">📖 他の意味</div><div class="modal-section-body">'+escHtml(w.otherMeanings.join(' / '))+'</div></div>' : '')
-    + (w.collocations && w.collocations.length > 0 ? '<div class="modal-section"><div class="modal-section-label">🔗 よく使う表現</div><div class="modal-section-body">'+escHtml(w.collocations.join('　/　'))+'</div></div>' : '');
+    + (w.collocations && w.collocations.length > 0 ? '<div class="modal-section"><div class="modal-section-label">🔗 よく使う表現</div><div class="modal-section-body">'+escHtml(w.collocations.join('　/　'))+'</div></div>' : '')
+    + missingHtml
+    + '<div id="wd-status" style="font-size:13px;color:var(--text2);min-height:18px;margin-top:10px"></div>'
+    + '<div style="display:flex;gap:8px;margin-top:6px">'
+    + '<button class="btn btn-secondary" style="flex:1;font-size:14px" onclick="openWordEdit(\''+w.id+'\')">✏️ 編集する</button>'
+    + '<button class="btn btn-secondary" style="flex:1;font-size:14px" id="wd-reai" onclick="reAnalyzeWord(\''+w.id+'\')">🤖 AI解析をやり直す</button>'
+    + '</div>';
 
   document.getElementById('wordModal').style.display = 'flex';
 }
 
 function closeWordDetail() {
   document.getElementById('wordModal').style.display = 'none';
+}
+
+// ============================================================
+// WORD EDIT
+// ============================================================
+function _fld(label, id, val, ph, hint) {
+  return '<div style="margin-bottom:12px">'
+    + '<div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px">'+label
+    + (hint ? '<span style="font-weight:400;color:var(--text3)"> — '+hint+'</span>' : '')+'</div>'
+    + '<input id="'+id+'" type="text" value="'+escHtml(val||'')+'" placeholder="'+escHtml(ph||'')+'"'
+    + ' style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:15px;color:var(--text);outline:none">'
+    + '</div>';
+}
+
+function openWordEdit(id) {
+  var w = words.find(function(x){ return x.id === id; });
+  if (!w) return;
+  document.getElementById('modalTitle').textContent = '✏️ ' + (w.word || '');
+  document.getElementById('modalBody').innerHTML =
+    _fld('単語・熟語 <span style="color:var(--red)">*</span>', 'we-word', w.word, '例: align on')
+    + _fld('発音記号', 'we-pron', w.pron, '例: /əˈlaɪn ɒn/')
+    + _fld('意味（日本語）', 'we-meaning', w.meaning, '例: ～について合意する')
+    + _fld('例文（英語）', 'we-example', w.example, '例: We need to align on the scope.')
+    + _fld('難易度', 'we-level', (w.level||[]).join(', '), '例: ビジネス英語, TOEIC800', 'カンマ区切り')
+    + _fld('使い方のコツ', 'we-usageTips', w.usageTips, '例: 会議で認識を合わせる際に使う。')
+    + _fld('よく使う表現', 'we-collocations', (w.collocations||[]).join(', '), '例: align on the scope', 'カンマ区切り')
+    + _fld('他の意味', 'we-otherMeanings', (w.otherMeanings||[]).join(', '), '', 'カンマ区切り')
+    + _fld('スクリプト名/出典', 'we-source', w.source, '例: 510k申請に向けた準備状況の確認')
+    + '<div id="we-status" style="font-size:13px;color:var(--text2);min-height:18px;margin-bottom:6px"></div>'
+    + '<div style="display:flex;gap:8px">'
+    + '<button class="btn btn-secondary" style="flex:1;font-size:14px" onclick="showWordDetail(\''+w.id+'\')">キャンセル</button>'
+    + '<button class="btn btn-primary" style="flex:1;font-size:14px" id="we-save" onclick="saveWordEdit(\''+w.id+'\')">保存する</button>'
+    + '</div>';
+}
+
+function _splitList(v) {
+  return (v||'').split(/[,、]/).map(function(s){ return s.trim(); }).filter(function(s){ return s; });
+}
+
+async function saveWordEdit(id) {
+  var w = words.find(function(x){ return x.id === id; });
+  if (!w) return;
+  var st = document.getElementById('we-status');
+  var btn = document.getElementById('we-save');
+  var newWordVal = (document.getElementById('we-word').value || '').trim();
+  if (!newWordVal) { st.innerHTML = '<span style="color:var(--red)">単語を入力してください</span>'; return; }
+
+  var patch = {
+    word: newWordVal,
+    pron: (document.getElementById('we-pron').value || '').trim(),
+    meaning: (document.getElementById('we-meaning').value || '').trim(),
+    example: (document.getElementById('we-example').value || '').trim(),
+    level: _splitList(document.getElementById('we-level').value),
+    usageTips: (document.getElementById('we-usageTips').value || '').trim(),
+    collocations: _splitList(document.getElementById('we-collocations').value),
+    otherMeanings: _splitList(document.getElementById('we-otherMeanings').value),
+    source: (document.getElementById('we-source').value || '').trim()
+  };
+
+  btn.disabled = true;
+  st.textContent = '⏳ 保存中...';
+  var ok = await persistWordPatch(id, patch, st);
+  btn.disabled = false;
+  if (ok) {
+    showToast('「'+patch.word+'」を更新しました', true);
+    showWordDetail(id);
+    if (currentTab === 'list') renderList();
+    else if (currentTab === 'stats') renderStats();
+  }
+}
+
+// ローカルのwordsとGitHub上のvocab.jsonの両方に変更を反映する。
+// GitHub側は「読み込む→該当単語だけ差し替える→書き戻す」方式にして、
+// 他端末で並行して更新された他の単語を巻き戻さないようにしている。
+async function persistWordPatch(id, patch, st) {
+  var w = words.find(function(x){ return x.id === id; });
+  if (!w) return false;
+
+  if (!GH_TOKEN) {
+    Object.keys(patch).forEach(function(k){ w[k] = patch[k]; });
+    if (patch.source !== undefined && patch.source) w.scriptId = w.scriptId || 'custom';
+    if (st) st.innerHTML = '<span style="color:var(--amber)">✓ 反映しました（GitHubへの保存にはトークンが必要です）</span>';
+    return true;
+  }
+
+  var apiUrl = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/data/vocab.json';
+  try {
+    var ghResp = await fetch(apiUrl, {headers:{'Authorization':'Bearer '+GH_TOKEN}});
+    if (!ghResp.ok) throw new Error('vocab.json取得失敗 HTTP ' + ghResp.status);
+    var ghData = await ghResp.json();
+    var existing = [];
+    try { existing = JSON.parse(decodeURIComponent(escape(atob(ghData.content.replace(/\n/g,''))))).words || []; }
+    catch(e) { throw new Error('vocab.jsonの解析に失敗しました'); }
+
+    var target = existing.find(function(x){ return x.id === id; });
+    if (!target) throw new Error('GitHub上に該当単語(' + id + ')が見つかりません');
+    Object.keys(patch).forEach(function(k){ target[k] = patch[k]; });
+
+    var encoded = btoa(unescape(encodeURIComponent(JSON.stringify({words: existing}, null, 2))));
+    var putResp = await fetch(apiUrl, {method:'PUT',
+      headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json'},
+      body: JSON.stringify({message:'✏️ 単語更新: '+(patch.word||w.word), content:encoded, sha:ghData.sha})
+    });
+    if (!putResp.ok) throw new Error('保存失敗 HTTP ' + putResp.status);
+
+    Object.keys(patch).forEach(function(k){ w[k] = patch[k]; });
+    if (st) st.textContent = '';
+    return true;
+  } catch(e) {
+    if (st) st.innerHTML = '<span style="color:var(--red)">⚠️ ' + escHtml(e.message || '保存エラー') + '</span>';
+    return false;
+  }
+}
+
+// 登録済み単語のAI解析やり直し。空欄の項目だけを埋め、
+// 手動で入力・修正済みの項目は上書きしない。
+async function reAnalyzeWord(id) {
+  var w = words.find(function(x){ return x.id === id; });
+  if (!w) return;
+  var st = document.getElementById('wd-status');
+  var btn = document.getElementById('wd-reai');
+
+  if (!GEM_KEY) {
+    st.innerHTML = '<span style="color:var(--red)">⚠️ GeminiキーがURLにありません。URLに <code style="background:var(--bg3);padding:1px 4px;border-radius:4px">&k=キー</code> を追加してアクセスし直してください。</span>';
+    return;
+  }
+
+  var blanks = [];
+  if (!w.pron) blanks.push('pron');
+  if (!w.meaning) blanks.push('meaning');
+  if (!w.example) blanks.push('example');
+  if (!(w.level||[]).length) blanks.push('level');
+  if (!w.usageTips) blanks.push('usageTips');
+  if (!(w.collocations||[]).length) blanks.push('collocations');
+  if (blanks.length === 0) {
+    st.innerHTML = '<span style="color:var(--text2)">すべての項目が入力済みです。内容を変えたい場合は「編集する」から修正してください。</span>';
+    return;
+  }
+
+  btn.disabled = true;
+  st.textContent = '⏳ AIが情報を生成中...';
+  var errDetail = '';
+  try {
+    var prompt = '以下の英単語/熟語についてビジネス英語学習者向けの情報をJSONのみで返してください。説明文は不要です。\n'
+      + '単語: ' + w.word + '\n\n'
+      + '{"pron":"IPA発音記号","meaning":"日本語の意味（簡潔に）","example":"ビジネスシーンでの英語例文","level":["難易度カテゴリ（ビジネス英語/TOEIC800/TOEIC900+/医療等）"],"usageTips":"使い方のコツ（日本語1文）","collocations":["よく使う表現1","よく使う表現2"]}';
+    var payload = {contents:[{parts:[{text: prompt}]}], generationConfig:{temperature:0.3, maxOutputTokens:1024, thinkingConfig:{thinkingBudget:0}}};
+    var result = await callGeminiWithFallback(payload);
+    if (result.data.error) {
+      errDetail = 'HTTP ' + result.status + ' / model: ' + result.model + '\n' + JSON.stringify(result.data.error).substring(0, 300);
+    } else {
+      var cand = (result.data.candidates || [])[0];
+      var txt = cand ? (((cand.content || {}).parts || [])[0] || {}).text || '' : '';
+      var m = txt.match(/\{[\s\S]*\}/);
+      if (!m) {
+        errDetail = 'model: ' + result.model + ' / JSON抽出失敗、生レスポンス:\n' + txt.substring(0, 300)
+          + (cand && cand.finishReason ? '\nfinishReason: ' + cand.finishReason : '');
+      } else {
+        var p = JSON.parse(m[0]);
+        var patch = {}, filled = [];
+        if (blanks.indexOf('pron') >= 0 && p.pron) { patch.pron = p.pron; filled.push('発音記号'); }
+        if (blanks.indexOf('meaning') >= 0 && p.meaning) { patch.meaning = p.meaning; filled.push('意味'); }
+        if (blanks.indexOf('example') >= 0 && p.example) { patch.example = p.example; filled.push('例文'); }
+        if (blanks.indexOf('level') >= 0 && Array.isArray(p.level) && p.level.length) { patch.level = p.level; filled.push('難易度'); }
+        if (blanks.indexOf('usageTips') >= 0 && p.usageTips) { patch.usageTips = p.usageTips; filled.push('使い方のコツ'); }
+        if (blanks.indexOf('collocations') >= 0 && Array.isArray(p.collocations) && p.collocations.length) { patch.collocations = p.collocations; filled.push('よく使う表現'); }
+
+        if (filled.length === 0) {
+          errDetail = 'model: ' + result.model + ' / 応答は取得できたが、空欄を埋められる内容がありませんでした\n' + txt.substring(0, 300);
+        } else {
+          st.textContent = '⏳ 保存中...';
+          var ok = await persistWordPatch(id, patch, st);
+          btn.disabled = false;
+          if (ok) {
+            showToast(filled.join('・') + ' を補完しました', true);
+            showWordDetail(id);
+            if (currentTab === 'list') renderList();
+            else if (currentTab === 'stats') renderStats();
+          }
+          return;
+        }
+      }
+    }
+  } catch(e) {
+    console.error('[ReAnalyze] error:', e);
+    errDetail = e.message || String(e);
+  }
+
+  btn.disabled = false;
+  st.innerHTML = '<span style="color:var(--red)">⚠️ AIによる自動生成に失敗しました。もう一度試すか、「編集する」から手動で入力してください。</span>'
+    + (errDetail ? '<pre style="font-size:10px;color:var(--text3);background:var(--bg3);padding:6px;border-radius:4px;white-space:pre-wrap;word-break:break-all;margin-top:6px">' + escHtml(errDetail) + '</pre>' : '');
 }
 
 // ============================================================
