@@ -1659,6 +1659,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w061",
+      "word": "preliminary",
+      "pron": "/prɪˈlɪmɪnəri/",
+      "meaning": "予備の、事前の",
+      "example": "We need to conduct a preliminary analysis of the market before making a final decision.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-13",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "「最終的なもの」の前に来る「準備段階」や「試行段階」のものを指す際に使います。",
+      "collocations": [
+        "preliminary report",
+        "preliminary findings",
+        "preliminary discussion",
+        "preliminary assessment"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-13",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
