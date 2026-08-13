@@ -1602,6 +1602,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w059",
+      "word": "identical",
+      "pron": "/aɪˈdɛntɪkəl/",
+      "meaning": "全く同じ、同一の",
+      "example": "The two proposals are almost identical in their core objectives, but differ in implementation details.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-13",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "「全く同じ」という強い意味合いで使われます。",
+      "collocations": [
+        "identical to",
+        "virtually identical",
+        "almost identical",
+        "identical features"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-13",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
