@@ -1630,6 +1630,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w060",
+      "word": "underlying",
+      "pron": "/ˌʌndərˈlaɪɪŋ/",
+      "meaning": "根本的な、基礎となる",
+      "example": "We need to address the underlying issues causing the decline in sales.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-13",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "問題や原因の根源を指す際によく使われます。",
+      "collocations": [
+        "underlying cause",
+        "underlying problem",
+        "underlying principle",
+        "underlying assumption",
+        "underlying trend"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-13",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
