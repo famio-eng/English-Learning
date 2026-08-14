@@ -135,5 +135,13 @@
     "pickSort": "desc",
     "rate": 0.7,
     "showBreath": true
+  },
+  "vocabSettings": {
+    "listSort": {
+      "col": "streak",
+      "dir": "asc"
+    },
+    "listScriptFilter": "",
+    "activeFilters": []
   }
 }
