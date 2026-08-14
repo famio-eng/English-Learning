@@ -138,7 +138,7 @@
   },
   "vocabSettings": {
     "listSort": {
-      "col": "streak",
+      "col": "added",
       "dir": "asc"
     },
     "listScriptFilter": "",
