@@ -139,7 +139,7 @@
   "vocabSettings": {
     "listSort": {
       "col": "added",
-      "dir": "asc"
+      "dir": "desc"
     },
     "listScriptFilter": "",
     "activeFilters": []
