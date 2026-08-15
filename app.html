@@ -66,7 +66,11 @@
   html,body{margin:0;padding:0;background:var(--color-bg);color:var(--color-text);
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;
     -webkit-font-smoothing:antialiased;height:100%}
-  #root{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;max-width:560px;margin:0 auto;position:relative}
+  /* height (not min-height): #root must be capped to the viewport, or its flex children's
+     overflow:auto never gets a bounded box to scroll within — tall content just grows the
+     whole page instead, dragging the bottom nav and any "always visible" footer along with
+     it. */
+  #root{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:560px;margin:0 auto;position:relative}
   a{color:var(--color-accent-300);text-decoration:none}
   button{font-family:inherit}
   ::-webkit-scrollbar{width:0;height:0}
@@ -109,7 +113,7 @@
   .onb-option{justify-content:flex-start;text-align:left;width:100%}
 
   /* app shell */
-  #app{display:none;flex:1;flex-direction:column;min-height:100vh;min-height:100dvh}
+  #app{display:none;flex:1;min-height:0;flex-direction:column}
   #app.active{display:flex}
   .tab-panel{display:none;flex:1;overflow:auto;padding:20px 20px 100px;box-sizing:border-box;flex-direction:column;gap:16px}
   .tab-panel.active{display:flex}

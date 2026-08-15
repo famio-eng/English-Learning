@@ -169,36 +169,59 @@
       var due = !w.nextReview || w.nextReview <= today;
       var statusLabel = w.reviewCount === 0 ? '未学習' : (due ? '復習期限' : (w.streak >= 3 && w.interval >= 4 ? '習得済み' : '学習中'));
       var statusColor = statusLabel === '習得済み' ? 'var(--color-success)' : statusLabel === '復習期限' ? 'var(--color-warning)' : statusLabel === '学習中' ? 'var(--color-info)' : 'var(--color-neutral-400)';
-      return '<button onclick="VocabTab.openDetail(\'' + w.id + '\')" style="display:flex;align-items:center;width:100%;background:var(--color-neutral-800);border:none;border-top:1px solid var(--color-neutral-700);cursor:pointer;text-align:left;color:inherit;padding:8px 6px">'
+      var lvls = levelsOf(w);
+      var levelBadge = lvls.length ? '<span class="tag tag-outline" style="font-size:8.5px;padding:2px 6px">' + esc(lvls[0]) + (lvls.length > 1 ? '+' + (lvls.length - 1) : '') + '</span>' : '';
+      return '<button onclick="VocabTab.openDetail(\'' + w.id + '\')" style="display:flex;align-items:center;gap:6px;width:100%;background:var(--color-neutral-800);border:none;border-top:1px solid var(--color-neutral-700);cursor:pointer;text-align:left;color:inherit;padding:8px 6px">'
         + '<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500">' + esc(w.word) + '</div><div style="font-size:10px;color:var(--color-neutral-400)">' + esc(w.meaning) + '</div></div>'
-        + '<span class="tag" style="font-size:9px;color:' + statusColor + ';border-color:' + statusColor + '">' + statusLabel + '</span></button>';
+        + '<div style="flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px">'
+        + levelBadge
+        + '<span style="font-size:9px;color:var(--color-neutral-500)">' + esc(w.added || '') + '</span>'
+        + '<span class="tag" style="font-size:9px;color:' + statusColor + ';border-color:' + statusColor + '">' + statusLabel + '</span>'
+        + '</div></button>';
     }).join('') || '<div style="padding:20px;text-align:center;color:var(--color-neutral-400);font-size:13px">該当する単語がありません</div>';
   }
+
+  // vocab list has its own scroll region so the "新規登録"/"学習セッションを設定" action
+  // bar stays visible without scrolling through the whole word list — position:sticky at
+  // the bottom of a *long* list only pins once you've already scrolled past it once, it
+  // doesn't keep it in view from the top, so the action bar must live outside the scroll.
+  // NOTE: only touch overflow/padding here, never `display` — `.tab-panel`/`.tab-panel.active`
+  // control visibility via that property, and an inline `display` would out-rank both class
+  // rules and break tab switching (the panel would stay visible after navigating away).
+  function resetPanelLayout(el) { el.style.overflow = ''; el.style.paddingBottom = ''; }
 
   function renderList() {
     var el = document.getElementById('tab-vocab');
     if (loaded !== true) {
+      resetPanelLayout(el);
       el.innerHTML = '<div class="card"><div style="padding:24px;text-align:center;color:var(--color-neutral-400)">読み込み中…</div></div>';
       loadWords().then(renderList);
       return;
     }
-    if (wordDetailId) { renderWordDetail(); return; }
-    if (wordFormOpen) { renderWordForm(); return; }
-    if (vocabMode === 'review') { renderReview(); return; }
+    if (wordDetailId) { resetPanelLayout(el); renderWordDetail(); return; }
+    if (wordFormOpen) { resetPanelLayout(el); renderWordForm(); return; }
+    if (vocabMode === 'review') { resetPanelLayout(el); renderReview(); return; }
 
     var pool = poolByLevelAndScript();
-    var html = '<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font-weight:600;font-size:24px">単語帳</div><span class="tag tag-neutral">' + pool.length + '語</span></div>';
-    html += '<div style="display:flex;flex-direction:column;gap:8px">'
+    var top = '<div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font-weight:600;font-size:24px">単語帳</div><span class="tag tag-neutral">' + pool.length + '語</span></div>';
+    top += '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">'
       + '<button onclick="VocabTab.toggleLevelPanel()" style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:var(--radius-sm);border:1px solid var(--color-neutral-700);background:var(--color-neutral-800);cursor:pointer;color:inherit">'
       + '<span style="font-size:12px;color:var(--color-neutral-400)">レベルカテゴリ</span><span style="font-size:12px;color:var(--color-accent-300)">' + (vocabLevel === 'all' ? '全レベル' : esc(vocabLevel)) + (levelPanelOpen ? ' ▴' : ' ▾') + '</span></button>'
       + (levelPanelOpen ? '<div style="display:flex;flex-wrap:wrap;gap:6px">' + levelChipsHtml() + '</div>' : '')
       + '</div>';
-    html += '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px">' + filterChipsHtml() + '</div>';
-    html += '<div style="border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);overflow:hidden">' + listRowsHtml() + '</div>';
-    html += '<div style="display:flex;gap:8px;position:sticky;bottom:0;padding-top:4px">'
+    top += '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-top:8px">' + filterChipsHtml() + '</div>';
+
+    var middle = '<div style="border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);overflow:hidden;margin-top:8px">' + listRowsHtml() + '</div>';
+
+    var footer = '<div style="display:flex;gap:8px;flex-shrink:0;padding-top:10px">'
       + '<button class="btn btn-secondary" onclick="VocabTab.openNewWord()">＋ 新規登録</button>'
       + '<button class="btn btn-primary" style="flex:1" onclick="VocabTab.showReview()">学習セッションを設定（' + pool.length + '語）</button></div>';
-    el.innerHTML = html;
+
+    el.style.overflow = 'hidden';
+    el.style.paddingBottom = '20px';
+    el.innerHTML = '<div style="flex-shrink:0">' + top + '</div>'
+      + '<div style="flex:1;min-height:0;overflow:auto">' + middle + '</div>'
+      + footer;
   }
 
   // ── SESSION CONFIG + REVIEW ──
@@ -256,15 +279,19 @@
         var item = queue[qIdx];
         var w = item.word;
         var askJa = item.dir === 'ja2en';
-        html += '<div style="margin-top:12px;perspective:1200px"><div onclick="VocabTab.flipCard()" style="position:relative;height:220px;transform-style:preserve-3d;transition:transform .5s ease;transform:' + (flipped ? 'rotateY(180deg)' : 'rotateY(0)') + ';cursor:pointer">'
-          + '<div style="position:absolute;inset:0;backface-visibility:hidden;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px">'
+        var wEsc = esc(w.word).replace(/'/g, "\\'");
+        var exEsc = w.example ? esc(w.example).replace(/'/g, "\\'") : '';
+        var speakBtn = function (text) { return '<button class="btn-icon btn-ghost" style="flex-shrink:0;width:28px;height:28px" onclick="event.stopPropagation();VocabTab.speak(\'' + text + '\')">🔊</button>'; };
+        html += '<div style="margin-top:12px;perspective:1200px"><div id="vt-flip-card" style="position:relative;height:220px;transform-style:preserve-3d;transition:transform .5s ease;transform:' + (flipped ? 'rotateY(180deg)' : 'rotateY(0)') + ';cursor:pointer" onclick="VocabTab.flipCard()">'
+          + '<div style="position:absolute;inset:0;backface-visibility:hidden;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px;box-sizing:border-box">'
           + (askJa
             ? '<div style="font-weight:600;font-size:20px;line-height:1.5">' + esc(w.meaning) + '</div><div style="font-size:12px;color:var(--color-neutral-400)">英語で言ってみましょう</div>'
-            : '<div style="font-weight:600;font-size:26px">' + esc(w.word) + '</div><div style="font-size:13px;color:var(--color-accent-300)">' + esc(w.pron || '') + '</div>')
+            : '<div style="display:flex;align-items:center;gap:8px"><div style="font-weight:600;font-size:26px">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div><div style="font-size:13px;color:var(--color-accent-300)">' + esc(w.pron || '') + '</div>')
           + '</div>'
-          + '<div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:8px">'
-          + '<div style="font-size:16px;font-weight:500">' + esc(w.word) + '</div><div style="font-size:13px;color:var(--color-neutral-200)">' + esc(w.meaning) + '</div>'
-          + (w.example ? '<div style="font-size:12px;color:var(--color-neutral-400);font-style:italic">"' + esc(w.example) + '"</div>' : '')
+          + '<div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:8px;box-sizing:border-box">'
+          + '<div style="display:flex;align-items:center;gap:8px"><div style="font-size:16px;font-weight:500">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div>'
+          + '<div style="font-size:13px;color:var(--color-neutral-200)">' + esc(w.meaning) + '</div>'
+          + (w.example ? '<div style="display:flex;align-items:flex-start;gap:6px"><div style="font-size:12px;color:var(--color-neutral-400);font-style:italic;flex:1">"' + esc(w.example) + '"</div>' + speakBtn(exEsc) + '</div>' : '')
           + '</div></div></div>';
         html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:14px">'
           + ratingBtn(0, 'もう一度') + ratingBtn(1, '難しい') + ratingBtn(2, 'OK') + ratingBtn(3, '完璧') + '</div>';
@@ -305,11 +332,15 @@
   function resetSession() { sessionState = 'idle'; renderReview(); }
   function resetQueue() { buildQueue(poolByLevelAndScript(), vocabDirection); renderReview(); }
   function flipCard() {
+    // Toggle the transform directly on the existing node — re-rendering via innerHTML
+    // (like every other state change here) would replace the element outright, so the
+    // CSS transition never has an old value to animate from and the flip just snaps.
     flipped = !flipped;
+    var cardEl = document.getElementById('vt-flip-card');
+    if (cardEl) cardEl.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0)';
     var item = queue[qIdx];
     if (flipped && item && item.dir === 'ja2en') speakWord(item.word.word);
     else if (!flipped && item && item.dir === 'en2ja') setTimeout(function () { speakWord(item.word.word); }, 250);
-    renderReview();
   }
   function answer(q) {
     var item = queue[qIdx];

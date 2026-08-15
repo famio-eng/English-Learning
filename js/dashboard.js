@@ -14,14 +14,18 @@
     { days: [3, 4], dayLabel: '水・木', tasks: [{ icon: 'message-circle', text: 'Pimsleur式対話練習' }] },
     { days: [5], dayLabel: '金', tasks: [{ icon: 'book-open', text: 'SM-2 単語復習' }] },
   ];
+  // `tab`: switches to that in-app tab. `onclick`: runs a DashboardTab method instead
+  // (ChatGPT / weekly report). Ported from dashboard.html's DAILY_PLAN, with the old
+  // `target: 'shadowing.html'`-style page links replaced by in-app tab switches now that
+  // everything lives in one SPA.
   var DAILY_PLAN = {
-    0: { title: '今日やること — シャドーイング＋単語復習', buttons: [{ label: 'シャドーイング', target: 'shadowing.html', cls: 'btn-primary' }, { label: '単語帳', target: 'vocab.html', cls: 'btn-secondary' }] },
-    1: { title: '今日やること — シャドーイング練習', buttons: [{ label: 'シャドーイングを始める', target: 'shadowing.html', cls: 'btn-primary' }] },
-    2: { title: '今日やること — シャドーイング練習', buttons: [{ label: 'シャドーイングを始める', target: 'shadowing.html', cls: 'btn-primary' }] },
-    3: { title: '今日やること — Pimsleur式対話練習', buttons: [{ label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
-    4: { title: '今日やること — Pimsleur式対話練習', buttons: [{ label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
-    5: { title: '今日やること — 単語復習', buttons: [{ label: '単語帳を開く', target: 'vocab.html', cls: 'btn-primary' }] },
-    6: { title: '今日やること — 振り返り＋スクリプト作成＋初回練習', buttons: [{ label: '週次レポートを生成', onclick: 'DashboardTab.openWeeklyReport()', cls: 'btn-primary' }, { label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
+    0: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }, { label: '単語帳を開く', tab: 'vocab', cls: 'btn-secondary' }] },
+    1: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }] },
+    2: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }] },
+    3: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
+    4: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
+    5: { buttons: [{ label: '単語帳を開く', tab: 'vocab', cls: 'btn-primary' }] },
+    6: { buttons: [{ label: '週次レポートを生成', onclick: 'DashboardTab.openWeeklyReportModal()', cls: 'btn-primary' }, { label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
   };
   var DAILY_TASKS_DEF = {
     0: [{ key: 'shadowing', label: 'シャドーイング 0.7倍速 3回通し', priority: 'must', auto: true }, { key: 'vocab', label: '単語復習（SM-2）', priority: 'must', auto: true }],
@@ -96,13 +100,11 @@
   }
   function weekType(d) { return isoWeekNumber(d) % 2 === 1 ? 'business' : 'travel'; }
 
+  // ?q= prefill doesn't reliably start a session inside a ChatGPT project (it just opens
+  // the project without composing anything), so open the project as-is and let the user
+  // start the chat themselves.
   var CHATGPT_PROJECT_URL = 'https://chatgpt.com/g/g-p-6a64216444588191b40c3a829fd3121b'; // 「英語学習」プロジェクト
-  function openChatGPT() {
-    var now = new Date();
-    var pad = function (n) { return String(n).padStart(2, '0'); };
-    var title = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
-    window.open(CHATGPT_PROJECT_URL + '?q=' + encodeURIComponent(title), '_blank');
-  }
+  function openChatGPT() { window.open(CHATGPT_PROJECT_URL, '_blank'); }
 
   // ── load ──
   function loadAll() {
@@ -152,7 +154,7 @@
     var defs = DAILY_TASKS_DEF[day] || [];
     return defs.map(function (t) {
       var done = !!dailyTaskState[t.key];
-      var onclick = t.auto ? '' : ' onclick="DashboardTab.toggleTask(\'' + t.key + '\')"';
+      var onclick = t.auto ? '' : (t.key === 'weeklyReport' ? ' onclick="DashboardTab.openWeeklyReportModal()"' : ' onclick="DashboardTab.toggleTask(\'' + t.key + '\')"');
       var label = t.label;
       if (t.key === 'vocab' && vocabDueCount !== null) {
         label = done ? '単語復習（完了 ✓）' : (vocabDueCount === 0 ? '単語復習（今日は復習なし）' : '単語復習（今日の復習 ' + vocabDueCount + '件）');
@@ -163,6 +165,15 @@
         + '<div style="font-size:11px;color:var(--color-neutral-500)">' + (t.priority === 'must' ? '必須' : 'できれば') + (done ? ' ・ 完了' : '') + '</div></div>'
         + '</button>';
     }).join('');
+  }
+
+  function todayButtonsHtml() {
+    var plan = DAILY_PLAN[new Date().getDay()];
+    if (!plan || !plan.buttons.length) return '';
+    return '<div style="display:flex;flex-direction:column;gap:8px">' + plan.buttons.map(function (b) {
+      var onclick = b.onclick ? b.onclick : (b.tab ? "App.switchTab('" + b.tab + "')" : '');
+      return '<button class="btn ' + b.cls + ' btn-block" onclick="' + onclick + '">' + esc(b.label) + '</button>';
+    }).join('') + '</div>';
   }
 
   function weekScheduleHtml() {
@@ -213,6 +224,8 @@
 
     html += '<div class="card"><div class="card-kicker">今日のタスク</div>'
       + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">' + todayTaskItemsHtml() + '</div></div>';
+
+    html += todayButtonsHtml();
 
     html += continueScriptHtml();
 
@@ -285,15 +298,37 @@
   function streakDotsHtml() {
     var now = new Date();
     var set = streakDatesSet();
+    var dayNamesShort = ['日', '月', '火', '水', '木', '金', '土'];
     var cells = [];
     for (var i = 13; i >= 0; i--) {
       var d = new Date(now); d.setDate(d.getDate() - i);
       var ds = S.todayStr(d);
       var override = editingPastRecords[ds];
       var done = override ? Object.keys(override).some(function (k) { return k !== '_manualKeys' && override[k]; }) : !!set[ds];
-      cells.push('<div style="width:14px;height:14px;border-radius:3px;background:' + (done ? 'var(--color-accent-500)' : 'transparent') + ';border:1px solid ' + (done ? 'var(--color-accent-500)' : 'var(--color-neutral-600)') + '"></div>');
+      cells.push('<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">'
+        + '<div style="font-size:8px;color:var(--color-neutral-500)">' + d.getDate() + '</div>'
+        + '<div style="font-size:7px;color:var(--color-neutral-600)">' + dayNamesShort[d.getDay()] + '</div>'
+        + '<div style="width:14px;height:14px;border-radius:3px;background:' + (done ? 'var(--color-accent-500)' : 'transparent') + ';border:1px solid ' + (done ? 'var(--color-accent-500)' : 'var(--color-neutral-600)') + '"></div></div>');
     }
     return cells.join('');
+  }
+
+  // ── CEFR (decorative estimate — no real assessment pipeline exists yet; see plan
+  // decision #2. Anchored to the TOEIC750→900+ goal from LEARNING_PLAN.md via a standard
+  // TOEIC↔CEFR correspondence table, not a per-user measurement.) ──
+  function cefrGridHtml() {
+    var LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'C1.1', 'C1.2', 'C2.1', 'C2.2'];
+    var currentIndex = 6, goalIndex = 9; // TOEIC750≈B2.1, TOEIC900+≈C1.2 (standard correspondence table)
+    var cells = LEVELS.map(function (lvl, i) {
+      var isCurrent = i === currentIndex, isGoal = i === goalIndex;
+      return '<div style="flex:1;min-width:0;text-align:center;padding:6px 1px;border-radius:var(--radius-sm);background:' + (isCurrent ? 'var(--color-accent-700)' : 'var(--color-neutral-900)') + ';border:1.5px solid ' + (isGoal ? 'var(--color-accent)' : 'var(--color-neutral-700)') + '">'
+        + '<div style="font-size:10px;font-weight:500;color:' + (isCurrent ? 'var(--color-text)' : 'var(--color-neutral-400)') + '">' + lvl[0] + '</div>'
+        + '<div style="font-size:9px;font-weight:500;color:' + (isCurrent ? 'var(--color-text)' : 'var(--color-neutral-400)') + '">' + lvl.slice(1) + '</div>'
+        + (isGoal ? '<div style="font-size:7px;color:var(--color-accent-300);margin-top:1px">目標</div>' : '') + '</div>';
+    }).join('');
+    return '<div class="card"><div class="card-kicker">CEFR目安（簡易推定）</div>'
+      + '<div style="display:flex;gap:2px;margin-top:8px">' + cells + '</div>'
+      + '<div style="font-size:11px;color:var(--color-neutral-400);margin-top:8px">TOEIC750（現在）→ 900+（目標）を一般的な対応表で換算した目安です。実測ではありません。</div></div>';
   }
 
   function renderProgress() {
@@ -316,10 +351,16 @@
       + '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-top:8px">' + weekCycleTimelineHtml() + '</div></div>';
 
     html += '<div class="card"><div class="card-kicker">週次レポート</div>'
-      + '<div id="dash-report-body" style="font-size:13px;line-height:1.8;color:var(--color-neutral-300)"></div>'
-      + '<button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="DashboardTab.openWeeklyReport()">今週のレポートを生成</button></div>';
+      + '<div style="font-size:13px;color:var(--color-neutral-400);margin-top:4px">その週のシャドーイング・単語復習・スコアをAIがまとめます</div>'
+      + '<button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="DashboardTab.openWeeklyReportModal()">今週のレポートを生成</button></div>';
+
+    html += cefrGridHtml();
 
     html += '<div class="card"><div class="card-kicker">目標</div><div style="font-size:14px;margin-top:4px">TOEIC 750（5年前）→ 会議で自信を持って話せるレベル</div></div>';
+
+    html += '<div class="card"><div class="card-kicker">過去の記録</div>'
+      + '<div style="font-size:13px;color:var(--color-neutral-400);margin-top:4px">録音のAI採点・フィードバックを振り返る</div>'
+      + '<button class="btn btn-secondary btn-block" style="margin-top:8px" onclick="DashboardTab.openRecordsModal()">過去の記録・AI分析を見る</button></div>';
 
     el.innerHTML = html;
   }
@@ -407,8 +448,18 @@
       if (tasks.vocab) data.vocabDays++;
       if (tasks.dialogue) data.dialogueDays++;
     }
-    data.scores = recentRecords.filter(function (r) { return r.score != null && r.date >= weekStart && r.date <= weekEnd; }).map(function (r) { return r.score; });
-    return Promise.resolve(data);
+    // Fetch this week's records directly rather than relying on the Home tab's 5-item
+    // cache, which can miss earlier-in-the-week scores once more recordings pile up.
+    if (!S.GH_TOKEN) { data.scores = []; return Promise.resolve(data); }
+    return S.apiListDir('records').then(function (files) {
+      var jsonFiles = (Array.isArray(files) ? files : []).filter(function (f) {
+        return f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json' && f.name >= weekStart;
+      }).sort(function (a, b) { return b.name.localeCompare(a.name); }).slice(0, 15);
+      return Promise.all(jsonFiles.map(function (f) { return S.apiGetJson('records/' + f.name).catch(function () { return null; }); }));
+    }).then(function (recs) {
+      data.scores = (recs || []).filter(Boolean).filter(function (r) { return r.score != null && r.date >= weekStart && r.date <= weekEnd; }).map(function (r) { return r.score; });
+      return data;
+    }).catch(function () { return data; });
   }
   function analyzeWeekWithGemini(data) {
     var taskSummary = '';
@@ -429,21 +480,144 @@
       + '{"summary":"今週の総括（2〜3文）","achievements":["よかった点1","よかった点2"],"improvements":["改善点1","改善点2"],"nextWeekFocus":"来週の重点事項（1文）","keyPhrases":["覚えたフレーズや表現（あれば）"]}';
     return S.callGeminiText([{ text: prompt }]).then(function (text) { return S.parseJsonFromModelText(text); });
   }
-  function openWeeklyReport() {
-    var body = document.getElementById('dash-report-body');
-    if (!body) return;
-    body.textContent = '生成中…';
-    collectWeeklyData().then(function (data) {
-      weeklyReportData = data;
-      if (!S.GEM_KEY) { body.textContent = data.shadDays + '日シャドーイング・' + data.vocabDays + '日単語復習（GEM_KEY未設定のためAI分析なし）'; return; }
-      analyzeWeekWithGemini(data).then(function (analysis) {
-        body.textContent = analysis ? analysis.summary : '分析に失敗しました。';
-        if (!dailyTaskState.weeklyReport) toggleTask('weeklyReport');
-      }).catch(function () { body.textContent = '分析に失敗しました。'; });
-    });
+  function spinnerHtml(label) {
+    return '<div style="text-align:center;padding:24px;color:var(--color-neutral-400);font-size:13px">' + esc(label) + '</div>';
+  }
+  function openSheet(title, bodyId, actionsId) {
+    var sheet = document.createElement('div');
+    sheet.innerHTML = '<div class="sheet-backdrop" id="' + bodyId + '-backdrop"></div>'
+      + '<div class="sheet" style="max-height:85vh"><div style="display:flex;justify-content:space-between;align-items:center;padding:16px 18px 8px"><div style="font-size:17px;font-weight:500">' + esc(title) + '</div><button class="btn btn-icon btn-ghost" id="' + bodyId + '-close">×</button></div>'
+      + '<div id="' + bodyId + '" style="overflow:auto;padding:0 18px 12px;flex:1;min-height:0"></div>'
+      + (actionsId ? '<div id="' + actionsId + '" style="display:flex;gap:8px;padding:0 18px 20px;flex-shrink:0"></div>' : '')
+      + '</div>';
+    document.body.appendChild(sheet);
+    function close() { sheet.remove(); }
+    sheet.querySelector('#' + bodyId + '-backdrop').onclick = close;
+    sheet.querySelector('#' + bodyId + '-close').onclick = close;
+    return sheet;
   }
 
-  window.DashboardTab = { toggleTask: toggleTask, openChatGPT: openChatGPT, openPastRecordsModal: openPastRecordsModal, openWeeklyReport: openWeeklyReport };
+  // ── weekly report modal (ported: renderWeeklyReportContent / copyWeeklyReport / saveWeeklyReport) ──
+  function statCardHtml(label, value, color) {
+    return '<div style="text-align:center;padding:12px 6px;border-radius:var(--radius-sm);background:var(--color-neutral-900);border:1px solid var(--color-neutral-700)">'
+      + '<div style="font-size:19px;font-weight:500;color:' + color + '">' + esc(value) + '</div><div style="font-size:11px;color:var(--color-neutral-400);margin-top:2px">' + esc(label) + '</div></div>';
+  }
+  function reportSectionHtml(title, items) {
+    return '<div class="card-kicker" style="margin-top:12px">' + title + '</div>'
+      + '<ul style="font-size:13px;line-height:1.8;padding-left:18px;margin:4px 0 0">' + items.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>';
+  }
+  function openWeeklyReportModal() {
+    var sheet = openSheet('週次レポート', 'wr-body', 'wr-actions');
+    document.getElementById('wr-body').innerHTML = spinnerHtml('データを収集中…');
+    collectWeeklyData().then(function (data) {
+      weeklyReportData = data;
+      if (!S.GEM_KEY) { renderWeeklyReportBody(data, null); return; }
+      document.getElementById('wr-body').innerHTML = spinnerHtml('Geminiで分析中…');
+      analyzeWeekWithGemini(data).then(function (analysis) { renderWeeklyReportBody(data, analysis); })
+        .catch(function () { renderWeeklyReportBody(data, null); });
+    }).catch(function () {
+      document.getElementById('wr-body').innerHTML = '<div style="color:var(--color-error);font-size:13px">データ収集に失敗しました</div>';
+    });
+  }
+  function renderWeeklyReportBody(data, analysis) {
+    var body = document.getElementById('wr-body');
+    if (!body) return;
+    var avgScore = data.scores.length ? Math.round(data.scores.reduce(function (s, v) { return s + v; }, 0) / data.scores.length) : null;
+    var mustPct = data.totalMust > 0 ? Math.round((data.completedMust / data.totalMust) * 100) : 0;
+    var html = '<div style="font-size:12px;color:var(--color-neutral-400);text-align:center;margin-bottom:10px">' + esc(data.weekStart) + '（土）〜 ' + esc(data.weekEndFull) + '（金）</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      + statCardHtml('シャドーイング', data.shadDays + '日', 'var(--color-accent)')
+      + statCardHtml('必須タスク達成率', mustPct + '%', 'var(--color-success)')
+      + statCardHtml('単語復習', data.vocabDays + '日', 'var(--color-info)')
+      + statCardHtml('AI評価平均', avgScore != null ? avgScore + '点' : '—', 'var(--color-warning)')
+      + '</div>';
+    if (analysis) {
+      html += '<div class="card" style="margin-top:14px"><div style="font-size:14px;line-height:1.7">' + esc(analysis.summary || '') + '</div></div>';
+      if (analysis.achievements && analysis.achievements.length) html += reportSectionHtml('✨ よかった点', analysis.achievements);
+      if (analysis.improvements && analysis.improvements.length) html += reportSectionHtml('🎯 改善ポイント', analysis.improvements);
+      if (analysis.keyPhrases && analysis.keyPhrases.length) {
+        html += '<div class="card-kicker" style="margin-top:12px">💡 今週のキーフレーズ</div><div style="margin-top:4px">'
+          + analysis.keyPhrases.map(function (p) { return '<span class="tag tag-accent" style="margin:2px 4px 2px 0">' + esc(p) + '</span>'; }).join('') + '</div>';
+      }
+      if (analysis.nextWeekFocus) html += '<div class="card-kicker" style="margin-top:12px">📅 来週の重点</div><div style="font-size:13px;margin-top:4px">' + esc(analysis.nextWeekFocus) + '</div>';
+    } else {
+      html += '<div style="font-size:13px;color:var(--color-neutral-400);margin-top:14px">（Gemini分析なし — GEM_KEYを設定するとAIコメントが追加されます）</div>';
+    }
+    body.innerHTML = html;
+    var actions = document.getElementById('wr-actions');
+    if (actions) {
+      actions.innerHTML = '<button class="btn btn-secondary" style="flex:1" onclick="DashboardTab.copyWeeklyReport()">コピー</button>'
+        + (S.GH_TOKEN ? '<button class="btn btn-primary" style="flex:1" onclick="DashboardTab.saveWeeklyReport()">GitHubに保存</button>' : '');
+    }
+  }
+  function copyWeeklyReport() {
+    var body = document.getElementById('wr-body');
+    if (!body) return;
+    navigator.clipboard.writeText(body.innerText || '').then(function () {
+      App.toast('レポートをコピーしました');
+      if (!dailyTaskState.weeklyReport) toggleTask('weeklyReport');
+    }).catch(function () { App.toast('コピーに失敗しました'); });
+  }
+  function saveWeeklyReport() {
+    if (!S.GH_TOKEN || !weeklyReportData) return;
+    var body = document.getElementById('wr-body');
+    var text = body ? (body.innerText || '') : '';
+    var report = { generatedAt: new Date().toISOString(), weekStart: weeklyReportData.weekStart, weekEnd: weeklyReportData.weekEndFull,
+      stats: { shadDays: weeklyReportData.shadDays, vocabDays: weeklyReportData.vocabDays, dialogueDays: weeklyReportData.dialogueDays, completedMust: weeklyReportData.completedMust, totalMust: weeklyReportData.totalMust, scores: weeklyReportData.scores }, text: text };
+    S.apiPutJson('data/weekly-reports/' + weeklyReportData.weekStart + '.json', function () { return report; }, '📊 週次レポート: ' + weeklyReportData.weekStart)
+      .then(function () { App.toast('GitHubに保存しました'); if (!dailyTaskState.weeklyReport) toggleTask('weeklyReport'); })
+      .catch(function () { App.toast('保存に失敗しました'); });
+  }
+
+  // ── past records / AI feedback review (ported: openRecordsModal / renderRecordsModal) ──
+  function openRecordsModal() {
+    var sheet = openSheet('過去の記録・AI分析', 'rm-body');
+    document.getElementById('rm-body').innerHTML = spinnerHtml('読み込み中…');
+    if (!S.GH_TOKEN) { document.getElementById('rm-body').innerHTML = '<div style="color:var(--color-neutral-400);font-size:13px">GHトークンが必要です</div>'; return; }
+    S.apiListDir('records').then(function (files) {
+      var jsonFiles = (Array.isArray(files) ? files : []).filter(function (f) {
+        return f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
+      }).sort(function (a, b) { return b.name.localeCompare(a.name); }).slice(0, 20);
+      if (!jsonFiles.length) { document.getElementById('rm-body').innerHTML = '<div style="color:var(--color-neutral-400);font-size:13px">記録がまだありません</div>'; return; }
+      return Promise.all(jsonFiles.map(function (f) { return S.apiGetJson('records/' + f.name).catch(function () { return null; }); })).then(function (recs) {
+        renderRecordsModalBody((recs || []).filter(Boolean));
+      });
+    }).catch(function () {
+      document.getElementById('rm-body').innerHTML = '<div style="color:var(--color-error);font-size:13px">読み込みに失敗しました</div>';
+    });
+  }
+  function renderRecordsModalBody(recs) {
+    var groups = {}, order = [];
+    recs.forEach(function (r) {
+      var key = r.scriptId || r.type || 'other';
+      if (!groups[key]) { groups[key] = []; order.push(key); }
+      groups[key].push(r);
+    });
+    var html = order.map(function (key) {
+      var title = SCRIPT_NAMES[key] || key;
+      var entries = groups[key].map(function (r) {
+        var modeLbl = r.mode === 'reading' ? '音読' : r.mode === 'shadowing' ? 'シャドー' : (r.mode || r.type || '—');
+        var scoreCol = r.score >= 75 ? 'var(--color-success)' : r.score >= 55 ? 'var(--color-warning)' : 'var(--color-error)';
+        var pts = (r.strengths || []).map(function (s) { return '<div style="font-size:12px;padding:2px 0">✅ ' + esc(s) + '</div>'; }).join('');
+        var imps = (r.improvements || []).map(function (s) { return '<div style="font-size:12px;padding:2px 0">💡 ' + esc(s) + '</div>'; }).join('');
+        var audio = r.recordingUrl ? '<audio controls style="width:100%;height:32px;margin-top:6px" src="' + esc(r.recordingUrl) + '"></audio>' : '';
+        return '<div class="card" style="margin-top:6px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
+          + '<span class="tag tag-neutral">' + esc(modeLbl) + '</span>'
+          + '<span style="font-size:11px;color:var(--color-neutral-400);flex:1">' + esc((r.date || '') + ' ' + (r.time || '')) + '</span>'
+          + (r.score != null ? '<span style="font-weight:600;color:' + scoreCol + '">' + r.score + '</span>' : '') + '</div>'
+          + (pts || imps ? '<div style="margin-top:6px">' + pts + imps + '</div>' : '') + audio + '</div>';
+      }).join('');
+      return '<div class="card-kicker" style="margin-top:14px">' + esc(title) + '</div>' + entries;
+    }).join('') || spinnerHtml('記録がありません');
+    var body = document.getElementById('rm-body');
+    if (body) body.innerHTML = html;
+  }
+
+  window.DashboardTab = {
+    toggleTask: toggleTask, openChatGPT: openChatGPT, openPastRecordsModal: openPastRecordsModal,
+    openWeeklyReportModal: openWeeklyReportModal, copyWeeklyReport: copyWeeklyReport, saveWeeklyReport: saveWeeklyReport,
+    openRecordsModal: openRecordsModal,
+  };
 
   App.registerTab('home', { onShow: renderHome });
   App.registerTab('progress', { onShow: renderProgress });
