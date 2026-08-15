@@ -1,5 +1,35 @@
 # 英語学習アプリ開発記録
 
+## 2026-08-15 Nocturneデザイン移植（app.html統合）
+
+Claude Design(プロジェクト `e369715c-05c9-4487-a74d-45d1daaa7b11`)で作った新デザインを本番アプリに反映。5ページ構成(index/shadowing/vocab/dashboard/dialogue.html)を、ボトムタブ1画面の `app.html` + `js/*.js` 構成に統合。
+
+### 新規ファイル構成
+```
+app.html              新エントリポイント（Nocturneデザイン・ボトムタブ・オンボーディング）
+index.html            app.htmlへのリダイレクトに変更（旧shadowing.html複製・stale）
+manifest.json         PWAマニフェスト（新規）
+assets/app-icon.png他 ホーム画面アイコン一式（新規、デザイン側から移植）
+js/shared.js          GH_TOKEN/GEM_KEY・GitHub Contents API・Gemini fallback呼び出しの共通化
+js/dashboard.js        ホーム＋進捗タブ（dashboard.htmlの実ロジックを移植）
+js/practice.js         会話タブ（shadowing.htmlのSCRIPTS・録音・AI採点ロジックを移植）
+js/vocab.js             単語タブ（vocab.htmlのSRSアルゴリズム・GitHub永続化を移植）
+js/profile.js           マイページタブ（新規・軽量設定のみ）
+```
+
+既存の shadowing.html / vocab.html / dashboard.html / dialogue.html は削除せず残置（フォールバック）。実機での動作確認が済んだら削除を検討。
+
+### 移植時の主な判断
+- **対話練習(dialogue.html)**: ホームの「対話練習・瞬間英作文」ボタンをChatGPT外部リンクに一本化。dialogue.html自体のアプリ内フロー(CEFR採点等)は新アプリから非導線化（ページは残置、リンクなし）
+- **過去記録の編集**: 進捗タブのストリークドットは読み取り専用の可視化に留め、「記録を修正」から既存の14日分タスク別編集(togglePastTask相当)を開くハイブリッド構成に（データの粒度を落とさないため）
+- **CEFRグリッド・TOEIC目標カード**: 実測パイプラインがないため装飾的な静的表示（将来スコア推移から推定するのは別タスク）
+- **週サイクルタイムライン**: LEARNING_PLAN.mdの「奇数週=ビジネス、偶数週=旅行」ルールからISO週番号の奇偶で動的算出
+- **単語帳セッションタイマー**: 新機能（開始/中断/再開/終了+経過時間）。ローカル状態のみでGitHub永続化はしない
+- **固定セッション曜日設定**: マイページの新規設定。localStorageのみ（GitHubスキーマ変更なし）
+
+### 検証方法
+ローカルNode静的サーバー + ヘッドレスChrome(CDP直接操作、chromium-cli/playwright未導入のため)で全5タブを実データ(本番GitHubリポジトリの公開読み取り)に対して動作確認。オンボーディング→ホーム→会話(スクリプト一覧・詳細・意味展開)→単語(レベルフィルタ・詳細・セッション開始〜終了)→進捗→マイページまで、コンソールエラーなしで一通り確認済み。GitHub書き込み系(録音保存・記録保存・単語帳保存)は本番コミットが入るため自動テストでは未発火——実機での書き込み確認はFami本人による確認が必要。
+
 ## 2026-05-25 環境構築・初回セッション
 
 ### 構築した環境
