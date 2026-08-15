@@ -791,7 +791,7 @@ var SCRIPTS = [
     var fb = document.getElementById('pt-feedback');
     var col = r.score >= 75 ? 'var(--color-success)' : r.score >= 55 ? 'var(--color-warning)' : 'var(--color-error)';
     var str = (r.strengths || []).map(function (s) { return '<li>✅ ' + esc(s) + '</li>'; }).join('');
-    var imp = (r.improvements || []).map(function (s) { return '<li>💡 ' + esc(s) + '</li>'; }).join('');
+    var imp = (r.improvements || []).map(function (s) { return '<li style="color:var(--color-warning)">💡 ' + esc(s) + '</li>'; }).join('');
     var advance = r.canAdvance ? '<div style="color:var(--color-success);font-size:13px;margin-top:8px">🎉 クリア！</div>' : '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:8px">📌 ' + esc(r.nextStepAdvice || '') + '</div>';
     fb.innerHTML = '<div class="card" style="margin-top:10px">'
       + '<div style="display:flex;align-items:center;gap:10px">'

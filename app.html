@@ -105,13 +105,6 @@
     border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;color:var(--color-text);font-family:inherit;outline:none}
   input.field:focus,textarea.field:focus{border-color:var(--color-accent)}
 
-  /* onboarding */
-  #onboarding{flex:1;display:flex;flex-direction:column;padding:70px 26px 28px;box-sizing:border-box}
-  .onb-dots{display:flex;gap:6px;justify-content:center;margin-top:18px}
-  .onb-dot{width:6px;height:6px;border-radius:50%;background:var(--color-neutral-700)}
-  .onb-dot.active{background:var(--color-accent)}
-  .onb-option{justify-content:flex-start;text-align:left;width:100%}
-
   /* app shell */
   #app{display:none;flex:1;min-height:0;flex-direction:column}
   #app.active{display:flex}
@@ -140,54 +133,7 @@
 <body>
 <div id="root">
 
-  <div id="onboarding">
-    <div id="onb-step0" class="onb-step" style="flex:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:18px">
-      <img src="./assets/app-icon.png" alt="アプリアイコン" style="width:72px;height:72px;border-radius:16px;display:block">
-      <div style="font-weight:600;font-size:30px;line-height:1.25">英会話学習<br>アプリ</div>
-      <div style="font-size:15px;line-height:1.6;color:var(--color-neutral-300);max-width:280px">
-        週1回の固定セッションと、隙間時間のシャドーイング・単語復習で続けられる設計。
-        <span style="color:var(--color-neutral-400)">Business &amp; Travel English</span>
-      </div>
-      <button class="btn btn-primary btn-block" id="onb-start" style="margin-top:24px">はじめる</button>
-    </div>
-
-    <div id="onb-step1" class="onb-step" style="display:none;flex-direction:column;flex:1">
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:28px">
-        <div style="font-size:13px;color:var(--color-accent-300);font-weight:500">STEP 1 / 3</div>
-        <div style="font-weight:600;font-size:24px">今のレベルは？</div>
-        <div style="font-size:14px;color:var(--color-neutral-400)">目安で大丈夫です。あとから変更できます。</div>
-      </div>
-      <div id="onb-level-options" style="display:flex;flex-direction:column;gap:10px;flex:1"></div>
-      <button class="btn btn-primary btn-block" id="onb-to-step2" style="margin-top:20px">次へ</button>
-    </div>
-
-    <div id="onb-step2" class="onb-step" style="display:none;flex-direction:column;flex:1">
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:28px">
-        <div style="font-size:13px;color:var(--color-accent-300);font-weight:500">STEP 2 / 3</div>
-        <div style="font-weight:600;font-size:24px">何を優先しますか？</div>
-        <div style="font-size:14px;color:var(--color-neutral-400)">奇数週=ビジネス英語、偶数週=旅行英語で交互に進みます。</div>
-      </div>
-      <div id="onb-goal-options" style="display:flex;flex-direction:column;gap:10px;flex:1"></div>
-      <button class="btn btn-primary btn-block" id="onb-to-step3" style="margin-top:20px">次へ</button>
-    </div>
-
-    <div id="onb-step3" class="onb-step" style="display:none;flex-direction:column;flex:1">
-      <div style="flex:1;display:flex;flex-direction:column;gap:18px;justify-content:center">
-        <div style="font-size:13px;color:var(--color-accent-300);font-weight:500">STEP 3 / 3</div>
-        <div style="font-weight:600;font-size:24px">準備ができました</div>
-        <div class="card">
-          <div style="font-size:14px;line-height:1.7;color:var(--color-neutral-300)">
-            週1回、15〜20分の固定セッションだけは必ず。それ以外は気が向いた時にシャドーイングと単語復習を。無理なく継続できるペースで設計しています。
-          </div>
-        </div>
-      </div>
-      <button class="btn btn-primary btn-block" id="onb-finish" style="margin-top:20px">アプリを始める</button>
-    </div>
-
-    <div class="onb-dots" id="onb-dots"></div>
-  </div>
-
-  <div id="app">
+  <div id="app" class="active">
     <div class="tab-panel active" id="tab-home"></div>
     <div class="tab-panel" id="tab-practice"></div>
     <div class="tab-panel" id="tab-vocab"></div>
@@ -224,90 +170,13 @@
 <script src="./js/shared.js"></script>
 <script>
 // ─────────────────────────────────────────────────────────────
-// App shell: onboarding gate, tab router, toast helper.
-// Stage 2-5 register themselves via App.registerTab(name, {render, onShow}).
+// App shell: tab router + toast helper. No onboarding gate — the app opens straight
+// to the last-viewed tab (the app icon lives in the Home tab header instead; see
+// js/dashboard.js). Stage 2-5 register themselves via App.registerTab(name, {onShow}).
 // ─────────────────────────────────────────────────────────────
 (function () {
   'use strict';
 
-  var LEVELS = ['TOEIC〜600（基礎から）', 'TOEIC600-750（このアプリの前提）', 'TOEIC750-900（応用強化）', 'TOEIC900+（実践のみ）', '目安がわからない'];
-  var GOALS = [
-    { v: 'business', label: 'ビジネス英語を伸ばす', sub: '会議・進捗報告・1on1' },
-    { v: 'travel', label: '旅行に備える', sub: '9月第3週の海外旅行' },
-    { v: 'both', label: '両方（週替わり）', sub: '奇数週=ビジネス、偶数週=旅行' },
-  ];
-  var onbStep = 0;
-  var onbLevel = null;
-  var onbGoal = 'both';
-
-  function renderOnbDots() {
-    var wrap = document.getElementById('onb-dots');
-    wrap.innerHTML = '';
-    for (var i = 0; i < 4; i++) {
-      var d = document.createElement('div');
-      d.className = 'onb-dot' + (i === onbStep ? ' active' : '');
-      wrap.appendChild(d);
-    }
-  }
-  function showOnbStep(n) {
-    onbStep = n;
-    document.querySelectorAll('.onb-step').forEach(function (el, i) {
-      el.style.display = i === n ? 'flex' : 'none';
-    });
-    renderOnbDots();
-  }
-  function renderLevelOptions() {
-    var wrap = document.getElementById('onb-level-options');
-    wrap.innerHTML = '';
-    LEVELS.forEach(function (label) {
-      var b = document.createElement('button');
-      b.className = 'btn onb-option';
-      b.textContent = label;
-      b.style.borderColor = onbLevel === label ? 'var(--color-accent)' : 'var(--color-neutral-700)';
-      b.style.background = onbLevel === label ? 'var(--color-accent-800)' : 'transparent';
-      b.style.color = onbLevel === label ? 'var(--color-text)' : 'var(--color-neutral-300)';
-      b.onclick = function () { onbLevel = label; renderLevelOptions(); };
-      wrap.appendChild(b);
-    });
-  }
-  function renderGoalOptions() {
-    var wrap = document.getElementById('onb-goal-options');
-    wrap.innerHTML = '';
-    GOALS.forEach(function (g) {
-      var b = document.createElement('button');
-      b.className = 'btn onb-option';
-      b.style.borderColor = onbGoal === g.v ? 'var(--color-accent)' : 'var(--color-neutral-700)';
-      b.style.background = onbGoal === g.v ? 'var(--color-accent-800)' : 'transparent';
-      b.style.color = onbGoal === g.v ? 'var(--color-text)' : 'var(--color-neutral-300)';
-      b.innerHTML = '<div style="display:flex;flex-direction:column;gap:2px;text-align:left"><span style="font-size:15px">' + g.label + '</span><span style="font-size:12px;color:var(--color-neutral-400)">' + g.sub + '</span></div>';
-      b.onclick = function () { onbGoal = g.v; renderGoalOptions(); };
-      wrap.appendChild(b);
-    });
-  }
-
-  function finishOnboarding() {
-    localStorage.setItem('onboarded_v1', '1');
-    localStorage.setItem('onb_level', onbLevel || '');
-    localStorage.setItem('onb_goal', onbGoal);
-    localStorage.setItem('weekly_focus', onbGoal === 'travel' ? 'travel' : 'business');
-    showApp();
-  }
-
-  function showApp() {
-    document.getElementById('onboarding').style.display = 'none';
-    document.getElementById('app').classList.add('active');
-    App.switchTab(App.state.activeTab || 'home');
-  }
-
-  document.getElementById('onb-start').onclick = function () { showOnbStep(1); };
-  document.getElementById('onb-to-step2').onclick = function () { showOnbStep(2); };
-  document.getElementById('onb-to-step3').onclick = function () { showOnbStep(3); };
-  document.getElementById('onb-finish').onclick = finishOnboarding;
-  renderLevelOptions();
-  renderGoalOptions();
-  renderOnbDots();
-
-  // ── App namespace: tab registry + router + toast ──
   var tabs = {};
   var App = {
     state: { activeTab: 'home' },
@@ -336,14 +205,11 @@
     btn.onclick = function () { App.switchTab(btn.getAttribute('data-tab')); };
   });
 
-  // Boot: skip onboarding for returning users.
+  // Tabs register themselves on script load (see js/dashboard.js etc.), which may happen
+  // after or before this DOMContentLoaded fires — App.switchTab no-ops until the tab is
+  // registered, so re-invoking it here is what actually renders the initial Home tab.
   window.addEventListener('DOMContentLoaded', function () {
-    if (localStorage.getItem('onboarded_v1')) {
-      showApp();
-    }
-    // Tabs register themselves on script load (see js/dashboard.js etc.), which may
-    // happen after or before this DOMContentLoaded fires — App.switchTab is safe either way
-    // since it no-ops until the tab is registered, and showApp() re-invokes it above.
+    App.switchTab(App.state.activeTab);
   });
 })();
 </script>

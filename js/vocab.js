@@ -162,6 +162,18 @@
       return '<button onclick="VocabTab.setFilter(\'' + f.id + '\')" style="flex-shrink:0;padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid ' + (active ? 'var(--color-accent)' : 'var(--color-neutral-700)') + ';background:' + (active ? 'var(--color-accent-800)' : 'transparent') + ';color:' + (active ? 'var(--color-text)' : 'var(--color-neutral-300)') + ';cursor:pointer;white-space:nowrap">' + esc(f.label) + '</button>';
     }).join('');
   }
+  var LIST_COL_W = { level: '54px', date: '54px', status: '48px' };
+  function listHeaderHtml() {
+    // Not position:sticky — its parent has overflow:hidden (for the card's rounded
+    // corners), which becomes the nearest "scrolling ancestor" per spec and defeats
+    // sticky before it ever reaches the real overflow:auto container further up.
+    return '<div style="display:flex;align-items:center;background:var(--color-neutral-800);border-bottom:1px solid var(--color-neutral-700);padding:6px 6px">'
+      + '<div style="flex:1;min-width:0;font-size:9.5px;color:var(--color-neutral-400)">単語</div>'
+      + '<div style="width:' + LIST_COL_W.level + ';flex-shrink:0;font-size:9.5px;color:var(--color-neutral-400);text-align:center">カテゴリ</div>'
+      + '<div style="width:' + LIST_COL_W.date + ';flex-shrink:0;font-size:9.5px;color:var(--color-neutral-400);text-align:center">登録日</div>'
+      + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;font-size:9.5px;color:var(--color-neutral-400);text-align:center">状態</div>'
+      + '</div>';
+  }
   function listRowsHtml() {
     var pool = poolByLevelAndScript();
     var today = S.todayStr();
@@ -170,14 +182,13 @@
       var statusLabel = w.reviewCount === 0 ? '未学習' : (due ? '復習期限' : (w.streak >= 3 && w.interval >= 4 ? '習得済み' : '学習中'));
       var statusColor = statusLabel === '習得済み' ? 'var(--color-success)' : statusLabel === '復習期限' ? 'var(--color-warning)' : statusLabel === '学習中' ? 'var(--color-info)' : 'var(--color-neutral-400)';
       var lvls = levelsOf(w);
-      var levelBadge = lvls.length ? '<span class="tag tag-outline" style="font-size:8.5px;padding:2px 6px">' + esc(lvls[0]) + (lvls.length > 1 ? '+' + (lvls.length - 1) : '') + '</span>' : '';
-      return '<button onclick="VocabTab.openDetail(\'' + w.id + '\')" style="display:flex;align-items:center;gap:6px;width:100%;background:var(--color-neutral-800);border:none;border-top:1px solid var(--color-neutral-700);cursor:pointer;text-align:left;color:inherit;padding:8px 6px">'
-        + '<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500">' + esc(w.word) + '</div><div style="font-size:10px;color:var(--color-neutral-400)">' + esc(w.meaning) + '</div></div>'
-        + '<div style="flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px">'
-        + levelBadge
-        + '<span style="font-size:9px;color:var(--color-neutral-500)">' + esc(w.added || '') + '</span>'
-        + '<span class="tag" style="font-size:9px;color:' + statusColor + ';border-color:' + statusColor + '">' + statusLabel + '</span>'
-        + '</div></button>';
+      var levelBadge = lvls.length ? '<span class="tag tag-outline" style="font-size:8px;padding:2px 5px;white-space:nowrap">' + esc(lvls[0]) + (lvls.length > 1 ? '+' + (lvls.length - 1) : '') + '</span>' : '<span style="font-size:9px;color:var(--color-neutral-600)">—</span>';
+      return '<button onclick="VocabTab.openDetail(\'' + w.id + '\')" style="display:flex;align-items:center;width:100%;background:var(--color-neutral-800);border:none;border-top:1px solid var(--color-neutral-700);cursor:pointer;text-align:left;color:inherit;padding:8px 6px">'
+        + '<div style="flex:1;min-width:0;padding-right:4px"><div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.word) + '</div><div style="font-size:10px;color:var(--color-neutral-400);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.meaning) + '</div></div>'
+        + '<div style="width:' + LIST_COL_W.level + ';flex-shrink:0;text-align:center">' + levelBadge + '</div>'
+        + '<div style="width:' + LIST_COL_W.date + ';flex-shrink:0;text-align:center;font-size:9px;color:var(--color-neutral-500)">' + esc(w.added || '—') + '</div>'
+        + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center"><span class="tag" style="font-size:8.5px;padding:2px 5px;color:' + statusColor + ';border-color:' + statusColor + ';white-space:nowrap">' + statusLabel + '</span></div>'
+        + '</button>';
     }).join('') || '<div style="padding:20px;text-align:center;color:var(--color-neutral-400);font-size:13px">該当する単語がありません</div>';
   }
 
@@ -211,7 +222,7 @@
       + '</div>';
     top += '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-top:8px">' + filterChipsHtml() + '</div>';
 
-    var middle = '<div style="border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);overflow:hidden;margin-top:8px">' + listRowsHtml() + '</div>';
+    var middle = '<div style="border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);overflow:hidden;margin-top:8px">' + listHeaderHtml() + listRowsHtml() + '</div>';
 
     var footer = '<div style="display:flex;gap:8px;flex-shrink:0;padding-top:10px">'
       + '<button class="btn btn-secondary" onclick="VocabTab.openNewWord()">＋ 新規登録</button>'

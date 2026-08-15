@@ -69,6 +69,8 @@
   var recentRecords = []; // parsed record JSONs, newest-first
   var weeklyReportData = null;
   var editingPastRecords = {};
+  var cefrHistory = []; // [{date, index, avgScore}], persisted in data/progress.json
+  var cefrLegendOpen = false;
   var loaded = false;
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -100,17 +102,25 @@
   }
   function weekType(d) { return isoWeekNumber(d) % 2 === 1 ? 'business' : 'travel'; }
 
-  // ?q= prefill doesn't reliably start a session inside a ChatGPT project (it just opens
-  // the project without composing anything), so open the project as-is and let the user
-  // start the chat themselves.
+  // NOTE: last tested, appending ?q= to this project URL opened the project but did not
+  // start a new session with the text pre-filled — ChatGPT's prefill query seems to only
+  // apply to the top-level chatgpt.com new-chat compose flow, not project-scoped URLs.
+  // Trying again with this title format since it's low-cost, but it may still just open
+  // the project without composing anything — please confirm on-device.
   var CHATGPT_PROJECT_URL = 'https://chatgpt.com/g/g-p-6a64216444588191b40c3a829fd3121b'; // 「英語学習」プロジェクト
-  function openChatGPT() { window.open(CHATGPT_PROJECT_URL, '_blank'); }
+  function openChatGPT() {
+    var now = new Date();
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var title = '対話練習・瞬間英作文・壁打ち_' + now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + '_' + pad(now.getHours()) + '-' + pad(now.getMinutes());
+    window.open(CHATGPT_PROJECT_URL + '?q=' + encodeURIComponent(title), '_blank');
+  }
 
   // ── load ──
   function loadAll() {
     return S.apiGetJson('data/progress.json').then(function (obj) {
       dailyTaskData = (obj && obj.dailyTasks) || {};
       dailyTaskState = dailyTaskData[todayStr] || {};
+      cefrHistory = (obj && obj.cefrHistory) || [];
     }).catch(function () {}).then(function () {
       return Promise.all([
         S.apiListDir('recordings').catch(function () { return []; }),
@@ -121,12 +131,13 @@
       recordings = recFiles.map(function (f) { return parseRecording(f.name || ''); }).filter(Boolean);
       var jsonFiles = (Array.isArray(results[1]) ? results[1] : []).filter(function (f) {
         return f.name && f.name.endsWith('.json') && f.name !== 'vocab-stats.json';
-      }).sort(function (a, b) { return b.name.localeCompare(a.name); }).slice(0, 5);
+      }).sort(function (a, b) { return b.name.localeCompare(a.name); }).slice(0, 12);
       return Promise.all(jsonFiles.map(function (f) {
         return S.apiGetJson('records/' + f.name).catch(function () { return null; });
       }));
     }).then(function (recs) {
       recentRecords = (recs || []).filter(Boolean);
+      updateCefrEstimate();
     }).then(function () {
       return S.rawGetJson('data/vocab.json').catch(function () { return null; });
     }).then(function (data) {
@@ -214,8 +225,10 @@
     var userName = localStorage.getItem('profile_name') || 'Fami';
 
     var html = '';
-    html += '<div style="display:flex;align-items:baseline;justify-content:space-between">'
-      + '<div style="font-weight:600;font-size:24px">こんにちは、' + esc(userName) + 'さん</div>'
+    html += '<div style="display:flex;align-items:center;justify-content:space-between">'
+      + '<div style="display:flex;align-items:center;gap:10px">'
+      + '<img src="./assets/app-icon.png" alt="" style="width:36px;height:36px;border-radius:10px;flex-shrink:0">'
+      + '<div style="font-weight:600;font-size:24px">こんにちは、' + esc(userName) + 'さん</div></div>'
       + '<span class="tag tag-accent">継続' + streakDays() + '日</span></div>';
 
     html += '<div class="card"><div style="display:flex;align-items:center;gap:8px">'
@@ -306,30 +319,86 @@
       var override = editingPastRecords[ds];
       var done = override ? Object.keys(override).some(function (k) { return k !== '_manualKeys' && override[k]; }) : !!set[ds];
       cells.push('<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">'
-        + '<div style="font-size:8px;color:var(--color-neutral-500)">' + d.getDate() + '</div>'
-        + '<div style="font-size:7px;color:var(--color-neutral-600)">' + dayNamesShort[d.getDay()] + '</div>'
+        + '<div style="font-size:8px;color:var(--color-neutral-300)">' + d.getDate() + '</div>'
+        + '<div style="font-size:7px;color:var(--color-neutral-400)">' + dayNamesShort[d.getDay()] + '</div>'
         + '<div style="width:14px;height:14px;border-radius:3px;background:' + (done ? 'var(--color-accent-500)' : 'transparent') + ';border:1px solid ' + (done ? 'var(--color-accent-500)' : 'var(--color-neutral-600)') + '"></div></div>');
     }
     return cells.join('');
   }
 
-  // ── CEFR (decorative estimate — no real assessment pipeline exists yet; see plan
-  // decision #2. Anchored to the TOEIC750→900+ goal from LEARNING_PLAN.md via a standard
-  // TOEIC↔CEFR correspondence table, not a per-user measurement.) ──
+  // ── CEFR estimate (derived from recent AI-scored practice, not an official test — see
+  // README note in the card itself). Score→level mapping and the TOEIC900+ goal anchor are
+  // both simple heuristics, not calibrated against a real CEFR assessment. ──
+  var CEFR_LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'C1.1', 'C1.2', 'C2.1', 'C2.2'];
+  var CEFR_GOAL_INDEX = 9; // TOEIC900+ ≈ C1.2, per a standard TOEIC↔CEFR correspondence table
+  var CEFR_LEGEND = [
+    { level: 'A1.1', desc: '挨拶や自己紹介など、ごく基本的な表現が言える' },
+    { level: 'A1.2', desc: '簡単な質問への受け答えができる' },
+    { level: 'A2.1', desc: '買い物や道案内など身近な場面で会話できる' },
+    { level: 'A2.2', desc: '日常の出来事について簡単に説明できる' },
+    { level: 'B1.1', desc: '身近な話題なら要点を理解し、意見を言える' },
+    { level: 'B1.2', desc: '会議や旅行先で自立してやり取りできる' },
+    { level: 'B2.1', desc: '抽象的な話題も含め、複雑な文章を理解できる' },
+    { level: 'B2.2', desc: 'ネイティブと自然なスピードで議論できる' },
+    { level: 'C1.1', desc: '専門的な内容を柔軟かつ的確に扱える' },
+    { level: 'C1.2', desc: '長い文章の含意まで正確に読み取れる' },
+    { level: 'C2.1', desc: 'ほぼネイティブ同等に、あらゆる場面に対応できる' },
+    { level: 'C2.2', desc: '文化的なニュアンスやジョークまで理解できる' },
+  ];
+  function avgRecentScore() {
+    var scores = recentRecords.filter(function (r) { return r.score != null; }).map(function (r) { return r.score; });
+    if (!scores.length) return null;
+    return Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+  }
+  // Linear mapping, anchored so the app's own pass thresholds land near the middle of the
+  // scale: score 70 (shadowing pass line) → B2.1 (index 6), ~5 points per half-level.
+  function estimateCefrIndex(avgScore) {
+    if (avgScore == null) return null;
+    return Math.max(0, Math.min(CEFR_LEVELS.length - 1, Math.round((avgScore - 40) / 5)));
+  }
+  function updateCefrEstimate() {
+    var avg = avgRecentScore();
+    var idx = estimateCefrIndex(avg);
+    if (idx == null) return;
+    var last = cefrHistory[cefrHistory.length - 1];
+    if (last && last.date === todayStr && last.index === idx) return; // no change to record today
+    cefrHistory = cefrHistory.filter(function (h) { return h.date !== todayStr; }).concat([{ date: todayStr, index: idx, avgScore: avg }]);
+    if (cefrHistory.length > 20) cefrHistory = cefrHistory.slice(-20);
+    if (!S.GH_TOKEN) return;
+    S.apiPutJson('data/progress.json', function (obj) { obj = obj || {}; obj.cefrHistory = cefrHistory; return obj; }, '📈 CEFR推定更新').catch(function () {});
+  }
+  function cefrTrendSvg() {
+    if (cefrHistory.length < 2) return '';
+    var w = 260, h = 50, pad = 6;
+    var yFor = function (idx) { return pad + (1 - idx / (CEFR_LEVELS.length - 1)) * (h - 2 * pad); };
+    var pts = cefrHistory.map(function (pt, i) { return (pad + i * (w - 2 * pad) / Math.max(1, cefrHistory.length - 1)).toFixed(1) + ',' + yFor(pt.index).toFixed(1); }).join(' ');
+    return '<svg width="100%" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" style="margin-top:6px">'
+      + '<polyline points="' + pts + '" fill="none" stroke="var(--color-accent)" stroke-width="2"/></svg>';
+  }
   function cefrGridHtml() {
-    var LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'C1.1', 'C1.2', 'C2.1', 'C2.2'];
-    var currentIndex = 6, goalIndex = 9; // TOEIC750≈B2.1, TOEIC900+≈C1.2 (standard correspondence table)
-    var cells = LEVELS.map(function (lvl, i) {
-      var isCurrent = i === currentIndex, isGoal = i === goalIndex;
+    var currentIndex = cefrHistory.length ? cefrHistory[cefrHistory.length - 1].index : null;
+    var cells = CEFR_LEVELS.map(function (lvl, i) {
+      var isCurrent = i === currentIndex, isGoal = i === CEFR_GOAL_INDEX;
       return '<div style="flex:1;min-width:0;text-align:center;padding:6px 1px;border-radius:var(--radius-sm);background:' + (isCurrent ? 'var(--color-accent-700)' : 'var(--color-neutral-900)') + ';border:1.5px solid ' + (isGoal ? 'var(--color-accent)' : 'var(--color-neutral-700)') + '">'
         + '<div style="font-size:10px;font-weight:500;color:' + (isCurrent ? 'var(--color-text)' : 'var(--color-neutral-400)') + '">' + lvl[0] + '</div>'
         + '<div style="font-size:9px;font-weight:500;color:' + (isCurrent ? 'var(--color-text)' : 'var(--color-neutral-400)') + '">' + lvl.slice(1) + '</div>'
         + (isGoal ? '<div style="font-size:7px;color:var(--color-accent-300);margin-top:1px">目標</div>' : '') + '</div>';
     }).join('');
-    return '<div class="card"><div class="card-kicker">CEFR目安（簡易推定）</div>'
+    var legend = cefrLegendOpen ? '<div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--color-neutral-700)">'
+      + CEFR_LEGEND.map(function (lg) {
+        return '<div style="display:flex;gap:8px"><span style="font-size:12px;font-weight:500;color:var(--color-accent-300);width:34px;flex-shrink:0">' + lg.level + '</span><span style="font-size:12px;color:var(--color-neutral-300)">' + lg.desc + '</span></div>';
+      }).join('') + '</div>' : '';
+    var note = currentIndex == null
+      ? 'AI評価付きの記録がまだ少ないため推定できません。シャドーイング・音読を録音してAI評価を受けると表示されます。'
+      : '直近の練習スコア平均から簡易的に推定した目安です（実際のCEFR試験ではありません）。目標はTOEIC900+相当。';
+    return '<div class="card"><div class="card-kicker">CEFR目安（練習スコアからの推定）</div>'
       + '<div style="display:flex;gap:2px;margin-top:8px">' + cells + '</div>'
-      + '<div style="font-size:11px;color:var(--color-neutral-400);margin-top:8px">TOEIC750（現在）→ 900+（目標）を一般的な対応表で換算した目安です。実測ではありません。</div></div>';
+      + cefrTrendSvg()
+      + '<div style="font-size:11px;color:var(--color-neutral-400);margin-top:8px">' + note + '</div>'
+      + '<button onclick="DashboardTab.toggleCefrLegend()" style="margin-top:8px;background:none;border:none;color:var(--color-accent-300);font-size:12px;cursor:pointer;padding:0">' + (cefrLegendOpen ? '▴ レベルの説明を閉じる' : '▾ レベルの説明を見る') + '</button>'
+      + legend + '</div>';
   }
+  function toggleCefrLegend() { cefrLegendOpen = !cefrLegendOpen; renderProgress(); }
 
   function renderProgress() {
     var el = document.getElementById('tab-progress');
@@ -502,9 +571,10 @@
     return '<div style="text-align:center;padding:12px 6px;border-radius:var(--radius-sm);background:var(--color-neutral-900);border:1px solid var(--color-neutral-700)">'
       + '<div style="font-size:19px;font-weight:500;color:' + color + '">' + esc(value) + '</div><div style="font-size:11px;color:var(--color-neutral-400);margin-top:2px">' + esc(label) + '</div></div>';
   }
-  function reportSectionHtml(title, items) {
+  function reportSectionHtml(title, items, tone) {
+    var color = tone === 'warning' ? 'var(--color-warning)' : 'var(--color-text)';
     return '<div class="card-kicker" style="margin-top:12px">' + title + '</div>'
-      + '<ul style="font-size:13px;line-height:1.8;padding-left:18px;margin:4px 0 0">' + items.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>';
+      + '<ul style="font-size:13px;line-height:1.8;padding-left:18px;margin:4px 0 0;color:' + color + '">' + items.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>';
   }
   function openWeeklyReportModal() {
     var sheet = openSheet('週次レポート', 'wr-body', 'wr-actions');
@@ -534,7 +604,7 @@
     if (analysis) {
       html += '<div class="card" style="margin-top:14px"><div style="font-size:14px;line-height:1.7">' + esc(analysis.summary || '') + '</div></div>';
       if (analysis.achievements && analysis.achievements.length) html += reportSectionHtml('✨ よかった点', analysis.achievements);
-      if (analysis.improvements && analysis.improvements.length) html += reportSectionHtml('🎯 改善ポイント', analysis.improvements);
+      if (analysis.improvements && analysis.improvements.length) html += reportSectionHtml('🎯 改善ポイント', analysis.improvements, 'warning');
       if (analysis.keyPhrases && analysis.keyPhrases.length) {
         html += '<div class="card-kicker" style="margin-top:12px">💡 今週のキーフレーズ</div><div style="margin-top:4px">'
           + analysis.keyPhrases.map(function (p) { return '<span class="tag tag-accent" style="margin:2px 4px 2px 0">' + esc(p) + '</span>'; }).join('') + '</div>';
@@ -599,7 +669,7 @@
         var modeLbl = r.mode === 'reading' ? '音読' : r.mode === 'shadowing' ? 'シャドー' : (r.mode || r.type || '—');
         var scoreCol = r.score >= 75 ? 'var(--color-success)' : r.score >= 55 ? 'var(--color-warning)' : 'var(--color-error)';
         var pts = (r.strengths || []).map(function (s) { return '<div style="font-size:12px;padding:2px 0">✅ ' + esc(s) + '</div>'; }).join('');
-        var imps = (r.improvements || []).map(function (s) { return '<div style="font-size:12px;padding:2px 0">💡 ' + esc(s) + '</div>'; }).join('');
+        var imps = (r.improvements || []).map(function (s) { return '<div style="font-size:12px;padding:2px 0;color:var(--color-warning)">💡 ' + esc(s) + '</div>'; }).join('');
         var audio = r.recordingUrl ? '<audio controls style="width:100%;height:32px;margin-top:6px" src="' + esc(r.recordingUrl) + '"></audio>' : '';
         return '<div class="card" style="margin-top:6px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
           + '<span class="tag tag-neutral">' + esc(modeLbl) + '</span>'
@@ -616,7 +686,7 @@
   window.DashboardTab = {
     toggleTask: toggleTask, openChatGPT: openChatGPT, openPastRecordsModal: openPastRecordsModal,
     openWeeklyReportModal: openWeeklyReportModal, copyWeeklyReport: copyWeeklyReport, saveWeeklyReport: saveWeeklyReport,
-    openRecordsModal: openRecordsModal,
+    openRecordsModal: openRecordsModal, toggleCefrLegend: toggleCefrLegend,
   };
 
   App.registerTab('home', { onShow: renderHome });
