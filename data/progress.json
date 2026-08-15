@@ -146,5 +146,12 @@
     },
     "listScriptFilter": "",
     "activeFilters": []
-  }
+  },
+  "cefrHistory": [
+    {
+      "date": "2026-08-15",
+      "index": 7,
+      "avgScore": 74
+    }
+  ]
 }
