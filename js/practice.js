@@ -790,8 +790,11 @@ var SCRIPTS = [
   function showAIFeedback(r, mode) {
     var fb = document.getElementById('pt-feedback');
     var col = r.score >= 75 ? 'var(--color-success)' : r.score >= 55 ? 'var(--color-warning)' : 'var(--color-error)';
+    // Improvements get a left accent bar rather than full-line color — text color there
+    // (green/amber/red) already means pass/borderline/fail for scores elsewhere in the
+    // app, so coloring the whole sentence the same way reads as a score judgment.
     var str = (r.strengths || []).map(function (s) { return '<li>✅ ' + esc(s) + '</li>'; }).join('');
-    var imp = (r.improvements || []).map(function (s) { return '<li style="color:var(--color-warning)">💡 ' + esc(s) + '</li>'; }).join('');
+    var imp = (r.improvements || []).map(function (s) { return '<li style="list-style:none;margin-left:-18px;padding:2px 0 2px 10px;border-left:3px solid var(--color-accent)">💡 ' + esc(s) + '</li>'; }).join('');
     var advance = r.canAdvance ? '<div style="color:var(--color-success);font-size:13px;margin-top:8px">🎉 クリア！</div>' : '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:8px">📌 ' + esc(r.nextStepAdvice || '') + '</div>';
     fb.innerHTML = '<div class="card" style="margin-top:10px">'
       + '<div style="display:flex;align-items:center;gap:10px">'

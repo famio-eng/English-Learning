@@ -22,10 +22,10 @@
     0: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }, { label: '単語帳を開く', tab: 'vocab', cls: 'btn-secondary' }] },
     1: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }] },
     2: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }] },
-    3: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
-    4: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
+    3: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: "DashboardTab.openChatGPT('practice')", cls: 'btn-secondary' }] },
+    4: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: "DashboardTab.openChatGPT('practice')", cls: 'btn-secondary' }] },
     5: { buttons: [{ label: '単語帳を開く', tab: 'vocab', cls: 'btn-primary' }] },
-    6: { buttons: [{ label: '週次レポートを生成', onclick: 'DashboardTab.openWeeklyReportModal()', cls: 'btn-primary' }, { label: 'ChatGPTで壁打ち', onclick: 'DashboardTab.openChatGPT()', cls: 'btn-secondary' }] },
+    6: { buttons: [{ label: '週次レポートを生成', onclick: 'DashboardTab.openWeeklyReportModal()', cls: 'btn-primary' }, { label: 'ChatGPTで壁打ち', onclick: "DashboardTab.openChatGPT('kickoff')", cls: 'btn-secondary' }] },
   };
   var DAILY_TASKS_DEF = {
     0: [{ key: 'shadowing', label: 'シャドーイング 0.7倍速 3回通し', priority: 'must', auto: true }, { key: 'vocab', label: '単語復習（SM-2）', priority: 'must', auto: true }],
@@ -71,6 +71,7 @@
   var editingPastRecords = {};
   var cefrHistory = []; // [{date, index, avgScore}], persisted in data/progress.json
   var cefrLegendOpen = false;
+  var cefrBasisOpen = false;
   var loaded = false;
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -102,17 +103,25 @@
   }
   function weekType(d) { return isoWeekNumber(d) % 2 === 1 ? 'business' : 'travel'; }
 
-  // NOTE: last tested, appending ?q= to this project URL opened the project but did not
-  // start a new session with the text pre-filled — ChatGPT's prefill query seems to only
-  // apply to the top-level chatgpt.com new-chat compose flow, not project-scoped URLs.
-  // Trying again with this title format since it's low-cost, but it may still just open
-  // the project without composing anything — please confirm on-device.
+  // Confirmed on-device: ?q= prefill just lands on the project's top page, no session
+  // starts. Fallback per Fami's suggestion — copy a starter prompt to the clipboard and
+  // open the bare project URL, so the prompt can be pasted into the compose box by hand.
   var CHATGPT_PROJECT_URL = 'https://chatgpt.com/g/g-p-6a64216444588191b40c3a829fd3121b'; // 「英語学習」プロジェクト
-  function openChatGPT() {
+  var CHATGPT_PROMPTS = {
+    kickoff: '今週の教材を準備したい', // LEARNING_PLAN.md記載の壁打ち開始フレーズ
+    practice: '対話練習をしたい。今日のテーマで日本語提示→数秒以内に英語で即答→フィードバック、という形式で進めてください。',
+  };
+  function openChatGPT(kind) {
     var now = new Date();
     var pad = function (n) { return String(n).padStart(2, '0'); };
-    var title = '対話練習・瞬間英作文・壁打ち_' + now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + '_' + pad(now.getHours()) + '-' + pad(now.getMinutes());
-    window.open(CHATGPT_PROJECT_URL + '?q=' + encodeURIComponent(title), '_blank');
+    var stamp = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
+    var text = (CHATGPT_PROMPTS[kind] || CHATGPT_PROMPTS.practice) + '\n（' + stamp + '）';
+    window.open(CHATGPT_PROJECT_URL, '_blank');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(function () { App.toast('プロンプトをコピーしました。チャット欄に貼り付けてください'); })
+        .catch(function () { App.toast('コピーに失敗しました'); });
+    }
   }
 
   // ── load ──
@@ -242,9 +251,9 @@
 
     html += continueScriptHtml();
 
-    html += '<button onclick="DashboardTab.openChatGPT()" style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:14px;cursor:pointer;text-align:left;color:inherit;font-family:inherit;width:100%">'
+    html += '<button onclick="DashboardTab.openChatGPT(\'practice\')" style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:14px;cursor:pointer;text-align:left;color:inherit;font-family:inherit;width:100%">'
       + '<div style="width:36px;height:36px;border-radius:12px;background:rgba(56,189,248,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">' + TASK_ICON.dialogue.replace('currentColor', 'var(--color-info)') + '</div>'
-      + '<div style="flex:1"><div style="font-size:14px;font-weight:500">対話練習・瞬間英作文</div><div style="font-size:12px;color:var(--color-neutral-400);margin-top:2px">ChatGPTを外部で開きます</div></div>'
+      + '<div style="flex:1"><div style="font-size:14px;font-weight:500">対話練習・瞬間英作文</div><div style="font-size:12px;color:var(--color-neutral-400);margin-top:2px">プロンプトをコピーしてChatGPTを開きます</div></div>'
       + '<span style="font-size:13px;color:var(--color-accent-300)">開く ›</span></button>';
 
     html += '<div class="card"><div class="card-kicker">今週のスケジュール</div><div style="display:flex;gap:4px;margin-top:8px">' + weekScheduleHtml() + '</div></div>';
@@ -375,6 +384,27 @@
     return '<svg width="100%" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" style="margin-top:6px">'
       + '<polyline points="' + pts + '" fill="none" stroke="var(--color-accent)" stroke-width="2"/></svg>';
   }
+  function cefrBasisHtml(currentIndex) {
+    if (!cefrBasisOpen) return '';
+    var scored = recentRecords.filter(function (r) { return r.score != null; });
+    var rows = scored.map(function (r) {
+      var title = SCRIPT_NAMES[r.scriptId] || r.scriptTitle || r.scriptId || '—';
+      return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:3px 0">'
+        + '<span style="color:var(--color-neutral-300);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">' + esc(title) + ' ・ ' + esc(r.date || '') + '</span>'
+        + '<span style="color:var(--color-neutral-400);flex-shrink:0">' + r.score + '点</span></div>';
+    }).join('') || '<div style="font-size:12px;color:var(--color-neutral-500)">AI評価付きの記録がありません</div>';
+    var avg = avgRecentScore();
+    var historyRows = cefrHistory.slice().reverse().map(function (h) {
+      return '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--color-neutral-400);padding:2px 0">'
+        + '<span>' + h.date + '</span><span>平均' + h.avgScore + '点 → ' + CEFR_LEVELS[h.index] + '</span></div>';
+    }).join('');
+    return '<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--color-neutral-700)">'
+      + '<div style="font-size:11px;color:var(--color-neutral-400);margin-bottom:4px">直近の採点記録（新しい順、最大12件）</div>'
+      + rows
+      + (scored.length ? '<div style="font-size:12px;color:var(--color-text);font-weight:500;margin-top:6px;padding-top:6px;border-top:1px solid var(--color-neutral-800)">平均 ' + avg + '点 → ' + (currentIndex != null ? CEFR_LEVELS[currentIndex] : '—') + ' と推定</div>' : '')
+      + (historyRows ? '<div style="font-size:11px;color:var(--color-neutral-400);margin-top:10px;margin-bottom:4px">推定の推移履歴</div>' + historyRows : '')
+      + '</div>';
+  }
   function cefrGridHtml() {
     var currentIndex = cefrHistory.length ? cefrHistory[cefrHistory.length - 1].index : null;
     var cells = CEFR_LEVELS.map(function (lvl, i) {
@@ -395,10 +425,15 @@
       + '<div style="display:flex;gap:2px;margin-top:8px">' + cells + '</div>'
       + cefrTrendSvg()
       + '<div style="font-size:11px;color:var(--color-neutral-400);margin-top:8px">' + note + '</div>'
-      + '<button onclick="DashboardTab.toggleCefrLegend()" style="margin-top:8px;background:none;border:none;color:var(--color-accent-300);font-size:12px;cursor:pointer;padding:0">' + (cefrLegendOpen ? '▴ レベルの説明を閉じる' : '▾ レベルの説明を見る') + '</button>'
+      + '<div style="display:flex;gap:14px;margin-top:8px">'
+      + '<button onclick="DashboardTab.toggleCefrBasis()" style="background:none;border:none;color:var(--color-accent-300);font-size:12px;cursor:pointer;padding:0">' + (cefrBasisOpen ? '▴ 推定の根拠を閉じる' : '▾ 推定の根拠を見る') + '</button>'
+      + '<button onclick="DashboardTab.toggleCefrLegend()" style="background:none;border:none;color:var(--color-accent-300);font-size:12px;cursor:pointer;padding:0">' + (cefrLegendOpen ? '▴ レベルの説明を閉じる' : '▾ レベルの説明を見る') + '</button>'
+      + '</div>'
+      + cefrBasisHtml(currentIndex)
       + legend + '</div>';
   }
   function toggleCefrLegend() { cefrLegendOpen = !cefrLegendOpen; renderProgress(); }
+  function toggleCefrBasis() { cefrBasisOpen = !cefrBasisOpen; renderProgress(); }
 
   function renderProgress() {
     var el = document.getElementById('tab-progress');
@@ -571,10 +606,18 @@
     return '<div style="text-align:center;padding:12px 6px;border-radius:var(--radius-sm);background:var(--color-neutral-900);border:1px solid var(--color-neutral-700)">'
       + '<div style="font-size:19px;font-weight:500;color:' + color + '">' + esc(value) + '</div><div style="font-size:11px;color:var(--color-neutral-400);margin-top:2px">' + esc(label) + '</div></div>';
   }
+  // `tone:'flag'` marks items as needing attention via a left accent bar rather than
+  // coloring the whole sentence — full-line warning/error color reads as if it were a
+  // score judgment (those colors already mean pass/borderline/fail elsewhere in the app).
   function reportSectionHtml(title, items, tone) {
-    var color = tone === 'warning' ? 'var(--color-warning)' : 'var(--color-text)';
+    if (tone === 'flag') {
+      return '<div class="card-kicker" style="margin-top:12px">' + title + '</div>'
+        + '<div style="margin-top:4px">' + items.map(function (a) {
+          return '<div style="font-size:13px;line-height:1.6;padding:2px 0 2px 10px;margin:4px 0;border-left:3px solid var(--color-accent)">' + esc(a) + '</div>';
+        }).join('') + '</div>';
+    }
     return '<div class="card-kicker" style="margin-top:12px">' + title + '</div>'
-      + '<ul style="font-size:13px;line-height:1.8;padding-left:18px;margin:4px 0 0;color:' + color + '">' + items.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>';
+      + '<ul style="font-size:13px;line-height:1.8;padding-left:18px;margin:4px 0 0">' + items.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>';
   }
   function openWeeklyReportModal() {
     var sheet = openSheet('週次レポート', 'wr-body', 'wr-actions');
@@ -604,7 +647,7 @@
     if (analysis) {
       html += '<div class="card" style="margin-top:14px"><div style="font-size:14px;line-height:1.7">' + esc(analysis.summary || '') + '</div></div>';
       if (analysis.achievements && analysis.achievements.length) html += reportSectionHtml('✨ よかった点', analysis.achievements);
-      if (analysis.improvements && analysis.improvements.length) html += reportSectionHtml('🎯 改善ポイント', analysis.improvements, 'warning');
+      if (analysis.improvements && analysis.improvements.length) html += reportSectionHtml('🎯 改善ポイント', analysis.improvements, 'flag');
       if (analysis.keyPhrases && analysis.keyPhrases.length) {
         html += '<div class="card-kicker" style="margin-top:12px">💡 今週のキーフレーズ</div><div style="margin-top:4px">'
           + analysis.keyPhrases.map(function (p) { return '<span class="tag tag-accent" style="margin:2px 4px 2px 0">' + esc(p) + '</span>'; }).join('') + '</div>';
@@ -669,7 +712,7 @@
         var modeLbl = r.mode === 'reading' ? '音読' : r.mode === 'shadowing' ? 'シャドー' : (r.mode || r.type || '—');
         var scoreCol = r.score >= 75 ? 'var(--color-success)' : r.score >= 55 ? 'var(--color-warning)' : 'var(--color-error)';
         var pts = (r.strengths || []).map(function (s) { return '<div style="font-size:12px;padding:2px 0">✅ ' + esc(s) + '</div>'; }).join('');
-        var imps = (r.improvements || []).map(function (s) { return '<div style="font-size:12px;padding:2px 0;color:var(--color-warning)">💡 ' + esc(s) + '</div>'; }).join('');
+        var imps = (r.improvements || []).map(function (s) { return '<div style="font-size:12px;line-height:1.5;padding:2px 0 2px 8px;margin:3px 0;border-left:2px solid var(--color-accent)">💡 ' + esc(s) + '</div>'; }).join('');
         var audio = r.recordingUrl ? '<audio controls style="width:100%;height:32px;margin-top:6px" src="' + esc(r.recordingUrl) + '"></audio>' : '';
         return '<div class="card" style="margin-top:6px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
           + '<span class="tag tag-neutral">' + esc(modeLbl) + '</span>'
@@ -686,7 +729,7 @@
   window.DashboardTab = {
     toggleTask: toggleTask, openChatGPT: openChatGPT, openPastRecordsModal: openPastRecordsModal,
     openWeeklyReportModal: openWeeklyReportModal, copyWeeklyReport: copyWeeklyReport, saveWeeklyReport: saveWeeklyReport,
-    openRecordsModal: openRecordsModal, toggleCefrLegend: toggleCefrLegend,
+    openRecordsModal: openRecordsModal, toggleCefrLegend: toggleCefrLegend, toggleCefrBasis: toggleCefrBasis,
   };
 
   App.registerTab('home', { onShow: renderHome });
