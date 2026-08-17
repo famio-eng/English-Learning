@@ -381,7 +381,8 @@
       + (w.usageTips ? '<div class="card" style="margin-top:8px"><div class="card-kicker">使い方のコツ</div><div style="font-size:13px;margin-top:4px">' + esc(w.usageTips) + '</div></div>' : '')
       + (w.collocations && w.collocations.length ? '<div class="card" style="margin-top:8px"><div class="card-kicker">よく使う表現</div><div style="font-size:13px;margin-top:4px">' + esc(w.collocations.join(' / ')) + '</div></div>' : '')
       + '<div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-secondary" style="flex:1" onclick="VocabTab.openEditWord(\'' + w.id + '\')">編集</button>'
-      + '<button class="btn btn-ghost" style="flex:1" onclick="VocabTab.closeDetail()">閉じる</button></div>';
+      + '<button class="btn btn-ghost" style="flex:1" onclick="VocabTab.closeDetail()">閉じる</button></div>'
+      + '<button style="width:100%;margin-top:8px;padding:9px;border-radius:var(--radius-sm);border:1px solid var(--color-error);background:transparent;color:var(--color-error);font-size:12.5px;cursor:pointer" onclick="VocabTab.deleteWord(\'' + w.id + '\')">この単語を削除</button>';
   }
 
   function openNewWord() { wordFormMode = 'new'; wordFormId = null; wordFormOpen = true; renderList(); }
@@ -397,6 +398,8 @@
       + field('meaning', '意味（日本語）', w ? w.meaning : '', 'e.g. 〜について合意する')
       + field('pron', '発音記号（任意）', w ? w.pron : '', 'e.g. /əˈlaɪn ɒn/')
       + fieldArea('example', '例文（任意・空欄でAI生成）', w ? w.example : '', "e.g. I'd like to align on two points.")
+      + fieldArea('usageTips', '使い方のコツ（任意）', w ? w.usageTips : '', 'e.g. フォーマルな場でよく使う表現')
+      + field('collocations', 'よく使う表現（任意・「/」区切り）', w && w.collocations ? w.collocations.join(' / ') : '', 'e.g. align on the plan / align expectations')
       + '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:8px">レベルカテゴリ</div>'
       + '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">' + ALL_LEVELS.map(function (l) {
         var active = levelSel.indexOf(l) !== -1;
@@ -433,18 +436,21 @@
     var meaningVal = (document.getElementById('vt-f-meaning').value || '').trim();
     var pronVal = (document.getElementById('vt-f-pron').value || '').trim();
     var exampleVal = (document.getElementById('vt-f-example').value || '').trim();
+    var usageTipsVal = (document.getElementById('vt-f-usageTips').value || '').trim();
+    var collocationsRaw = (document.getElementById('vt-f-collocations').value || '').trim();
+    var collocationsVal = collocationsRaw ? collocationsRaw.split(/[\/、,，]/).map(function (s) { return s.trim(); }).filter(Boolean) : [];
     var el = document.getElementById('tab-vocab');
     var levelVal = JSON.parse(el.dataset.formLevels || '[]');
     var st = document.getElementById('vt-form-status');
     if (!wordVal) { st.textContent = '単語を入力してください'; return; }
 
     var needsAI = !meaningVal || !exampleVal;
-    var proceed = function (meaning, example, pron, level) {
+    var proceed = function (meaning, example, pron, level, usageTips, collocations) {
       if (wordFormMode === 'edit' && wordFormId) {
-        var patch = { word: wordVal, meaning: meaning, example: example, pron: pron, level: level.length ? level : levelVal };
+        var patch = { word: wordVal, meaning: meaning, example: example, pron: pron, level: level.length ? level : levelVal, usageTips: usageTips, collocations: collocations };
         persistWordPatch(wordFormId, patch, st);
       } else {
-        submitNewWord(wordVal, meaning, example, pron, level.length ? level : levelVal, st);
+        submitNewWord(wordVal, meaning, example, pron, level.length ? level : levelVal, usageTips, collocations, st);
       }
     };
 
@@ -454,12 +460,13 @@
         + '{"pron":"IPA発音記号","meaning":"日本語の意味（簡潔に）","example":"ビジネスシーンでの英語例文","level":["難易度カテゴリ（ビジネス英語/TOEIC800/TOEIC900+/医療等）"],"usageTips":"使い方のコツ（日本語1文）","collocations":["よく使う表現1","よく使う表現2"]}';
       S.callGeminiText([{ text: prompt }], { temperature: 0.3, maxOutputTokens: 1024 }).then(function (txt) {
         var parsed = S.parseJsonFromModelText(txt);
-        proceed(meaningVal || parsed.meaning || '', exampleVal || parsed.example || '', pronVal || parsed.pron || '', parsed.level || []);
+        proceed(meaningVal || parsed.meaning || '', exampleVal || parsed.example || '', pronVal || parsed.pron || '', parsed.level || [],
+          usageTipsVal || parsed.usageTips || '', collocationsVal.length ? collocationsVal : (parsed.collocations || []));
       }).catch(function () { st.textContent = 'AI生成に失敗しました。手動で入力してください。'; });
     } else if (needsAI) {
       st.textContent = '意味・例文が未入力で、GeminiキーもURLにありません。手動で入力してください。';
     } else {
-      proceed(meaningVal, exampleVal, pronVal, []);
+      proceed(meaningVal, exampleVal, pronVal, [], usageTipsVal, collocationsVal);
     }
   }
   function persistWordPatch(id, patch, st) {
@@ -482,11 +489,28 @@
       wordFormOpen = false; renderList();
     }).catch(function () { st.textContent = '保存に失敗しました'; });
   }
-  function submitNewWord(wordVal, meaning, example, pron, level, st) {
+  function deleteWord(id) {
+    var w = words.find(function (x) { return x.id === id; });
+    if (!w) return;
+    if (!window.confirm('「' + w.word + '」を削除します。この操作は取り消せません。よろしいですか？')) return;
+    var finish = function () {
+      words = words.filter(function (x) { return x.id !== id; });
+      saveProgressSilent();
+      App.toast('「' + w.word + '」を削除しました');
+      wordDetailId = null; renderList();
+    };
+    if (!S.GH_TOKEN) { finish(); return; }
+    S.apiPutJson('data/vocab.json', function (obj) {
+      var list = ((obj && obj.words) || []).filter(function (x) { return x.id !== id; });
+      return { words: list };
+    }, '🗑️ 単語削除: ' + w.word).then(finish).catch(function () { App.toast('削除に失敗しました'); });
+  }
+
+  function submitNewWord(wordVal, meaning, example, pron, level, usageTips, collocations, st) {
     var maxId = 0;
     words.forEach(function (w) { var n = parseInt((w.id || '').replace(/\D/g, ''), 10); if (!isNaN(n) && n > maxId) maxId = n; });
     var newWord = { id: 'w' + String(maxId + 1).padStart(3, '0'), word: wordVal, pron: pron, meaning: meaning, example: example, source: '', scriptId: 'custom', added: S.todayStr(),
-      level: level, usageTips: '', collocations: [], otherMeanings: [], interval: 1, nextReview: S.todayStr(), reviewCount: 0, streak: 0, missCount: 0, lastMissed: '' };
+      level: level, usageTips: usageTips || '', collocations: collocations || [], otherMeanings: [], interval: 1, nextReview: S.todayStr(), reviewCount: 0, streak: 0, missCount: 0, lastMissed: '' };
     if (!S.GH_TOKEN) {
       words.push(newWord); App.toast('追加しました（GitHub保存にはトークンが必要です）');
       wordFormOpen = false; renderList();
@@ -508,6 +532,7 @@
     startSession: startSession, pauseSession: pauseSession, resumeSession: resumeSession, endSession: endSession, resetSession: resetSession, resetQueue: resetQueue,
     flipCard: flipCard, answer: answer, openDetail: openDetail, closeDetail: closeDetail, speak: speakWord,
     openNewWord: openNewWord, openEditWord: openEditWord, closeWordForm: closeWordForm, toggleFormLevel: toggleFormLevel, saveWordForm: saveWordForm,
+    deleteWord: deleteWord,
   };
   App.registerTab('vocab', { onShow: renderList });
 })();
