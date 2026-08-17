@@ -22,6 +22,7 @@
   var vocabFilter = 'all'; // scriptId
   var vocabDirection = 'en2ja';
   var levelPanelOpen = false;
+  var vocabSort = { key: null, dir: 'asc' }; // key: null(登録順) | 'word' | 'level' | 'added' | 'status'
 
   var queue = [], qIdx = 0, flipped = false;
   var sessionState = 'idle'; // idle | running | paused | ended
@@ -163,31 +164,68 @@
     }).join('');
   }
   var LIST_COL_W = { level: '54px', date: '54px', status: '48px' };
+  // status/level ranks are shared by the row renderer and the sort comparator so the
+  // "状態"/"カテゴリ" columns sort by the same notion they display, not a re-derived one.
+  function wordStatus(w, today) {
+    var due = !w.nextReview || w.nextReview <= today;
+    var label = w.reviewCount === 0 ? '未学習' : (due ? '復習期限' : (w.streak >= 3 && w.interval >= 4 ? '習得済み' : '学習中'));
+    var color = label === '習得済み' ? 'var(--color-success)' : label === '復習期限' ? 'var(--color-warning)' : label === '学習中' ? 'var(--color-info)' : 'var(--color-neutral-400)';
+    var rank = label === '復習期限' ? 0 : label === '未学習' ? 1 : label === '学習中' ? 2 : 3;
+    return { label: label, color: color, rank: rank };
+  }
+  function levelRank(w) {
+    var lvls = levelsOf(w);
+    if (!lvls.length) return ALL_LEVELS.length;
+    var idx = ALL_LEVELS.indexOf(lvls[0]);
+    return idx === -1 ? ALL_LEVELS.length : idx;
+  }
+  function applySort(pool, today) {
+    if (!vocabSort.key) return pool;
+    var dir = vocabSort.dir === 'desc' ? -1 : 1;
+    return pool.slice().sort(function (a, b) {
+      var av, bv;
+      if (vocabSort.key === 'word') { av = (a.word || '').toLowerCase(); bv = (b.word || '').toLowerCase(); }
+      else if (vocabSort.key === 'level') { av = levelRank(a); bv = levelRank(b); }
+      else if (vocabSort.key === 'status') { av = wordStatus(a, today).rank; bv = wordStatus(b, today).rank; }
+      else { av = a.added || ''; bv = b.added || ''; }
+      if (av < bv) return -1 * dir;
+      if (av > bv) return 1 * dir;
+      return 0;
+    });
+  }
+  function sortIndicator(key) { return vocabSort.key === key ? (vocabSort.dir === 'asc' ? ' ▲' : ' ▼') : ''; }
   function listHeaderHtml() {
     // Not position:sticky — its parent has overflow:hidden (for the card's rounded
     // corners), which becomes the nearest "scrolling ancestor" per spec and defeats
     // sticky before it ever reaches the real overflow:auto container further up.
+    var col = function (key, label, extraStyle) {
+      var active = vocabSort.key === key;
+      return '<div onclick="VocabTab.setSort(\'' + key + '\')" style="' + (extraStyle || '') + 'font-size:9.5px;cursor:pointer;user-select:none;white-space:nowrap;color:' + (active ? 'var(--color-accent-300)' : 'var(--color-neutral-400)') + '">' + esc(label) + sortIndicator(key) + '</div>';
+    };
     return '<div style="display:flex;align-items:center;background:var(--color-neutral-800);border-bottom:1px solid var(--color-neutral-700);padding:6px 6px">'
-      + '<div style="flex:1;min-width:0;font-size:9.5px;color:var(--color-neutral-400)">単語</div>'
-      + '<div style="width:' + LIST_COL_W.level + ';flex-shrink:0;font-size:9.5px;color:var(--color-neutral-400);text-align:center">カテゴリ</div>'
-      + '<div style="width:' + LIST_COL_W.date + ';flex-shrink:0;font-size:9.5px;color:var(--color-neutral-400);text-align:center">登録日</div>'
-      + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;font-size:9.5px;color:var(--color-neutral-400);text-align:center">状態</div>'
+      + col('word', '単語', 'flex:1;min-width:0;')
+      + col('level', 'カテゴリ', 'width:' + LIST_COL_W.level + ';flex-shrink:0;text-align:center;')
+      + col('added', '登録日', 'width:' + LIST_COL_W.date + ';flex-shrink:0;text-align:center;')
+      + col('status', '状態', 'width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center;')
       + '</div>';
   }
+  function setSort(key) {
+    if (vocabSort.key === key) { vocabSort.dir = vocabSort.dir === 'asc' ? 'desc' : 'asc'; }
+    else { vocabSort.key = key; vocabSort.dir = 'asc'; }
+    renderList();
+  }
   function listRowsHtml() {
-    var pool = poolByLevelAndScript();
     var today = S.todayStr();
+    var pool = applySort(poolByLevelAndScript(), today);
     return pool.map(function (w) {
-      var due = !w.nextReview || w.nextReview <= today;
-      var statusLabel = w.reviewCount === 0 ? '未学習' : (due ? '復習期限' : (w.streak >= 3 && w.interval >= 4 ? '習得済み' : '学習中'));
-      var statusColor = statusLabel === '習得済み' ? 'var(--color-success)' : statusLabel === '復習期限' ? 'var(--color-warning)' : statusLabel === '学習中' ? 'var(--color-info)' : 'var(--color-neutral-400)';
+      var st = wordStatus(w, today);
       var lvls = levelsOf(w);
       var levelBadge = lvls.length ? '<span class="tag tag-outline" style="font-size:8px;padding:2px 5px;white-space:nowrap">' + esc(lvls[0]) + (lvls.length > 1 ? '+' + (lvls.length - 1) : '') + '</span>' : '<span style="font-size:9px;color:var(--color-neutral-600)">—</span>';
       return '<button onclick="VocabTab.openDetail(\'' + w.id + '\')" style="display:flex;align-items:center;width:100%;background:var(--color-neutral-800);border:none;border-top:1px solid var(--color-neutral-700);cursor:pointer;text-align:left;color:inherit;padding:8px 6px">'
         + '<div style="flex:1;min-width:0;padding-right:4px"><div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.word) + '</div><div style="font-size:10px;color:var(--color-neutral-400);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.meaning) + '</div></div>'
         + '<div style="width:' + LIST_COL_W.level + ';flex-shrink:0;text-align:center">' + levelBadge + '</div>'
         + '<div style="width:' + LIST_COL_W.date + ';flex-shrink:0;text-align:center;font-size:9px;color:var(--color-neutral-500)">' + esc(w.added || '—') + '</div>'
-        + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center"><span class="tag" style="font-size:8.5px;padding:2px 5px;color:' + statusColor + ';border-color:' + statusColor + ';white-space:nowrap">' + statusLabel + '</span></div>'
+        + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center"><span class="tag" style="font-size:8.5px;padding:2px 5px;color:' + st.color + ';border-color:' + st.color + ';white-space:nowrap">' + st.label + '</span></div>'
         + '</button>';
     }).join('') || '<div style="padding:20px;text-align:center;color:var(--color-neutral-400);font-size:13px">該当する単語がありません</div>';
   }
@@ -474,7 +512,7 @@
     if (!w) return;
     if (!S.GH_TOKEN) {
       Object.keys(patch).forEach(function (k) { w[k] = patch[k]; });
-      App.toast('反映しました（GitHub保存にはトークンが必要です）');
+      App.toast('反映しました（GitHub保存にはトークンが必要です）', 'success');
       wordFormOpen = false; renderList();
       return;
     }
@@ -485,7 +523,7 @@
       return { words: list };
     }, '✏️ 単語更新: ' + patch.word).then(function () {
       Object.keys(patch).forEach(function (k) { w[k] = patch[k]; });
-      App.toast('「' + patch.word + '」を更新しました');
+      App.toast('「' + patch.word + '」を更新しました', 'success');
       wordFormOpen = false; renderList();
     }).catch(function () { st.textContent = '保存に失敗しました'; });
   }
@@ -496,7 +534,7 @@
     var finish = function () {
       words = words.filter(function (x) { return x.id !== id; });
       saveProgressSilent();
-      App.toast('「' + w.word + '」を削除しました');
+      App.toast('「' + w.word + '」を削除しました', 'success');
       wordDetailId = null; renderList();
     };
     if (!S.GH_TOKEN) { finish(); return; }
@@ -512,7 +550,7 @@
     var newWord = { id: 'w' + String(maxId + 1).padStart(3, '0'), word: wordVal, pron: pron, meaning: meaning, example: example, source: '', scriptId: 'custom', added: S.todayStr(),
       level: level, usageTips: usageTips || '', collocations: collocations || [], otherMeanings: [], interval: 1, nextReview: S.todayStr(), reviewCount: 0, streak: 0, missCount: 0, lastMissed: '' };
     if (!S.GH_TOKEN) {
-      words.push(newWord); App.toast('追加しました（GitHub保存にはトークンが必要です）');
+      words.push(newWord); App.toast('追加しました（GitHub保存にはトークンが必要です）', 'success');
       wordFormOpen = false; renderList();
       return;
     }
@@ -522,13 +560,13 @@
       return { words: list };
     }, '📚 単語追加: ' + wordVal).then(function () {
       words.push(newWord);
-      App.toast('「' + wordVal + '」を追加しました');
+      App.toast('「' + wordVal + '」を追加しました', 'success');
       wordFormOpen = false; renderList();
     }).catch(function () { st.textContent = '保存に失敗しました'; });
   }
 
   window.VocabTab = {
-    showReview: showReview, showList: showList, setLevel: setLevel, setFilter: setFilter, toggleLevelPanel: toggleLevelPanel, setDirection: setDirection,
+    showReview: showReview, showList: showList, setLevel: setLevel, setFilter: setFilter, toggleLevelPanel: toggleLevelPanel, setDirection: setDirection, setSort: setSort,
     startSession: startSession, pauseSession: pauseSession, resumeSession: resumeSession, endSession: endSession, resetSession: resetSession, resetQueue: resetQueue,
     flipCard: flipCard, answer: answer, openDetail: openDetail, closeDetail: closeDetail, speak: speakWord,
     openNewWord: openNewWord, openEditWord: openEditWord, closeWordForm: closeWordForm, toggleFormLevel: toggleFormLevel, saveWordForm: saveWordForm,

@@ -119,7 +119,7 @@
     window.open(CHATGPT_PROJECT_URL, '_blank');
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text)
-        .then(function () { App.toast('プロンプトをコピーしました。チャット欄に貼り付けてください'); })
+        .then(function () { App.toast('プロンプトをコピーしました。チャット欄に貼り付けてください', 'success'); })
         .catch(function () { App.toast('コピーに失敗しました'); });
     }
   }
@@ -530,7 +530,7 @@
         if (!obj.dailyTasks) obj.dailyTasks = {};
         Object.keys(editingPastRecords).forEach(function (k) { obj.dailyTasks[k] = editingPastRecords[k]; });
         return obj;
-      }, '📝 記録修正: ' + dateStr).then(function () { App.toast('保存しました'); }).catch(function () { App.toast('保存に失敗しました'); });
+      }, '📝 記録修正: ' + dateStr).then(function () { App.toast('保存しました', 'success'); }).catch(function () { App.toast('保存に失敗しました'); });
     }, 800);
   }
 
@@ -667,7 +667,7 @@
     var body = document.getElementById('wr-body');
     if (!body) return;
     navigator.clipboard.writeText(body.innerText || '').then(function () {
-      App.toast('レポートをコピーしました');
+      App.toast('レポートをコピーしました', 'success');
       if (!dailyTaskState.weeklyReport) toggleTask('weeklyReport');
     }).catch(function () { App.toast('コピーに失敗しました'); });
   }
@@ -678,7 +678,7 @@
     var report = { generatedAt: new Date().toISOString(), weekStart: weeklyReportData.weekStart, weekEnd: weeklyReportData.weekEndFull,
       stats: { shadDays: weeklyReportData.shadDays, vocabDays: weeklyReportData.vocabDays, dialogueDays: weeklyReportData.dialogueDays, completedMust: weeklyReportData.completedMust, totalMust: weeklyReportData.totalMust, scores: weeklyReportData.scores }, text: text };
     S.apiPutJson('data/weekly-reports/' + weeklyReportData.weekStart + '.json', function () { return report; }, '📊 週次レポート: ' + weeklyReportData.weekStart)
-      .then(function () { App.toast('GitHubに保存しました'); if (!dailyTaskState.weeklyReport) toggleTask('weeklyReport'); })
+      .then(function () { App.toast('GitHubに保存しました', 'success'); if (!dailyTaskState.weeklyReport) toggleTask('weeklyReport'); })
       .catch(function () { App.toast('保存に失敗しました'); });
   }
 
