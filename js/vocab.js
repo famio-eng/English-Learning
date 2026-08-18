@@ -175,7 +175,41 @@
     var active = vocabWeakOnly;
     return '<button onclick="VocabTab.toggleWeakOnly()" style="display:flex;align-items:center;gap:5px;flex-shrink:0;padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid ' + (active ? 'var(--color-warning)' : 'var(--color-neutral-700)') + ';background:' + (active ? 'rgba(245,158,11,.15)' : 'transparent') + ';color:' + (active ? 'var(--color-warning)' : 'var(--color-neutral-300)') + ';cursor:pointer;white-space:nowrap">🔥 苦手だけ <span style="font-size:10px">' + weakCount + '</span></button>';
   }
-  var LIST_COL_W = { level: '54px', date: '54px', status: '48px' };
+  // status列はアイコンのみ表示になったぶん狭くでき、浮いた分をlevel列(長い日本語の
+  // レベル名が入る)に回す。以前は level:54px だとバッジがはみ出し登録日と重なっていた。
+  var LIST_COL_W = { level: '62px', date: '52px', status: '28px' };
+  // 成長段階の自作イラスト(たね/め/しおれ/満開)。絵文字ではなく元テイストに合わせた
+  // 植物モチーフの独自SVGキャラクターで表現する。1つのpath集合をステージ名で分岐して
+  // 返し、サイズだけ呼び出し側で指定できるようにしてある。
+  var GROWTH_ICON_PATHS = {
+    seed: '<ellipse cx="12" cy="20" rx="7" ry="1.6" fill="#8a5a34" opacity=".3"/>'
+      + '<path d="M12 6.5c3.6 0 6 3.1 6 7.2 0 3.5-2.6 5.3-6 5.3s-6-1.8-6-5.3c0-4.1 2.4-7.2 6-7.2z" fill="#d99a52"/>'
+      + '<path d="M9.3 10c1-.9 1.8-1.2 2.3-1.2" stroke="#f3c98a" stroke-width="1.1" stroke-linecap="round" opacity=".8"/>'
+      + '<circle cx="9.8" cy="14.3" r="1" fill="#5c3b1e"/><circle cx="14.2" cy="14.3" r="1" fill="#5c3b1e"/>'
+      + '<path d="M10.3 16.6c.6.5 1.7.5 2.3 0" stroke="#5c3b1e" stroke-width="1" stroke-linecap="round" fill="none"/>',
+    sprout: '<ellipse cx="12" cy="20" rx="7" ry="1.6" fill="#4d7a3a" opacity=".25"/>'
+      + '<path d="M12 20v-6" stroke="#5a9c4f" stroke-width="1.6" stroke-linecap="round"/>'
+      + '<path d="M12 14c0-3-3-3.6-4.6-2.6C8.2 14 10 15 12 14z" fill="#8fd47a"/>'
+      + '<path d="M12 14c0-3.4 3.2-4.2 5-3C16.6 14.4 14.4 15.2 12 14z" fill="#7bc96f"/>'
+      + '<circle cx="10.6" cy="17.3" r="0.9" fill="#3c5c30"/><circle cx="13.4" cy="17.3" r="0.9" fill="#3c5c30"/>'
+      + '<path d="M11.1 19.1c.5.4 1.3.4 1.8 0" stroke="#3c5c30" stroke-width="0.9" stroke-linecap="round" fill="none"/>',
+    wilt: '<ellipse cx="12" cy="20" rx="7" ry="1.6" fill="#8a6a2f" opacity=".2"/>'
+      + '<path d="M12 20c0-2.6-1-3.8-.6-5.6" stroke="#a9b569" stroke-width="1.6" stroke-linecap="round"/>'
+      + '<path d="M11.4 14.4c-.4-3-3.4-3.2-4.8-1.8 1.2 2.6 3.2 3 4.8 1.8z" fill="#c7cf7c"/>'
+      + '<path d="M11.4 14.4c1-3 4-2.8 5.2-1.2-1.2 1.2-3.4 1.2-5.2 1.2z" fill="#b6c96a"/>'
+      + '<path d="M15.4 15.8c1.1.3 1.9 1.3 1.9 2.4 0 1.1-.9 1.8-1.9 1.8s-1.9-.7-1.9-1.8c0-1.1.8-2.1 1.9-2.4z" fill="#5fb8e0"/>'
+      + '<path d="M9.6 17.4c.5.15.8.5.6.9" stroke="#5c5a2f" stroke-width="1" stroke-linecap="round" fill="none"/>'
+      + '<path d="M12.4 17.4c.5.15.8.5.6.9" stroke="#5c5a2f" stroke-width="1" stroke-linecap="round" fill="none"/>',
+    bloom: '<ellipse cx="12" cy="20" rx="7.5" ry="1.6" fill="#2f6b3a" opacity=".25"/>'
+      + '<path d="M12 20v-7" stroke="#4f8f42" stroke-width="1.8" stroke-linecap="round"/>'
+      + '<circle cx="12" cy="10.5" r="5.2" fill="#7bc96f"/>'
+      + '<circle cx="9.3" cy="9" r="1.6" fill="#f7b8d0"/><circle cx="14.7" cy="9" r="1.6" fill="#f7b8d0"/><circle cx="12" cy="7.2" r="1.6" fill="#fde07a"/>'
+      + '<circle cx="10" cy="12" r="0.9" fill="#2f4a25"/><circle cx="14" cy="12" r="0.9" fill="#2f4a25"/>'
+      + '<path d="M10.6 13.6c.7.5 2.1.5 2.8 0" stroke="#2f4a25" stroke-width="1" stroke-linecap="round" fill="none"/>',
+  };
+  function growthIcon(stage, size, extraStyle) {
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;flex-shrink:0' + (extraStyle ? ';' + extraStyle : '') + '">' + GROWTH_ICON_PATHS[stage] + '</svg>';
+  }
   // status/level ranks are shared by the row renderer and the sort comparator so the
   // "状態"/"カテゴリ" columns sort by the same notion they display, not a re-derived one.
   function wordStatus(w, today) {
@@ -183,8 +217,8 @@
     var label = w.reviewCount === 0 ? '未学習' : (due ? '復習期限' : (w.streak >= 3 && w.interval >= 4 ? '習得済み' : '学習中'));
     var color = label === '習得済み' ? 'var(--color-success)' : label === '復習期限' ? 'var(--color-warning)' : label === '学習中' ? 'var(--color-info)' : 'var(--color-neutral-400)';
     var rank = label === '復習期限' ? 0 : label === '未学習' ? 1 : label === '学習中' ? 2 : 3;
-    var icon = label === '習得済み' ? '🌳' : label === '復習期限' ? '⏰' : label === '学習中' ? '🌿' : '🌱';
-    return { label: label, color: color, rank: rank, icon: icon };
+    var stage = label === '習得済み' ? 'bloom' : label === '復習期限' ? 'wilt' : label === '学習中' ? 'sprout' : 'seed';
+    return { label: label, color: color, rank: rank, stage: stage };
   }
   function levelRank(w) {
     var lvls = levelsOf(w);
@@ -233,12 +267,14 @@
     return pool.map(function (w) {
       var st = wordStatus(w, today);
       var lvls = levelsOf(w);
-      var levelBadge = lvls.length ? '<span class="tag tag-outline" style="font-size:8px;padding:2px 5px;white-space:nowrap">' + esc(lvls[0]) + (lvls.length > 1 ? '+' + (lvls.length - 1) : '') + '</span>' : '<span style="font-size:9px;color:var(--color-neutral-600)">—</span>';
+      // 列幅ぶんでtext-overflow:ellipsisさせるため、バッジ自体もdisplay:inline-block +
+      // max-width:100%にしておく(親のoverflow:hiddenだけではインライン要素は切り詰まらない)。
+      var levelBadge = lvls.length ? '<span class="tag tag-outline" style="display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom;font-size:8px;padding:2px 5px;white-space:nowrap">' + esc(lvls[0]) + (lvls.length > 1 ? '+' + (lvls.length - 1) : '') + '</span>' : '<span style="font-size:9px;color:var(--color-neutral-600)">—</span>';
       return '<button onclick="VocabTab.openDetail(\'' + w.id + '\')" style="display:flex;align-items:center;width:100%;background:var(--color-neutral-800);border:none;border-top:1px solid var(--color-neutral-700);cursor:pointer;text-align:left;color:inherit;padding:8px 6px">'
         + '<div style="flex:1;min-width:0;padding-right:4px"><div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.word) + '</div><div style="font-size:10px;color:var(--color-neutral-400);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.meaning) + '</div></div>'
-        + '<div style="width:' + LIST_COL_W.level + ';flex-shrink:0;text-align:center">' + levelBadge + '</div>'
+        + '<div style="width:' + LIST_COL_W.level + ';flex-shrink:0;text-align:center;overflow:hidden" title="' + esc(lvls.join(' / ')) + '">' + levelBadge + '</div>'
         + '<div style="width:' + LIST_COL_W.date + ';flex-shrink:0;text-align:center;font-size:9px;color:var(--color-neutral-500)">' + esc(w.added || '—') + '</div>'
-        + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center" title="' + esc(st.label) + '"><span style="font-size:16px">' + st.icon + '</span></div>'
+        + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center" title="' + esc(st.label) + '">' + growthIcon(st.stage, 18) + '</div>'
         + '</button>';
     }).join('') || '<div style="padding:20px;text-align:center;color:var(--color-neutral-400);font-size:13px">該当する単語がありません</div>';
   }
@@ -494,7 +530,7 @@
       + '<div style="font-size:13px;color:var(--color-accent-300)">' + esc(w.pron || '') + '</div>'
       + '<div style="font-size:14px;color:var(--color-neutral-200)">' + esc(w.meaning) + '</div>'
       + (w.example ? '<div style="font-size:13px;color:var(--color-neutral-400);font-style:italic">"' + esc(w.example) + '"</div>' : '')
-      + '<div style="margin-top:4px">' + badges + '<span class="tag" style="color:' + st.color + ';border-color:' + st.color + '">' + st.icon + ' ' + esc(st.label) + '</span>' + (w.missCount ? '<span class="tag tag-outline" style="margin-left:4px">🔥 ' + w.missCount + '回ミス</span>' : '') + '</div>'
+      + '<div style="margin-top:4px;display:flex;align-items:center;flex-wrap:wrap;gap:4px">' + badges + '<span class="tag" style="display:inline-flex;align-items:center;gap:3px;color:' + st.color + ';border-color:' + st.color + '">' + growthIcon(st.stage, 15) + esc(st.label) + '</span>' + (w.missCount ? '<span class="tag tag-outline">🔥 ' + w.missCount + '回ミス</span>' : '') + '</div>'
       + (w.usageTips ? '<div class="card" style="margin-top:8px"><div class="card-kicker">使い方のコツ</div><div style="font-size:13px;margin-top:4px">' + esc(w.usageTips) + '</div></div>' : '')
       + (w.collocations && w.collocations.length ? '<div class="card" style="margin-top:8px"><div class="card-kicker">よく使う表現</div><div style="font-size:13px;margin-top:4px">' + esc(w.collocations.join(' / ')) + '</div></div>' : '')
       + '<div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-secondary" style="flex:1" onclick="VocabTab.openEditWord(\'' + w.id + '\')">編集</button>'
