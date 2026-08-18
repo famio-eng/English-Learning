@@ -21,10 +21,13 @@
   var vocabLevel = 'all';
   var vocabFilter = 'all'; // scriptId
   var vocabDirection = 'en2ja';
+  var vocabInteraction = 'flip'; // 'flip' | 'reveal' (progressive-reveal, ja2en only)
+  var vocabWeakOnly = false; // 苦手デッキ: missCount > 0 の単語だけに絞る
   var levelPanelOpen = false;
   var vocabSort = { key: null, dir: 'asc' }; // key: null(登録順) | 'word' | 'level' | 'added' | 'status'
 
   var queue = [], qIdx = 0, flipped = false;
+  var revealCount = 1, revealSolved = false; // progressive-reveal state for the current card
   var sessionState = 'idle'; // idle | running | paused | ended
   var sessionElapsed = 0, sessionStartedAt = null, sessionTimer = null, sessionReviewed = 0;
 
@@ -104,7 +107,7 @@
       return (b.missCount || 0) - (a.missCount || 0);
     });
     queue = sorted.map(function (w) { return { word: w, dir: dir === 'random' ? (Math.random() < 0.5 ? 'en2ja' : 'ja2en') : dir }; });
-    qIdx = 0; flipped = false; sessionReviewed = 0;
+    qIdx = 0; flipped = false; revealCount = 1; revealSolved = false; sessionReviewed = 0;
   }
 
   function levelsOf(w) { return w.level || []; }
@@ -112,7 +115,8 @@
   function poolByLevel() { return vocabLevel === 'all' ? words : words.filter(function (w) { return levelsOf(w).indexOf(vocabLevel) !== -1; }); }
   function poolByLevelAndScript() {
     var byLevel = poolByLevel();
-    return vocabFilter === 'all' ? byLevel : byLevel.filter(function (w) { return w.scriptId === vocabFilter; });
+    var byScript = vocabFilter === 'all' ? byLevel : byLevel.filter(function (w) { return w.scriptId === vocabFilter; });
+    return vocabWeakOnly ? byScript.filter(function (w) { return (w.missCount || 0) > 0; }) : byScript;
   }
   function getDue(pool) { var today = S.todayStr(); return pool.filter(function (w) { return !w.nextReview || w.nextReview <= today; }); }
 
@@ -163,6 +167,14 @@
       return '<button onclick="VocabTab.setFilter(\'' + f.id + '\')" style="flex-shrink:0;padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid ' + (active ? 'var(--color-accent)' : 'var(--color-neutral-700)') + ';background:' + (active ? 'var(--color-accent-800)' : 'transparent') + ';color:' + (active ? 'var(--color-text)' : 'var(--color-neutral-300)') + ';cursor:pointer;white-space:nowrap">' + esc(f.label) + '</button>';
     }).join('');
   }
+  // 苦手デッキ: missCount>0 (過去に一度でも間違えた) 単語だけに絞るトグル。一覧にも
+  // 学習セッション設定にも同じチップを出し、どちらもpoolByLevelAndScript()経由で
+  // 反映されるので、セッション対象を「苦手だけ」に絞って復習することもできる。
+  function weakChipHtml() {
+    var weakCount = poolByLevel().filter(function (w) { return (w.missCount || 0) > 0; }).length;
+    var active = vocabWeakOnly;
+    return '<button onclick="VocabTab.toggleWeakOnly()" style="display:flex;align-items:center;gap:5px;flex-shrink:0;padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid ' + (active ? 'var(--color-warning)' : 'var(--color-neutral-700)') + ';background:' + (active ? 'rgba(245,158,11,.15)' : 'transparent') + ';color:' + (active ? 'var(--color-warning)' : 'var(--color-neutral-300)') + ';cursor:pointer;white-space:nowrap">🔥 苦手だけ <span style="font-size:10px">' + weakCount + '</span></button>';
+  }
   var LIST_COL_W = { level: '54px', date: '54px', status: '48px' };
   // status/level ranks are shared by the row renderer and the sort comparator so the
   // "状態"/"カテゴリ" columns sort by the same notion they display, not a re-derived one.
@@ -171,7 +183,8 @@
     var label = w.reviewCount === 0 ? '未学習' : (due ? '復習期限' : (w.streak >= 3 && w.interval >= 4 ? '習得済み' : '学習中'));
     var color = label === '習得済み' ? 'var(--color-success)' : label === '復習期限' ? 'var(--color-warning)' : label === '学習中' ? 'var(--color-info)' : 'var(--color-neutral-400)';
     var rank = label === '復習期限' ? 0 : label === '未学習' ? 1 : label === '学習中' ? 2 : 3;
-    return { label: label, color: color, rank: rank };
+    var icon = label === '習得済み' ? '🌳' : label === '復習期限' ? '⏰' : label === '学習中' ? '🌿' : '🌱';
+    return { label: label, color: color, rank: rank, icon: icon };
   }
   function levelRank(w) {
     var lvls = levelsOf(w);
@@ -225,7 +238,7 @@
         + '<div style="flex:1;min-width:0;padding-right:4px"><div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.word) + '</div><div style="font-size:10px;color:var(--color-neutral-400);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(w.meaning) + '</div></div>'
         + '<div style="width:' + LIST_COL_W.level + ';flex-shrink:0;text-align:center">' + levelBadge + '</div>'
         + '<div style="width:' + LIST_COL_W.date + ';flex-shrink:0;text-align:center;font-size:9px;color:var(--color-neutral-500)">' + esc(w.added || '—') + '</div>'
-        + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center"><span class="tag" style="font-size:8.5px;padding:2px 5px;color:' + st.color + ';border-color:' + st.color + ';white-space:nowrap">' + st.label + '</span></div>'
+        + '<div style="width:' + LIST_COL_W.status + ';flex-shrink:0;text-align:center" title="' + esc(st.label) + '"><span style="font-size:16px">' + st.icon + '</span></div>'
         + '</button>';
     }).join('') || '<div style="padding:20px;text-align:center;color:var(--color-neutral-400);font-size:13px">該当する単語がありません</div>';
   }
@@ -258,7 +271,7 @@
       + '<span style="font-size:12px;color:var(--color-neutral-400)">レベルカテゴリ</span><span style="font-size:12px;color:var(--color-accent-300)">' + (vocabLevel === 'all' ? '全レベル' : esc(vocabLevel)) + (levelPanelOpen ? ' ▴' : ' ▾') + '</span></button>'
       + (levelPanelOpen ? '<div style="display:flex;flex-wrap:wrap;gap:6px">' + levelChipsHtml() + '</div>' : '')
       + '</div>';
-    top += '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-top:8px">' + filterChipsHtml() + '</div>';
+    top += '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-top:8px">' + weakChipHtml() + filterChipsHtml() + '</div>';
 
     var middle = '<div style="border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);overflow:hidden;margin-top:8px">' + listHeaderHtml() + listRowsHtml() + '</div>';
 
@@ -281,6 +294,13 @@
       return '<button class="seg-opt" data-active="' + active + '" onclick="VocabTab.setDirection(\'' + d + '\')">' + label + '</button>';
     }).join('');
   }
+  function interactionOptionsHtml() {
+    return ['flip', 'reveal'].map(function (m) {
+      var label = m === 'flip' ? 'フリップ式' : '部分ヒント式';
+      var active = vocabInteraction === m;
+      return '<button class="seg-opt" data-active="' + active + '" onclick="VocabTab.setInteraction(\'' + m + '\')">' + label + '</button>';
+    }).join('');
+  }
   function fmtMs(ms) {
     var s = Math.floor(ms / 1000);
     var p2 = function (n) { return String(n).padStart(2, '0'); };
@@ -297,8 +317,10 @@
       var pool = poolByLevelAndScript();
       html += '<div class="card"><div class="card-kicker">学習セッションの設定</div>'
         + '<div style="margin-top:10px"><div style="font-size:12px;color:var(--color-neutral-400)">レベルカテゴリ</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">' + levelChipsHtml() + '</div></div>'
-        + '<div style="margin-top:10px"><div style="font-size:12px;color:var(--color-neutral-400)">ダイアグラム</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">' + filterChipsHtml() + '</div></div>'
+        + '<div style="margin-top:10px"><div style="font-size:12px;color:var(--color-neutral-400)">ダイアグラム</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">' + weakChipHtml() + filterChipsHtml() + '</div></div>'
         + '<div style="margin-top:10px"><div style="font-size:12px;color:var(--color-neutral-400)">出題方向</div><div class="seg" style="display:flex;margin-top:6px">' + directionOptionsHtml() + '</div></div>'
+        + '<div style="margin-top:10px"><div style="font-size:12px;color:var(--color-neutral-400)">出題スタイル</div><div class="seg" style="display:flex;margin-top:6px">' + interactionOptionsHtml() + '</div>'
+        + '<div style="font-size:11px;color:var(--color-neutral-500);margin-top:4px">部分ヒント式は「日→英」出題のときだけ有効です</div></div>'
         + '<div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--color-neutral-700);font-size:12px;color:var(--color-accent-300)">' + pool.length + '語が対象</div>'
         + '<button class="btn btn-primary btn-block" style="margin-top:10px" onclick="VocabTab.startSession()">学習を開始</button></div>';
     } else if (sessionState === 'ended') {
@@ -328,26 +350,69 @@
         var item = queue[qIdx];
         var w = item.word;
         var askJa = item.dir === 'ja2en';
-        var wEsc = esc(w.word).replace(/'/g, "\\'");
-        var exEsc = w.example ? esc(w.example).replace(/'/g, "\\'") : '';
-        var speakBtn = function (text) { return '<button class="btn-icon btn-ghost" style="flex-shrink:0;width:28px;height:28px" onclick="event.stopPropagation();VocabTab.speak(\'' + text + '\')">🔊</button>'; };
-        html += '<div style="margin-top:12px;perspective:1200px"><div id="vt-flip-card" style="position:relative;height:220px;transform-style:preserve-3d;transition:transform .5s ease;transform:' + (flipped ? 'rotateY(180deg)' : 'rotateY(0)') + ';cursor:pointer" onclick="VocabTab.flipCard()">'
-          + '<div style="position:absolute;inset:0;backface-visibility:hidden;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px;box-sizing:border-box">'
-          + (askJa
-            ? '<div style="font-weight:600;font-size:20px;line-height:1.5">' + esc(w.meaning) + '</div><div style="font-size:12px;color:var(--color-neutral-400)">英語で言ってみましょう</div>'
-            : '<div style="display:flex;align-items:center;gap:8px"><div style="font-weight:600;font-size:26px">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div><div style="font-size:13px;color:var(--color-accent-300)">' + esc(w.pron || '') + '</div>')
-          + '</div>'
-          + '<div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:8px;box-sizing:border-box">'
-          + '<div style="display:flex;align-items:center;gap:8px"><div style="font-size:16px;font-weight:500">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div>'
-          + '<div style="font-size:13px;color:var(--color-neutral-200)">' + esc(w.meaning) + '</div>'
-          + (w.example ? '<div style="display:flex;align-items:flex-start;gap:6px"><div style="font-size:12px;color:var(--color-neutral-400);font-style:italic;flex:1">"' + esc(w.example) + '"</div>' + speakBtn(exEsc) + '</div>' : '')
-          + '</div></div></div>';
-        html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:14px">'
-          + ratingBtn(0, 'もう一度') + ratingBtn(1, '難しい') + ratingBtn(2, 'OK') + ratingBtn(3, '完璧') + '</div>';
+        var useReveal = vocabInteraction === 'reveal' && askJa;
+        if (useReveal) {
+          html += revealCardHtml(item);
+          if (revealSolved) {
+            html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:14px">'
+              + ratingBtn(0, 'もう一度') + ratingBtn(1, '難しい') + ratingBtn(2, 'OK') + ratingBtn(3, '完璧') + '</div>';
+          }
+        } else {
+          var wEsc = esc(w.word).replace(/'/g, "\\'");
+          var exEsc = w.example ? esc(w.example).replace(/'/g, "\\'") : '';
+          var speakBtn = function (text) { return '<button class="btn-icon btn-ghost" style="flex-shrink:0;width:28px;height:28px" onclick="event.stopPropagation();VocabTab.speak(\'' + text + '\')">🔊</button>'; };
+          html += '<div id="vt-active-card" style="margin-top:12px;perspective:1200px"><div id="vt-flip-card" style="position:relative;height:220px;transform-style:preserve-3d;transition:transform .5s ease;transform:' + (flipped ? 'rotateY(180deg)' : 'rotateY(0)') + ';cursor:pointer" onclick="VocabTab.flipCard()">'
+            + '<div style="position:absolute;inset:0;backface-visibility:hidden;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px;box-sizing:border-box">'
+            + (askJa
+              ? '<div style="font-weight:600;font-size:20px;line-height:1.5">' + esc(w.meaning) + '</div><div style="font-size:12px;color:var(--color-neutral-400)">英語で言ってみましょう</div>'
+              : '<div style="display:flex;align-items:center;gap:8px"><div style="font-weight:600;font-size:26px">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div><div style="font-size:13px;color:var(--color-accent-300)">' + esc(w.pron || '') + '</div>')
+            + '</div>'
+            + '<div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:8px;box-sizing:border-box">'
+            + '<div style="display:flex;align-items:center;gap:8px"><div style="font-size:16px;font-weight:500">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div>'
+            + '<div style="font-size:13px;color:var(--color-neutral-200)">' + esc(w.meaning) + '</div>'
+            + (w.example ? '<div style="display:flex;align-items:flex-start;gap:6px"><div style="font-size:12px;color:var(--color-neutral-400);font-style:italic;flex:1">"' + esc(w.example) + '"</div>' + speakBtn(exEsc) + '</div>' : '')
+            + '</div></div></div>';
+          html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:14px">'
+            + ratingBtn(0, 'もう一度') + ratingBtn(1, '難しい') + ratingBtn(2, 'OK') + ratingBtn(3, '完璧') + '</div>';
+        }
       }
     }
     el.innerHTML = html;
   }
+  // プログレッシブリビール(部分ヒント)方式: 最初の1文字だけ見せ、「もう1文字」で
+  // 少しずつ開示。フリップの代わりに「答えを見る」で全体を出して評価ボタンに進む。
+  function revealCardHtml(item) {
+    var w = item.word;
+    var letters = w.word.replace(/ /g, '').length;
+    var shown = w.word.split('').map(function (ch, i) {
+      if (ch === ' ') return '&nbsp;&nbsp;';
+      var idx = w.word.slice(0, i).replace(/ /g, '').length;
+      return (revealSolved || idx < revealCount) ? esc(ch) : '_';
+    }).join(' ');
+    var canRevealMore = revealCount < letters;
+    var html = '<div id="vt-active-card" class="card" style="margin-top:12px;padding:26px 20px;text-align:center">'
+      + '<div style="font-weight:600;font-size:18px;line-height:1.5">' + esc(w.meaning) + '</div>'
+      + '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:4px">英語で言ってみましょう（ヒントを見ながらでもOK）</div>'
+      + '<div style="font-family:ui-monospace,Menlo,monospace;font-size:22px;letter-spacing:2px;margin-top:18px;min-height:32px;color:' + (revealSolved ? 'var(--color-accent-300)' : 'var(--color-text)') + '">' + shown + '</div>';
+    if (revealSolved) {
+      html += (w.pron ? '<div style="font-size:13px;color:var(--color-neutral-300);margin-top:10px">' + esc(w.pron) + '</div>' : '')
+        + (w.example ? '<div style="font-size:12px;color:var(--color-neutral-400);font-style:italic;margin-top:8px">"' + esc(w.example) + '"</div>' : '');
+    } else {
+      html += '<div style="display:flex;gap:8px;margin-top:16px;justify-content:center">'
+        + '<button class="btn btn-secondary"' + (canRevealMore ? '' : ' disabled') + ' onclick="VocabTab.revealMore()">もう1文字（' + revealCount + '/' + letters + '）</button>'
+        + '<button class="btn btn-primary" onclick="VocabTab.revealSolve()">答えを見る</button></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+  function revealMore() {
+    var item = queue[qIdx];
+    if (!item) return;
+    var letters = item.word.word.replace(/ /g, '').length;
+    if (revealCount < letters) revealCount++;
+    renderReview();
+  }
+  function revealSolve() { revealSolved = true; renderReview(); }
   function ratingBtn(q, label) {
     var style = q >= 2 ? 'background:var(--color-accent-800);border:1px solid var(--color-accent-600);color:var(--color-text)' : 'background:var(--color-neutral-800);border:1px solid var(--color-neutral-600);color:var(--color-neutral-200)';
     return '<button onclick="VocabTab.answer(' + q + ')" style="' + style + ';border-radius:var(--radius-sm);padding:10px 4px;font-size:12px">' + label + '</button>';
@@ -360,8 +425,10 @@
   function showList() { stopSessionTick(); vocabMode = 'list'; sessionState = 'idle'; renderList(); }
   function setLevel(l) { vocabLevel = l; levelPanelOpen = false; renderList(); }
   function setFilter(f) { vocabFilter = f; renderList(); }
+  function toggleWeakOnly() { vocabWeakOnly = !vocabWeakOnly; renderList(); }
   function toggleLevelPanel() { levelPanelOpen = !levelPanelOpen; renderList(); }
   function setDirection(d) { vocabDirection = d; renderReview(); }
+  function setInteraction(m) { vocabInteraction = m; renderReview(); }
   function startSession() {
     buildQueue(poolByLevelAndScript(), vocabDirection);
     sessionState = 'running'; sessionElapsed = 0; sessionStartedAt = Date.now();
@@ -394,12 +461,23 @@
   function answer(q) {
     var item = queue[qIdx];
     if (!item) return;
-    applyReview(item.word.id, q);
-    sessionReviewed++;
-    if (q === 0) { queue.push(queue.splice(qIdx, 1)[0]); }
-    else qIdx++;
-    flipped = false;
-    renderReview();
+    var commit = function () {
+      applyReview(item.word.id, q);
+      sessionReviewed++;
+      if (q === 0) { queue.push(queue.splice(qIdx, 1)[0]); }
+      else qIdx++;
+      flipped = false; revealCount = 1; revealSolved = false;
+      renderReview();
+    };
+    // OK/完璧の正解時だけ、次のカードに進む前にカードを一瞬光らせる。ボックスシャドウ
+    // のみをアニメーションさせ、フリップカードの3D transform(rotateY)とは競合しない。
+    var cardEl = document.getElementById('vt-active-card');
+    if (q >= 2 && cardEl) {
+      cardEl.classList.add('vt-correct-pulse');
+      setTimeout(commit, 380);
+    } else {
+      commit();
+    }
   }
 
   // ── word detail / edit / add (ported: showWordDetail / persistWordPatch / submitAddWord) ──
@@ -409,13 +487,14 @@
     var w = words.find(function (x) { return x.id === wordDetailId; });
     if (!w) { wordDetailId = null; renderList(); return; }
     var el = document.getElementById('tab-vocab');
+    var st = wordStatus(w, S.todayStr());
     var badges = levelsOf(w).map(function (l) { return '<span class="tag tag-outline" style="margin-right:4px">' + esc(l) + '</span>'; }).join('');
     el.innerHTML = '<div style="display:flex;align-items:center;gap:10px"><div style="font-weight:600;font-size:20px">' + esc(w.word) + '</div>'
       + '<button class="btn-icon btn-ghost" onclick="VocabTab.speak(\'' + esc(w.word).replace(/'/g, "\\'") + '\')">🔊</button></div>'
       + '<div style="font-size:13px;color:var(--color-accent-300)">' + esc(w.pron || '') + '</div>'
       + '<div style="font-size:14px;color:var(--color-neutral-200)">' + esc(w.meaning) + '</div>'
       + (w.example ? '<div style="font-size:13px;color:var(--color-neutral-400);font-style:italic">"' + esc(w.example) + '"</div>' : '')
-      + '<div style="margin-top:4px">' + badges + '</div>'
+      + '<div style="margin-top:4px">' + badges + '<span class="tag" style="color:' + st.color + ';border-color:' + st.color + '">' + st.icon + ' ' + esc(st.label) + '</span>' + (w.missCount ? '<span class="tag tag-outline" style="margin-left:4px">🔥 ' + w.missCount + '回ミス</span>' : '') + '</div>'
       + (w.usageTips ? '<div class="card" style="margin-top:8px"><div class="card-kicker">使い方のコツ</div><div style="font-size:13px;margin-top:4px">' + esc(w.usageTips) + '</div></div>' : '')
       + (w.collocations && w.collocations.length ? '<div class="card" style="margin-top:8px"><div class="card-kicker">よく使う表現</div><div style="font-size:13px;margin-top:4px">' + esc(w.collocations.join(' / ')) + '</div></div>' : '')
       + '<div style="display:flex;gap:8px;margin-top:10px"><button class="btn btn-secondary" style="flex:1" onclick="VocabTab.openEditWord(\'' + w.id + '\')">編集</button>'
@@ -566,9 +645,9 @@
   }
 
   window.VocabTab = {
-    showReview: showReview, showList: showList, setLevel: setLevel, setFilter: setFilter, toggleLevelPanel: toggleLevelPanel, setDirection: setDirection, setSort: setSort,
+    showReview: showReview, showList: showList, setLevel: setLevel, setFilter: setFilter, toggleWeakOnly: toggleWeakOnly, toggleLevelPanel: toggleLevelPanel, setDirection: setDirection, setInteraction: setInteraction, setSort: setSort,
     startSession: startSession, pauseSession: pauseSession, resumeSession: resumeSession, endSession: endSession, resetSession: resetSession, resetQueue: resetQueue,
-    flipCard: flipCard, answer: answer, openDetail: openDetail, closeDetail: closeDetail, speak: speakWord,
+    flipCard: flipCard, answer: answer, revealMore: revealMore, revealSolve: revealSolve, openDetail: openDetail, closeDetail: closeDetail, speak: speakWord,
     openNewWord: openNewWord, openEditWord: openEditWord, closeWordForm: closeWordForm, toggleFormLevel: toggleFormLevel, saveWordForm: saveWordForm,
     deleteWord: deleteWord,
   };

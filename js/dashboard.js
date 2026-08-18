@@ -65,6 +65,7 @@
   var dailyTaskState = {};
   var dailyTaskData = {};
   var vocabDueCount = null;
+  var vocabMasteredCount = null;
   var recordings = [];   // parsed {date, scriptId, mode}
   var recentRecords = []; // parsed record JSONs, newest-first
   var weeklyReportData = null;
@@ -150,20 +151,34 @@
     }).then(function () {
       return S.rawGetJson('data/vocab.json').catch(function () { return null; });
     }).then(function (data) {
-      if (!data) { vocabDueCount = null; return; }
+      if (!data) { vocabDueCount = null; vocabMasteredCount = null; return; }
       var progress = {};
       try { progress = JSON.parse(localStorage.getItem('vocab_progress_v2') || '{}'); } catch (e) {}
       vocabDueCount = (data.words || []).filter(function (w) {
         var nr = (progress[w.id] && progress[w.id].nextReview) || w.nextReview || todayStr;
         return nr <= todayStr;
       }).length;
+      // マスター判定はvocab.jsのwordStatus()と同じ基準(streak>=3 かつ interval>=4)。
+      vocabMasteredCount = (data.words || []).filter(function (w) {
+        var p = progress[w.id] || {};
+        var streak = p.streak !== undefined ? p.streak : (w.streak || 0);
+        var interval = p.interval !== undefined ? p.interval : (w.interval || 1);
+        return streak >= 3 && interval >= 4;
+      }).length;
     }).then(function () { loaded = true; });
   }
 
   // ── streak / score data ──
+  // シャドーイング録音のあった日に加えて、単語復習のみ行った日(dailyTasks側にしか
+  // 記録が残らない)も「継続」に数える。以前はrecordingsだけを見ていたため、SM-2復習
+  // だけした日はストリークが途切れて見えていた。
   function streakDatesSet() {
     var s = {};
     recordings.forEach(function (r) { s[r.date] = true; });
+    Object.keys(dailyTaskData).forEach(function (d) {
+      var day = dailyTaskData[d];
+      if (day && Object.keys(day).some(function (k) { return day[k]; })) s[d] = true;
+    });
     return s;
   }
   function streakDays() { return S.GH_TOKEN ? calcStreak(streakDatesSet(), new Date()) : 0; }
@@ -259,14 +274,15 @@
     html += '<div class="card"><div class="card-kicker">今週のスケジュール</div><div style="display:flex;gap:4px;margin-top:8px">' + weekScheduleHtml() + '</div></div>';
 
     var lastScore = recentRecords[0] && recentRecords[0].score != null ? recentRecords[0].score + '点' : '—';
-    html += '<div style="display:flex;gap:10px">'
-      + statPill('直近スコア', lastScore) + statPill('復習待ち', vocabDueCount != null ? vocabDueCount + '語' : '—') + statPill('学習日数', streakDays() + '日')
+    html += '<div style="display:flex;flex-wrap:wrap;gap:10px">'
+      + statPill('直近スコア', lastScore) + statPill('復習待ち', vocabDueCount != null ? vocabDueCount + '語' : '—')
+      + statPill('学習日数', streakDays() + '日') + statPill('習得語数', vocabMasteredCount != null ? vocabMasteredCount + '語' : '—')
       + '</div>';
 
     el.innerHTML = html;
   }
   function statPill(label, value) {
-    return '<div style="flex:1;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:10px 8px;text-align:center">'
+    return '<div style="flex:1 1 calc(50% - 5px);min-width:100px;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:10px 8px;text-align:center">'
       + '<div style="font-size:18px;font-weight:500">' + esc(value) + '</div><div style="font-size:11px;color:var(--color-neutral-400);margin-top:2px">' + esc(label) + '</div></div>';
   }
 
