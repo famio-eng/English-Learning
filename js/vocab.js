@@ -178,34 +178,27 @@
   // status列はアイコンのみ表示になったぶん狭くでき、浮いた分をlevel列(長い日本語の
   // レベル名が入る)に回す。以前は level:54px だとバッジがはみ出し登録日と重なっていた。
   var LIST_COL_W = { level: '62px', date: '52px', status: '28px' };
-  // 成長段階の自作イラスト(たね/め/しおれ/満開)。絵文字ではなく元テイストに合わせた
-  // 植物モチーフの独自SVGキャラクターで表現する。1つのpath集合をステージ名で分岐して
-  // 返し、サイズだけ呼び出し側で指定できるようにしてある。
+  // 成長段階の自作イラスト(たね/め/しおれ/満開)。フラットな線と塗りだけで構成し、
+  // 顔や擬人化は付けない(キャラクター化しない)植物モチーフのアイコンとして表現する。
+  // 1つのpath集合をステージ名で分岐して返し、サイズだけ呼び出し側で指定できる。
   var GROWTH_ICON_PATHS = {
-    seed: '<ellipse cx="12" cy="20" rx="7" ry="1.6" fill="#8a5a34" opacity=".3"/>'
-      + '<path d="M12 6.5c3.6 0 6 3.1 6 7.2 0 3.5-2.6 5.3-6 5.3s-6-1.8-6-5.3c0-4.1 2.4-7.2 6-7.2z" fill="#d99a52"/>'
-      + '<path d="M9.3 10c1-.9 1.8-1.2 2.3-1.2" stroke="#f3c98a" stroke-width="1.1" stroke-linecap="round" opacity=".8"/>'
-      + '<circle cx="9.8" cy="14.3" r="1" fill="#5c3b1e"/><circle cx="14.2" cy="14.3" r="1" fill="#5c3b1e"/>'
-      + '<path d="M10.3 16.6c.6.5 1.7.5 2.3 0" stroke="#5c3b1e" stroke-width="1" stroke-linecap="round" fill="none"/>',
-    sprout: '<ellipse cx="12" cy="20" rx="7" ry="1.6" fill="#4d7a3a" opacity=".25"/>'
-      + '<path d="M12 20v-6" stroke="#5a9c4f" stroke-width="1.6" stroke-linecap="round"/>'
-      + '<path d="M12 14c0-3-3-3.6-4.6-2.6C8.2 14 10 15 12 14z" fill="#8fd47a"/>'
-      + '<path d="M12 14c0-3.4 3.2-4.2 5-3C16.6 14.4 14.4 15.2 12 14z" fill="#7bc96f"/>'
-      + '<circle cx="10.6" cy="17.3" r="0.9" fill="#3c5c30"/><circle cx="13.4" cy="17.3" r="0.9" fill="#3c5c30"/>'
-      + '<path d="M11.1 19.1c.5.4 1.3.4 1.8 0" stroke="#3c5c30" stroke-width="0.9" stroke-linecap="round" fill="none"/>',
-    wilt: '<ellipse cx="12" cy="20" rx="7" ry="1.6" fill="#8a6a2f" opacity=".2"/>'
-      + '<path d="M12 20c0-2.6-1-3.8-.6-5.6" stroke="#a9b569" stroke-width="1.6" stroke-linecap="round"/>'
-      + '<path d="M11.4 14.4c-.4-3-3.4-3.2-4.8-1.8 1.2 2.6 3.2 3 4.8 1.8z" fill="#c7cf7c"/>'
-      + '<path d="M11.4 14.4c1-3 4-2.8 5.2-1.2-1.2 1.2-3.4 1.2-5.2 1.2z" fill="#b6c96a"/>'
-      + '<path d="M15.4 15.8c1.1.3 1.9 1.3 1.9 2.4 0 1.1-.9 1.8-1.9 1.8s-1.9-.7-1.9-1.8c0-1.1.8-2.1 1.9-2.4z" fill="#5fb8e0"/>'
-      + '<path d="M9.6 17.4c.5.15.8.5.6.9" stroke="#5c5a2f" stroke-width="1" stroke-linecap="round" fill="none"/>'
-      + '<path d="M12.4 17.4c.5.15.8.5.6.9" stroke="#5c5a2f" stroke-width="1" stroke-linecap="round" fill="none"/>',
-    bloom: '<ellipse cx="12" cy="20" rx="7.5" ry="1.6" fill="#2f6b3a" opacity=".25"/>'
-      + '<path d="M12 20v-7" stroke="#4f8f42" stroke-width="1.8" stroke-linecap="round"/>'
-      + '<circle cx="12" cy="10.5" r="5.2" fill="#7bc96f"/>'
-      + '<circle cx="9.3" cy="9" r="1.6" fill="#f7b8d0"/><circle cx="14.7" cy="9" r="1.6" fill="#f7b8d0"/><circle cx="12" cy="7.2" r="1.6" fill="#fde07a"/>'
-      + '<circle cx="10" cy="12" r="0.9" fill="#2f4a25"/><circle cx="14" cy="12" r="0.9" fill="#2f4a25"/>'
-      + '<path d="M10.6 13.6c.7.5 2.1.5 2.8 0" stroke="#2f4a25" stroke-width="1" stroke-linecap="round" fill="none"/>',
+    seed: '<path d="M12 6c3 0 5.4 2.6 5.4 6.4 0 4-2.7 6-5.4 6s-5.4-2-5.4-6C6.6 8.6 9 6 12 6z" fill="#d99a52"/>'
+      + '<path d="M9 9.6c1.4-1.6 3.2-2 4.2-1.6" stroke="#f3c98a" stroke-width="1" stroke-linecap="round" fill="none" opacity=".7"/>'
+      + '<path d="M6 19h12" stroke="#8a5a34" stroke-width="1.2" stroke-linecap="round" opacity=".35"/>',
+    sprout: '<path d="M6 19h12" stroke="#4d7a3a" stroke-width="1.2" stroke-linecap="round" opacity=".3"/>'
+      + '<path d="M12 19v-6.5" stroke="#5a9c4f" stroke-width="1.6" stroke-linecap="round"/>'
+      + '<path d="M12 13c0-3.2-2.8-4-4.6-3C8 12.6 10 13.4 12 13z" fill="#7bc96f"/>'
+      + '<path d="M12 13c0-3.6 3-4.6 4.8-3.4C16 12.8 14 13.6 12 13z" fill="#5a9c4f"/>',
+    wilt: '<path d="M6 19h12" stroke="#8a6a2f" stroke-width="1.2" stroke-linecap="round" opacity=".25"/>'
+      + '<path d="M12 19c.4-2.6-.6-4-1.4-5.6" stroke="#b7a24a" stroke-width="1.6" stroke-linecap="round" fill="none"/>'
+      + '<path d="M10.6 13.4c-1-2.8-3.8-3.2-5.2-2 1 2.4 3.2 3 5.2 2z" fill="#c9b95e"/>'
+      + '<path d="M15.6 15.4c1.1.4 1.8 1.4 1.8 2.5 0 1.1-.9 1.9-1.8 1.9s-1.8-.8-1.8-1.9c0-1.1.7-2.1 1.8-2.5z" fill="#e0a83a"/>',
+    bloom: '<path d="M5 19h14" stroke="#2f6b3a" stroke-width="1.2" stroke-linecap="round" opacity=".3"/>'
+      + '<path d="M12 19v-8.5" stroke="#4f8f42" stroke-width="1.8" stroke-linecap="round"/>'
+      + '<path d="M12 13.5c0-3-3-3.8-4.8-2.8.8 2.8 3 3.4 4.8 2.8z" fill="#6bbd5f"/>'
+      + '<path d="M12 13c0-3.4 3.2-4.4 5-3.2-1 3-3.4 3.8-5 3.2z" fill="#4f8f42"/>'
+      + '<path d="M12 10.5c-1.6-1.6-1.6-4-.4-5.2 1.6 1 2 3.4.4 5.2z" fill="#8fd47a"/>'
+      + '<circle cx="12" cy="5" r="1.3" fill="#fcd34d"/>',
   };
   function growthIcon(stage, size, extraStyle) {
     return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;flex-shrink:0' + (extraStyle ? ';' + extraStyle : '') + '">' + GROWTH_ICON_PATHS[stage] + '</svg>';
