@@ -192,14 +192,13 @@
       + '<path d="M12 19v-4.2" stroke="#5a9c4f" stroke-width="1.6" stroke-linecap="round"/>'
       + '<path d="M12 14.8c0-3.4-2.6-5-5.2-4.6-.4 3.2 2 5 5.2 4.6z" fill="#7bc96f"/>'
       + '<path d="M12 14.8c0-3.4 2.6-5 5.2-4.6.4 3.2-2 5-5.2 4.6z" fill="#5a9c4f"/>',
+    // 直立した双葉を回転させただけだと「傾いた」だけに見えたため、自重で先端が
+    // 巻き込む"シェパーズフック"型の曲線1本+先端の垂れ下がった葉で表現し直した。
     wilt: '<path d="M6 19h12" stroke="#5c4a30" stroke-width="1.2" stroke-linecap="round" opacity=".3"/>'
-      + '<g transform="rotate(38 12 19)">'
-      + '<path d="M12 19v-4.2" stroke="#a8875a" stroke-width="1.6" stroke-linecap="round"/>'
-      + '<path d="M12 14.8c0-3.4-2.6-5-5.2-4.6-.4 3.2 2 5 5.2 4.6z" fill="#c9a86a"/>'
-      + '<path d="M12 14.8c0-3.4 2.6-5 5.2-4.6.4 3.2-2 5-5.2 4.6z" fill="#a8875a"/>'
-      + '</g>',
+      + '<path d="M12 19c0-4 .8-7 3.2-7.4c2-.3 2.7 1.2 1.6 2.6c-.9 1.1-2.6 1.3-3.6.5" stroke="#a8875a" stroke-width="1.6" stroke-linecap="round" fill="none"/>'
+      + '<path d="M15.8 12.4c.2 1.8-.4 3.2-1.7 3.5-.4-1.8.3-3.2 1.7-3.5z" fill="#c9a86a"/>',
     bloom: '<path d="M5 19h14" stroke="#2f6b3a" stroke-width="1.2" stroke-linecap="round" opacity=".3"/>'
-      + '<path d="M12 19v-6.5" stroke="#4f8f42" stroke-width="1.7" stroke-linecap="round"/>'
+      + '<path d="M12 19v-12.4" stroke="#4f8f42" stroke-width="1.7" stroke-linecap="round"/>'
       + '<path d="M12 15.5c0-2.4-2.2-3.2-3.8-2.6.4 2.2 2.2 3 3.8 2.6z" fill="#6bbd5f"/>'
       + '<path d="M12 15c0-2.6 2.4-3.4 4-2.8-.6 2.4-2.4 3.2-4 2.8z" fill="#4f8f42"/>'
       + '<g fill="#f6a5c0">'
