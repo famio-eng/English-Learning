@@ -1687,6 +1687,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w062",
+      "word": "deem",
+      "pron": "/diːm/",
+      "meaning": "〜と見なす、〜と判断する",
+      "example": "The committee may deem it necessary to revise the project timeline.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-08-20",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "フォーマルな文脈で「〜と考える」「〜と判断する」という意味で使われます。",
+      "collocations": [
+        "deem it necessary",
+        "deem it appropriate",
+        "deem it advisable",
+        "be deemed acceptable"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-08-20",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
