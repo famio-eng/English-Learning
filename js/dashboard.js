@@ -22,10 +22,10 @@
     0: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }, { label: '単語帳を開く', tab: 'vocab', cls: 'btn-secondary' }] },
     1: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }] },
     2: { buttons: [{ label: 'シャドーイングを始める', tab: 'practice', cls: 'btn-primary' }] },
-    3: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: "DashboardTab.openChatGPT('practice')", cls: 'btn-secondary' }] },
-    4: { buttons: [{ label: 'ChatGPTで壁打ち', onclick: "DashboardTab.openChatGPT('practice')", cls: 'btn-secondary' }] },
+    3: { buttons: [{ label: 'ChatGPTで壁打ち', hint: 'プロンプトをコピーして開きます', onclick: "DashboardTab.openChatGPT('practice')", cls: 'btn-secondary' }] },
+    4: { buttons: [{ label: 'ChatGPTで壁打ち', hint: 'プロンプトをコピーして開きます', onclick: "DashboardTab.openChatGPT('practice')", cls: 'btn-secondary' }] },
     5: { buttons: [{ label: '単語帳を開く', tab: 'vocab', cls: 'btn-primary' }] },
-    6: { buttons: [{ label: '週次レポートを生成', onclick: 'DashboardTab.openWeeklyReportModal()', cls: 'btn-primary' }, { label: 'ChatGPTで壁打ち', onclick: "DashboardTab.openChatGPT('kickoff')", cls: 'btn-secondary' }] },
+    6: { buttons: [{ label: '週次レポートを生成', onclick: 'DashboardTab.openWeeklyReportModal()', cls: 'btn-primary' }, { label: 'ChatGPTで壁打ち', hint: 'プロンプトをコピーして開きます', onclick: "DashboardTab.openChatGPT('kickoff')", cls: 'btn-secondary' }] },
   };
   var DAILY_TASKS_DEF = {
     0: [{ key: 'shadowing', label: 'シャドーイング 0.7倍速 3回通し', priority: 'must', auto: true }, { key: 'vocab', label: '単語復習（SM-2）', priority: 'must', auto: true }],
@@ -207,7 +207,10 @@
     if (!plan || !plan.buttons.length) return '';
     return '<div style="display:flex;flex-direction:column;gap:8px">' + plan.buttons.map(function (b) {
       var onclick = b.onclick ? b.onclick : (b.tab ? "App.switchTab('" + b.tab + "')" : '');
-      return '<button class="btn ' + b.cls + ' btn-block" onclick="' + onclick + '">' + esc(b.label) + '</button>';
+      var inner = b.hint
+        ? '<span style="display:flex;flex-direction:column;gap:2px;line-height:1.3"><span>' + esc(b.label) + '</span><span style="font-size:11px;font-weight:400;opacity:.7">' + esc(b.hint) + '</span></span>'
+        : esc(b.label);
+      return '<button class="btn ' + b.cls + ' btn-block" style="height:auto;padding-top:8px;padding-bottom:8px" onclick="' + onclick + '">' + inner + '</button>';
     }).join('') + '</div>';
   }
 
