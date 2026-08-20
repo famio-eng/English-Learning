@@ -131,6 +131,9 @@
     },
     "2026-08-15": {
       "weeklyReport": false
+    },
+    "2026-08-20": {
+      "dialogue": true
     }
   },
   "shadowSettings": {
