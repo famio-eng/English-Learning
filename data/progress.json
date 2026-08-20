@@ -133,7 +133,7 @@
       "weeklyReport": false
     },
     "2026-08-20": {
-      "dialogue": true
+      "dialogue": false
     }
   },
   "shadowSettings": {
