@@ -141,6 +141,9 @@
     },
     "2026-08-20": {
       "dialogue": false
+    },
+    "2026-09-07": {
+      "shadowing": true
     }
   },
   "shadowSettings": {
