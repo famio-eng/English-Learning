@@ -418,8 +418,8 @@ var SCRIPTS = [
       en: 'Airport & Immigration',
       date: '2026-09-07',
       tip: 'FCO到着時の入国審査を想定。declare/baggage claimは即答できるように。',
-      raw: "Here's my passport and my boarding pass. I'm traveling to Italy for tourism, for eight days. I'll be staying at Hotel Corot in Rome, and then at HCC Taber in Barcelona. This is my first time visiting Italy. No, I don't have anything to declare. Could you tell me where the baggage claim is? Is there a currency exchange counter nearby?",
-      breathGroups: ["Here's my passport", "and my boarding pass.", "I'm traveling to Italy", "for tourism,", "for eight days.", "I'll be staying at Hotel Corot in Rome,", "and then at HCC Taber in Barcelona.", "This is my first time", "visiting Italy.", "No, I don't have anything", "to declare.", "Could you tell me", "where the baggage claim is?", "Is there a currency exchange counter", "nearby?"],
+      raw: "Here's my passport and my boarding pass. I'm traveling to Italy for tourism, for nine days. I'll be staying at Hotel Corot in Rome, and then at HCC Taber in Barcelona. This is my first time visiting Italy. No, I don't have anything to declare. Could you tell me where the baggage claim is? Is there a currency exchange counter nearby?",
+      breathGroups: ["Here's my passport", "and my boarding pass.", "I'm traveling to Italy", "for tourism,", "for nine days.", "I'll be staying at Hotel Corot in Rome,", "and then at HCC Taber in Barcelona.", "This is my first time", "visiting Italy.", "No, I don't have anything", "to declare.", "Could you tell me", "where the baggage claim is?", "Is there a currency exchange counter", "nearby?"],
       vocab: [
         { word: 'boarding pass', pron: '/ˈbɔːrdɪŋ pæs/', meaning: '搭乗券', example: 'Please have your boarding pass and passport ready.' },
         { word: 'declare', pron: '/dɪˈklɛər/', meaning: '（税関で）申告する', example: 'Do you have anything to declare?' },
@@ -430,7 +430,7 @@ var SCRIPTS = [
       analyzed: {
         sentences: [
           { en: "Here's my passport and my boarding pass.", ja: "パスポートと搭乗券です。" },
-          { en: "I'm traveling to Italy for tourism, for eight days.", ja: "観光目的でイタリアに8日間滞在します。" },
+          { en: "I'm traveling to Italy for tourism, for nine days.", ja: "観光目的でイタリアに9日間滞在します。" },
           { en: "I'll be staying at Hotel Corot in Rome, and then at HCC Taber in Barcelona.", ja: "ローマではHotel Corot、その後バルセロナではHCC Taberに宿泊します。" },
           { en: "This is my first time visiting Italy.", ja: "イタリアを訪れるのは今回が初めてです。" },
           { en: "No, I don't have anything to declare.", ja: "いいえ、申告するものは何もありません。" },
@@ -451,8 +451,8 @@ var SCRIPTS = [
       en: 'Hotel Check-in & Issues',
       date: '2026-09-07',
       tip: 'Hotel Corot(ローマ)は従業員を装った盗難注意の案内あり。不審な訪問はドアを開けずフロントに確認する練習。',
-      raw: "Hi, I have a reservation under the name Sakurada. We're staying for four nights, two guests. Could I see a city map, and is breakfast included? Sorry, I didn't request any maintenance. Could you please confirm this with the front desk first? I'll call the front desk to check before opening the door. Could you slide any message under the door instead?",
-      breathGroups: ["Hi, I have a reservation", "under the name Sakurada.", "We're staying for four nights,", "two guests.", "Could I see a city map,", "and is breakfast included?", "Sorry, I didn't request", "any maintenance.", "Could you please confirm this", "with the front desk first?", "I'll call the front desk", "to check before opening the door.", "Could you slide any message", "under the door instead?"],
+      raw: "Hi, I have a reservation under the name Sakurada. Here's my passport, and it's for two guests. Could I see a city map, and is breakfast included? Sorry, I didn't request any maintenance. Could you please confirm this with the front desk first? I'll call the front desk to check before opening the door. Could you slide any message under the door instead?",
+      breathGroups: ["Hi, I have a reservation", "under the name Sakurada.", "Here's my passport,", "and it's for two guests.", "Could I see a city map,", "and is breakfast included?", "Sorry, I didn't request", "any maintenance.", "Could you please confirm this", "with the front desk first?", "I'll call the front desk", "to check before opening the door.", "Could you slide any message", "under the door instead?"],
       vocab: [
         { word: 'reservation', pron: '/ˌrɛzərˈveɪʃən/', meaning: '予約', example: 'I have a reservation under the name Sakurada.' },
         { word: 'front desk', pron: '/frʌnt dɛsk/', meaning: '（ホテルの）フロント', example: "I'll call the front desk to check first." },
@@ -463,7 +463,7 @@ var SCRIPTS = [
       analyzed: {
         sentences: [
           { en: "Hi, I have a reservation under the name Sakurada.", ja: "Sakuradaの名前で予約しています。" },
-          { en: "We're staying for four nights, two guests.", ja: "4泊、2名で宿泊します。" },
+          { en: "Here's my passport, and it's for two guests.", ja: "パスポートです、2名分でお願いします。" },
           { en: "Could I see a city map, and is breakfast included?", ja: "市内地図をいただけますか、また朝食は含まれていますか？" },
           { en: "Sorry, I didn't request any maintenance.", ja: "すみませんが、メンテナンスは依頼していません。" },
           { en: "Could you please confirm this with the front desk first?", ja: "まずフロントに確認していただけますか？" },
