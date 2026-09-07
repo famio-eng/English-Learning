@@ -146,6 +146,10 @@
       "shadowing": true,
       "vocab": true,
       "vocabDoneCount": 5
+    },
+    "2026-09-08": {
+      "vocab": true,
+      "vocabDoneCount": 5
     }
   },
   "shadowSettings": {
