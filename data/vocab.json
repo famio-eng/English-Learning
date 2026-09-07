@@ -1506,13 +1506,13 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "企業買収や事業の引き継ぎなど、責任や管理が移る状況で使われます。",
       "collocations": [
         "take over a company",
         "take over the management",
         "take over operations"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-05",
       "reviewCount": 0,
@@ -1533,6 +1533,7 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "職務や責任、物理的なものを他者に渡す際に使います。",
       "collocations": [
         "hand over responsibilities",
@@ -1540,7 +1541,6 @@
         "hand over the reins",
         "hand over documents"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-05",
       "reviewCount": 0,
@@ -1561,13 +1561,13 @@
         "ビジネス英語",
         "TOEIC900+"
       ],
+      "otherMeanings": [],
       "usageTips": "QMSRで使われる略語です。",
       "collocations": [
         "DDF implementation",
         "DDF architecture",
         "DDF development"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-07",
       "reviewCount": 0,
@@ -1587,6 +1587,7 @@
       "level": [
         "ビジネス英語"
       ],
+      "otherMeanings": [],
       "usageTips": "建築、家具、製造業の文脈でよく使われます。",
       "collocations": [
         "MDF board",
@@ -1595,7 +1596,6 @@
         "painted MDF",
         "MDF core"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-07",
       "reviewCount": 0,
@@ -1616,6 +1616,7 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "「全く同じ」という強い意味合いで使われます。",
       "collocations": [
         "identical to",
@@ -1623,7 +1624,6 @@
         "almost identical",
         "identical features"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-13",
       "reviewCount": 0,
@@ -1644,6 +1644,7 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "問題や原因の根源を指す際によく使われます。",
       "collocations": [
         "underlying cause",
@@ -1652,7 +1653,6 @@
         "underlying assumption",
         "underlying trend"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-13",
       "reviewCount": 0,
@@ -1673,6 +1673,7 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "「最終的なもの」の前に来る「準備段階」や「試行段階」のものを指す際に使います。",
       "collocations": [
         "preliminary report",
@@ -1680,7 +1681,6 @@
         "preliminary discussion",
         "preliminary assessment"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-13",
       "reviewCount": 0,
@@ -1701,6 +1701,7 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "フォーマルな文脈で「〜と考える」「〜と判断する」という意味で使われます。",
       "collocations": [
         "deem it necessary",
@@ -1708,7 +1709,6 @@
         "deem it advisable",
         "be deemed acceptable"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-08-20",
       "reviewCount": 0,
@@ -1729,12 +1729,12 @@
         "ビジネス英語",
         "TOEIC800"
       ],
+      "otherMeanings": [],
       "usageTips": "二つの異なる事実や状況を対比させる際に使用します。",
       "collocations": [
         "whereas in contrast",
         "whereas on the other hand"
       ],
-      "otherMeanings": [],
       "interval": 1,
       "nextReview": "2026-09-03",
       "reviewCount": 0,
@@ -1761,10 +1761,10 @@
         "print a boarding pass",
         "mobile boarding pass"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 2.2,
+      "nextReview": "2026-09-10",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1787,10 +1787,10 @@
         "declare goods",
         "declare cash over a limit"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 2.2,
+      "nextReview": "2026-09-10",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1813,12 +1813,12 @@
         "carousel number",
         "lost baggage"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
+      "interval": 0.6,
+      "nextReview": "2026-09-08",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-09-07"
     },
     {
       "id": "w067",
@@ -1839,12 +1839,12 @@
         "exchange rate",
         "exchange money"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
+      "interval": 0.6,
+      "nextReview": "2026-09-08",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-09-07"
     },
     {
       "id": "w068",
@@ -1865,12 +1865,12 @@
         "immigration officer",
         "immigration control"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
+      "interval": 0.6,
+      "nextReview": "2026-09-08",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-09-07"
     },
     {
       "id": "w069",
