@@ -1891,12 +1891,12 @@
         "check with the front desk",
         "front desk staff"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
+      "interval": 0.6,
+      "nextReview": "2026-09-08",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-09-08"
     },
     {
       "id": "w070",
@@ -1917,10 +1917,10 @@
         "confirm a reservation",
         "cancel a reservation"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 2.2,
+      "nextReview": "2026-09-10",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1943,10 +1943,10 @@
         "routine maintenance",
         "maintenance staff"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 2.2,
+      "nextReview": "2026-09-10",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1969,10 +1969,10 @@
         "confirm with the front desk",
         "double-confirm"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
-      "streak": 0,
+      "interval": 2.2,
+      "nextReview": "2026-09-10",
+      "reviewCount": 1,
+      "streak": 1,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1995,12 +1995,12 @@
         "room rate",
         "buffet breakfast"
       ],
-      "interval": 1,
-      "nextReview": "2026-09-07",
-      "reviewCount": 0,
+      "interval": 0.6,
+      "nextReview": "2026-09-08",
+      "reviewCount": 1,
       "streak": 0,
-      "missCount": 0,
-      "lastMissed": ""
+      "missCount": 1,
+      "lastMissed": "2026-09-08"
     },
     {
       "id": "w074",
