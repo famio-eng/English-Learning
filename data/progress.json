@@ -37,6 +37,13 @@
       "readOk": 1,
       "shadOk": 0,
       "readCleared": true
+    },
+    "airport": {
+      "lastScore": 78,
+      "lastDate": "2026-09-07",
+      "readCleared": true,
+      "readOk": 1,
+      "shadOk": 0
     }
   },
   "vocabSelectedScripts": [
