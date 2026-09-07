@@ -1717,6 +1717,32 @@
       "lastMissed": ""
     },
     {
+      "id": "w063",
+      "word": "whereas",
+      "pron": "/ˌwerˈæz/",
+      "meaning": "～である一方、～であるのに対し",
+      "example": "Company A focuses on market share, whereas Company B prioritizes profit margins.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-09-03",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "二つの異なる事実や状況を対比させる際に使用します。",
+      "collocations": [
+        "whereas in contrast",
+        "whereas on the other hand"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-09-03",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
       "id": "w064",
       "word": "boarding pass",
       "pron": "/ˈbɔːrdɪŋ pæs/",
