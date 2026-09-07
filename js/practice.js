@@ -409,12 +409,142 @@ var SCRIPTS = [
     }
   }
 ];
+  // 2026-09-07作成: ローマ・バルセロナ旅行(9/12〜)まで残り1週間のため、実際の旅程
+  // (Hotel Corot/HCC Taber宿泊、レストラン予約、カンプ・ノウ観戦等)に即した内容に差し替え。
   var TRAVEL_SCRIPTS = [
-    { id: 'airport', title: '空港・入国審査', en: 'Airport & Immigration' },
-    { id: 'hotel', title: 'ホテルのチェックイン・トラブル対応', en: 'Hotel Check-in & Issues' },
-    { id: 'restaurant', title: 'レストランでの注文', en: 'Ordering at a Restaurant' },
-    { id: 'directions', title: '道案内・ちょっとしたトラブル', en: 'Directions & Mishaps' },
-  ]; // per LEARNING_PLAN.md's 偶数週 priority order — not yet written, shown locked
+    {
+      id: 'airport',
+      title: '空港・入国審査',
+      en: 'Airport & Immigration',
+      date: '2026-09-07',
+      tip: 'FCO到着時の入国審査を想定。declare/baggage claimは即答できるように。',
+      raw: "Here's my passport and my boarding pass. I'm traveling to Italy for tourism, for eight days. I'll be staying at Hotel Corot in Rome, and then at HCC Taber in Barcelona. This is my first time visiting Italy. No, I don't have anything to declare. Could you tell me where the baggage claim is? Is there a currency exchange counter nearby?",
+      breathGroups: ["Here's my passport", "and my boarding pass.", "I'm traveling to Italy", "for tourism,", "for eight days.", "I'll be staying at Hotel Corot in Rome,", "and then at HCC Taber in Barcelona.", "This is my first time", "visiting Italy.", "No, I don't have anything", "to declare.", "Could you tell me", "where the baggage claim is?", "Is there a currency exchange counter", "nearby?"],
+      vocab: [
+        { word: 'boarding pass', pron: '/ˈbɔːrdɪŋ pæs/', meaning: '搭乗券', example: 'Please have your boarding pass and passport ready.' },
+        { word: 'declare', pron: '/dɪˈklɛər/', meaning: '（税関で）申告する', example: 'Do you have anything to declare?' },
+        { word: 'baggage claim', pron: '/ˈbæɡɪdʒ kleɪm/', meaning: '手荷物受取所', example: 'Where is the baggage claim for this flight?' },
+        { word: 'currency exchange', pron: '/ˈkʌrənsi ɪksˈtʃeɪndʒ/', meaning: '両替（所）', example: 'Is there a currency exchange counter near here?' },
+        { word: 'purpose of visit', pron: '/ˈpɜːrpəs əv ˈvɪzɪt/', meaning: '渡航目的', example: 'The officer asked about the purpose of my visit.' },
+      ],
+      analyzed: {
+        sentences: [
+          { en: "Here's my passport and my boarding pass.", ja: "パスポートと搭乗券です。" },
+          { en: "I'm traveling to Italy for tourism, for eight days.", ja: "観光目的でイタリアに8日間滞在します。" },
+          { en: "I'll be staying at Hotel Corot in Rome, and then at HCC Taber in Barcelona.", ja: "ローマではHotel Corot、その後バルセロナではHCC Taberに宿泊します。" },
+          { en: "This is my first time visiting Italy.", ja: "イタリアを訪れるのは今回が初めてです。" },
+          { en: "No, I don't have anything to declare.", ja: "いいえ、申告するものは何もありません。" },
+          { en: "Could you tell me where the baggage claim is?", ja: "手荷物受取所はどこか教えていただけますか？" },
+          { en: "Is there a currency exchange counter nearby?", ja: "近くに両替所はありますか？" },
+        ],
+        pronunciationTips: [
+          "boarding pass: BOAR-ding pass。BOARにアクセント。",
+          "declare: dih-CLAIR。CLAIRを強く、語尾のrは軽く添える程度。",
+          "baggage claim: BAG-gij claim。BAGにアクセント。",
+          "currency exchange: CUR-ren-cy ex-CHANGE。両方とも最初の音節にアクセント。",
+        ],
+      },
+    },
+    {
+      id: 'hotel',
+      title: 'ホテルのチェックイン・トラブル対応',
+      en: 'Hotel Check-in & Issues',
+      date: '2026-09-07',
+      tip: 'Hotel Corot(ローマ)は従業員を装った盗難注意の案内あり。不審な訪問はドアを開けずフロントに確認する練習。',
+      raw: "Hi, I have a reservation under the name Sakurada. We're staying for four nights, two guests. Could I see a city map, and is breakfast included? Sorry, I didn't request any maintenance. Could you please confirm this with the front desk first? I'll call the front desk to check before opening the door. Could you slide any message under the door instead?",
+      breathGroups: ["Hi, I have a reservation", "under the name Sakurada.", "We're staying for four nights,", "two guests.", "Could I see a city map,", "and is breakfast included?", "Sorry, I didn't request", "any maintenance.", "Could you please confirm this", "with the front desk first?", "I'll call the front desk", "to check before opening the door.", "Could you slide any message", "under the door instead?"],
+      vocab: [
+        { word: 'reservation', pron: '/ˌrɛzərˈveɪʃən/', meaning: '予約', example: 'I have a reservation under the name Sakurada.' },
+        { word: 'front desk', pron: '/frʌnt dɛsk/', meaning: '（ホテルの）フロント', example: "I'll call the front desk to check first." },
+        { word: 'maintenance', pron: '/ˈmeɪntənəns/', meaning: '（設備の）点検・保守', example: "I didn't request any maintenance." },
+        { word: 'confirm', pron: '/kənˈfɜːrm/', meaning: '確認する', example: 'Could you please confirm this with the front desk?' },
+        { word: 'breakfast included', pron: '/ˈbrɛkfəst ɪnˈkluːdɪd/', meaning: '朝食付き', example: 'Is breakfast included in the room rate?' },
+      ],
+      analyzed: {
+        sentences: [
+          { en: "Hi, I have a reservation under the name Sakurada.", ja: "Sakuradaの名前で予約しています。" },
+          { en: "We're staying for four nights, two guests.", ja: "4泊、2名で宿泊します。" },
+          { en: "Could I see a city map, and is breakfast included?", ja: "市内地図をいただけますか、また朝食は含まれていますか？" },
+          { en: "Sorry, I didn't request any maintenance.", ja: "すみませんが、メンテナンスは依頼していません。" },
+          { en: "Could you please confirm this with the front desk first?", ja: "まずフロントに確認していただけますか？" },
+          { en: "I'll call the front desk to check before opening the door.", ja: "ドアを開ける前にフロントに電話して確認します。" },
+          { en: "Could you slide any message under the door instead?", ja: "代わりに伝言をドアの下に入れていただけますか？" },
+        ],
+        pronunciationTips: [
+          "reservation: rez-er-VAY-shun。VAYにアクセント。",
+          "maintenance: MAIN-te-nance。MAINを強く。",
+          "confirm: con-FIRM。FIRMにアクセント、rはこもった音。",
+          "front desk: FRONTとdeskの両方をはっきりと。",
+        ],
+      },
+    },
+    {
+      id: 'restaurant',
+      title: 'レストランでの注文',
+      en: 'Ordering at a Restaurant',
+      date: '2026-09-07',
+      tip: 'Volare・Pietro al Pantheon等、予約済みの店での名乗り方と、未予約店での飛び込み確認の両方をカバー。',
+      raw: "Hi, I have a reservation under Sakurada, for two, at seven thirty. Do you happen to have a table for two around one o'clock? Could we see the menu, please? I'll have the margherita pizza, and my wife will have the carbonara. Could we get some tap water, please? Everything was delicious, thank you. Could we have the bill, please? Do you accept credit cards?",
+      breathGroups: ["Hi, I have a reservation", "under Sakurada,", "for two,", "at seven thirty.", "Do you happen to have", "a table for two", "around one o'clock?", "Could we see the menu,", "please?", "I'll have the margherita pizza,", "and my wife will have the carbonara.", "Could we get some tap water,", "please?", "Everything was delicious,", "thank you.", "Could we have the bill,", "please?", "Do you accept credit cards?"],
+      vocab: [
+        { word: 'table for two', pron: '/ˈteɪbəl fɔːr tuː/', meaning: '2名用の席', example: 'Do you happen to have a table for two?' },
+        { word: 'tap water', pron: '/tæp ˈwɔːtər/', meaning: '水道水（無料の水）', example: 'Could we get some tap water, please?' },
+        { word: 'allergic to', pron: '/əˈlɜːrdʒɪk tuː/', meaning: '〜にアレルギーがある', example: "I'm allergic to shellfish, is this dish safe?" },
+        { word: 'the bill', pron: '/ðə bɪl/', meaning: 'お会計', example: 'Could we have the bill, please?' },
+        { word: 'accept credit cards', pron: '/əkˈsɛpt ˈkrɛdɪt kɑːrdz/', meaning: 'クレジットカードを使える', example: 'Do you accept credit cards?' },
+      ],
+      analyzed: {
+        sentences: [
+          { en: "Hi, I have a reservation under Sakurada, for two, at seven thirty.", ja: "Sakuradaの名前で7時半に2名で予約しています。" },
+          { en: "Do you happen to have a table for two around one o'clock?", ja: "1時ごろ、2名の席は空いていますか？" },
+          { en: "Could we see the menu, please?", ja: "メニューを見せていただけますか？" },
+          { en: "I'll have the margherita pizza, and my wife will have the carbonara.", ja: "マルゲリータピザを、妻はカルボナーラをお願いします。" },
+          { en: "Could we get some tap water, please?", ja: "水道水をいただけますか？" },
+          { en: "Everything was delicious, thank you.", ja: "とても美味しかったです、ありがとうございます。" },
+          { en: "Could we have the bill, please? Do you accept credit cards?", ja: "お会計をお願いします。クレジットカードは使えますか？" },
+        ],
+        pronunciationTips: [
+          "reservation: rez-er-VAY-shun。",
+          "margherita: mar-ge-RI-ta。RIを強く。",
+          "bill: 短くはっきりと。billとbeelを混同しない。",
+          "Could we get...: クドゥ・ウィと繋げて発音、weは弱く。",
+        ],
+      },
+    },
+    {
+      id: 'directions',
+      title: '道案内・ちょっとしたトラブル',
+      en: 'Directions & Mishaps',
+      date: '2026-09-07',
+      tip: 'パンテオン等の時間指定チケット、忘れ物、カンプ・ノウのQRコード未着など、実際に起こりうるトラブル対応。',
+      raw: "Excuse me, could you tell me the way to the Pantheon? I have a ticket booked for four o'clock. Where should I go? I think I left my phone behind at the restaurant. Could you help me? I haven't received my QR code for tonight's match yet. Could you help me check my ticket status? Is there a police station nearby? Thank you so much for your help.",
+      breathGroups: ["Excuse me,", "could you tell me", "the way to the Pantheon?", "I have a ticket", "booked for four o'clock.", "Where should I go?", "I think I left my phone", "behind at the restaurant.", "Could you help me?", "I haven't received my QR code", "for tonight's match yet.", "Could you help me", "check my ticket status?", "Is there a police station", "nearby?", "Thank you so much", "for your help."],
+      vocab: [
+        { word: 'the way to', pron: '/ðə weɪ tuː/', meaning: '〜への道（行き方）', example: 'Could you tell me the way to the Pantheon?' },
+        { word: 'left behind', pron: '/lɛft bɪˈhaɪnd/', meaning: '置き忘れる', example: 'I think I left my phone behind at the restaurant.' },
+        { word: 'lost and found', pron: '/lɒst ənd faʊnd/', meaning: '忘れ物取扱所', example: 'Is there a lost and found office here?' },
+        { word: 'ticket status', pron: '/ˈtɪkɪt ˈsteɪtəs/', meaning: 'チケットの状況', example: 'Could you help me check my ticket status?' },
+        { word: 'police station', pron: '/pəˈliːs ˈsteɪʃən/', meaning: '警察署', example: 'Is there a police station nearby?' },
+      ],
+      analyzed: {
+        sentences: [
+          { en: "Excuse me, could you tell me the way to the Pantheon?", ja: "すみません、パンテオンへの行き方を教えていただけますか？" },
+          { en: "I have a ticket booked for four o'clock. Where should I go?", ja: "4時のチケットを予約しています、どちらに行けばいいですか？" },
+          { en: "I think I left my phone behind at the restaurant. Could you help me?", ja: "レストランに携帯電話を忘れてきたと思います。手伝っていただけますか？" },
+          { en: "I haven't received my QR code for tonight's match yet.", ja: "今夜の試合のQRコードをまだ受け取っていません。" },
+          { en: "Could you help me check my ticket status?", ja: "チケットの状況を確認するのを手伝っていただけますか？" },
+          { en: "Is there a police station nearby?", ja: "近くに警察署はありますか？" },
+          { en: "Thank you so much for your help.", ja: "ご協力いただき本当にありがとうございます。" },
+        ],
+        pronunciationTips: [
+          "Excuse me: eks-KYUZ mi。KYUZを強く。",
+          "booked: 過去形のedはtの音（ブックト）。",
+          "left behind: LEFT bi-HIND。",
+          "police station: po-LEECE STAY-shun。両方はっきりと。",
+        ],
+      },
+    },
+  ];
 
   var PASS_THRESHOLD = { reading: 65, shadowing: 70 };
   var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
@@ -469,9 +599,9 @@ var SCRIPTS = [
       + '<div style="font-size:13px;color:var(--color-accent-300);font-weight:500;white-space:nowrap">' + scoreLabelFor(s) + '</div></button>';
   }
   function travelCardHtml(s) {
-    return '<div style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:14px;opacity:0.5">'
+    return '<button onclick="PracticeTab.openScript(\'' + s.id + '\')" style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:14px;cursor:pointer;text-align:left;color:inherit;font-family:inherit;width:100%">'
       + '<div style="flex:1"><div style="font-size:15px;font-weight:500">' + esc(s.title) + '</div><div style="font-size:12px;color:var(--color-neutral-400)">' + esc(s.en) + '</div></div>'
-      + '<div style="font-size:12px;color:var(--color-neutral-400)">準備中</div></div>';
+      + '<div style="font-size:13px;color:var(--color-accent-300);font-weight:500;white-space:nowrap">' + scoreLabelFor(s) + '</div></button>';
   }
 
   function renderList() {
@@ -481,6 +611,9 @@ var SCRIPTS = [
     var pending = window.App.state.pendingOpenScriptId;
     if (pending) { window.App.state.pendingOpenScriptId = null; openScriptDetail(pending); return; }
     if (openScript) { renderDetail(); return; }
+
+    var pendingCat = window.App.state.pendingPracticeCategory;
+    if (pendingCat) { window.App.state.pendingPracticeCategory = null; practiceCategory = pendingCat; }
 
     var order = businessOrder.filter(function (id) { return SCRIPTS.some(function (s) { return s.id === id; }); });
     SCRIPTS.forEach(function (s) { if (order.indexOf(s.id) === -1) order.push(s.id); });
@@ -500,7 +633,7 @@ var SCRIPTS = [
         + (editingList ? ordered.map(function (s) { return businessCardHtml(s, true); }).join('') : visible.map(function (s) { return businessCardHtml(s, false); }).join(''))
         + '</div>';
     } else {
-      html += '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:4px">9月第3週の旅行に向けて（準備中）</div>';
+      html += '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:4px">9/12〜のローマ・バルセロナ旅行に向けて</div>';
       html += '<div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">' + TRAVEL_SCRIPTS.map(travelCardHtml).join('') + '</div>';
     }
     el.innerHTML = html;
@@ -530,7 +663,7 @@ var SCRIPTS = [
   // ── DETAIL ──
   function openScriptDetail(id) {
     var s = findScript(id);
-    if (!s || TRAVEL_SCRIPTS.indexOf(s) !== -1) { if (TRAVEL_SCRIPTS.some(function (t) { return t.id === id; })) { App.toast('このスクリプトは準備中です'); return; } }
+    if (!s) { App.toast('スクリプトが見つかりません'); return; }
     openScript = s;
     practiceMode = 'shadow'; showMeaning = false; lastRecDataUrl = ''; isRec = false; isPlaying = false;
     renderList();
@@ -734,8 +867,8 @@ var SCRIPTS = [
     reader.onload = function () {
       var b64 = reader.result.split(',')[1];
       var scriptText = openScript.raw;
-      var promptText = 'You are an English pronunciation coach evaluating a Japanese business professional.\n'
-        + 'This speaker is a Japanese native learning business English.\n'
+      var promptText = 'You are an English pronunciation coach evaluating a Japanese English learner.\n'
+        + 'This speaker is a Japanese native learning practical English (business or travel context).\n'
         + 'Mode: ' + mode + '. Full script text the speaker is reading/shadowing:\n"' + scriptText + '"\n\n'
         + 'Scoring criteria for Japanese learners (anchor on intelligibility, not native-level polish):\n'
         + '- 85+: Excellent, near-native rhythm and pronunciation\n'

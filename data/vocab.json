@@ -1715,6 +1715,473 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w063",
+      "word": "boarding pass",
+      "pron": "/ˈbɔːrdɪŋ pæs/",
+      "meaning": "搭乗券",
+      "example": "Please have your boarding pass and passport ready.",
+      "source": "空港・入国審査",
+      "scriptId": "airport",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "空港でチェックイン・保安検査の際に提示を求められる基本語。",
+      "collocations": [
+        "show your boarding pass",
+        "print a boarding pass",
+        "mobile boarding pass"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w064",
+      "word": "declare",
+      "pron": "/dɪˈklɛər/",
+      "meaning": "（税関で）申告する",
+      "example": "Do you have anything to declare?",
+      "source": "空港・入国審査",
+      "scriptId": "airport",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "税関の入国審査で必ず聞かれる質問。nothing to declareで「申告するものはない」。",
+      "collocations": [
+        "nothing to declare",
+        "declare goods",
+        "declare cash over a limit"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w065",
+      "word": "baggage claim",
+      "pron": "/ˈbæɡɪdʒ kleɪm/",
+      "meaning": "手荷物受取所",
+      "example": "Where is the baggage claim for this flight?",
+      "source": "空港・入国審査",
+      "scriptId": "airport",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "到着後にスーツケースを受け取る場所。",
+      "collocations": [
+        "baggage claim area",
+        "carousel number",
+        "lost baggage"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w066",
+      "word": "currency exchange",
+      "pron": "/ˈkʌrənsi ɪksˈtʃeɪndʒ/",
+      "meaning": "両替（所）",
+      "example": "Is there a currency exchange counter near here?",
+      "source": "空港・入国審査",
+      "scriptId": "airport",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "空港・駅にある両替カウンター。exchange rate（為替レート）と合わせて覚える。",
+      "collocations": [
+        "currency exchange counter",
+        "exchange rate",
+        "exchange money"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w067",
+      "word": "purpose of visit",
+      "pron": "/ˈpɜːrpəs əv ˈvɪzɪt/",
+      "meaning": "渡航目的",
+      "example": "The officer asked about the purpose of my visit.",
+      "source": "空港・入国審査",
+      "scriptId": "airport",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "入国審査で頻出。tourism（観光）と答えられるようにしておく。",
+      "collocations": [
+        "purpose of visit",
+        "immigration officer",
+        "immigration control"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w068",
+      "word": "front desk",
+      "pron": "/frʌnt dɛsk/",
+      "meaning": "（ホテルの）フロント",
+      "example": "I'll call the front desk to check first.",
+      "source": "ホテルのチェックイン・トラブル対応",
+      "scriptId": "hotel",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "ホテルの受付。不審な訪問者にはまずフロントに確認する、という安全確保の文脈でよく使う。",
+      "collocations": [
+        "call the front desk",
+        "check with the front desk",
+        "front desk staff"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w069",
+      "word": "reservation",
+      "pron": "/ˌrɛzərˈveɪʃən/",
+      "meaning": "予約",
+      "example": "I have a reservation under the name Sakurada.",
+      "source": "ホテルのチェックイン・トラブル対応",
+      "scriptId": "hotel",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "ホテル・レストラン共通で使う「予約」。underは「〜の名前で」の意味。",
+      "collocations": [
+        "reservation under the name",
+        "confirm a reservation",
+        "cancel a reservation"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w070",
+      "word": "maintenance",
+      "pron": "/ˈmeɪntənəns/",
+      "meaning": "（設備の）点検・保守",
+      "example": "I didn't request any maintenance.",
+      "source": "ホテルのチェックイン・トラブル対応",
+      "scriptId": "hotel",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "「空調点検」等を口実にした不審な訪問を断る際に重要な単語。",
+      "collocations": [
+        "request maintenance",
+        "routine maintenance",
+        "maintenance staff"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w071",
+      "word": "confirm",
+      "pron": "/kənˈfɜːrm/",
+      "meaning": "確認する",
+      "example": "Could you please confirm this with the front desk?",
+      "source": "ホテルのチェックイン・トラブル対応",
+      "scriptId": "hotel",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "「〜と確認していただけますか」の定番表現。",
+      "collocations": [
+        "confirm a reservation",
+        "confirm with the front desk",
+        "double-confirm"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w072",
+      "word": "breakfast included",
+      "pron": "/ˈbrɛkfəst ɪnˈkluːdɪd/",
+      "meaning": "朝食付き",
+      "example": "Is breakfast included in the room rate?",
+      "source": "ホテルのチェックイン・トラブル対応",
+      "scriptId": "hotel",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "宿泊料金に朝食が含まれるかを尋ねる定番フレーズ。",
+      "collocations": [
+        "breakfast included",
+        "room rate",
+        "buffet breakfast"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w073",
+      "word": "table for two",
+      "pron": "/ˈteɪbəl fɔːr tuː/",
+      "meaning": "2名用の席",
+      "example": "Do you happen to have a table for two?",
+      "source": "レストランでの注文",
+      "scriptId": "restaurant",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "レストランで空席を尋ねる際の基本表現。",
+      "collocations": [
+        "table for two",
+        "table by the window",
+        "without a reservation"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w074",
+      "word": "tap water",
+      "pron": "/tæp ˈwɔːtər/",
+      "meaning": "水道水（無料の水）",
+      "example": "Could we get some tap water, please?",
+      "source": "レストランでの注文",
+      "scriptId": "restaurant",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "欧州のレストランでは水が有料の場合が多く、無料の水を頼む際に使う。",
+      "collocations": [
+        "tap water",
+        "sparkling water",
+        "still water"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w075",
+      "word": "allergic to",
+      "pron": "/əˈlɜːrdʒɪk tuː/",
+      "meaning": "〜にアレルギーがある",
+      "example": "I'm allergic to shellfish, is this dish safe?",
+      "source": "レストランでの注文",
+      "scriptId": "restaurant",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "食物アレルギーを伝える重要フレーズ。安全のため覚えておきたい。",
+      "collocations": [
+        "allergic to nuts",
+        "allergic reaction",
+        "food allergy"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w076",
+      "word": "the bill",
+      "pron": "/ðə bɪl/",
+      "meaning": "お会計",
+      "example": "Could we have the bill, please?",
+      "source": "レストランでの注文",
+      "scriptId": "restaurant",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "イギリス英語でbill、アメリカ英語ではcheckとも言う。",
+      "collocations": [
+        "ask for the bill",
+        "split the bill",
+        "pay the bill"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w077",
+      "word": "the way to",
+      "pron": "/ðə weɪ tuː/",
+      "meaning": "〜への道（行き方）",
+      "example": "Could you tell me the way to the Pantheon?",
+      "source": "道案内・ちょっとしたトラブル",
+      "scriptId": "directions",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "道を尋ねる最も基本的な言い方。",
+      "collocations": [
+        "the way to",
+        "on the way to",
+        "which way"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w078",
+      "word": "left behind",
+      "pron": "/lɛft bɪˈhaɪnd/",
+      "meaning": "置き忘れる",
+      "example": "I think I left my phone behind at the restaurant.",
+      "source": "道案内・ちょっとしたトラブル",
+      "scriptId": "directions",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "忘れ物を伝える表現。leave A behindの過去形。",
+      "collocations": [
+        "leave something behind",
+        "lost and found",
+        "left my bag behind"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w079",
+      "word": "lost and found",
+      "pron": "/lɒst ənd faʊnd/",
+      "meaning": "忘れ物取扱所",
+      "example": "Is there a lost and found office here?",
+      "source": "道案内・ちょっとしたトラブル",
+      "scriptId": "directions",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "空港・駅・観光施設の忘れ物センター。",
+      "collocations": [
+        "lost and found office",
+        "report a lost item"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
+    },
+    {
+      "id": "w080",
+      "word": "police station",
+      "pron": "/pəˈliːs ˈsteɪʃən/",
+      "meaning": "警察署",
+      "example": "Is there a police station nearby?",
+      "source": "道案内・ちょっとしたトラブル",
+      "scriptId": "directions",
+      "added": "2026-09-07",
+      "level": [
+        "ネイティブ日常"
+      ],
+      "otherMeanings": [],
+      "usageTips": "盗難・トラブル時に助けを求める際の基本語。",
+      "collocations": [
+        "nearby police station",
+        "report to the police",
+        "call the police"
+      ],
+      "interval": 1,
+      "nextReview": "2026-09-07",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }

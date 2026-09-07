@@ -104,6 +104,36 @@
   }
   function weekType(d) { return isoWeekNumber(d) % 2 === 1 ? 'business' : 'travel'; }
 
+  // 2026-09-07追加: 通常の隔週business/travel切替とは別に、出発直前5日間(9/7〜9/11)だけ
+  // 旅行英語に全振りする一時的な上書き。恒久的な週次設定(DAILY_PLAN等)は変えず、
+  // renderHome側の表示だけをこの期間中差し替える。
+  var PRE_TRIP_PLAN = {
+    5: { dayLabel: '月', focus: '空港・入国審査', scriptId: 'airport' },
+    4: { dayLabel: '火', focus: 'ホテルのチェックイン・トラブル対応', scriptId: 'hotel' },
+    3: { dayLabel: '水', focus: 'レストランでの注文', scriptId: 'restaurant' },
+    2: { dayLabel: '木', focus: '道案内・ちょっとしたトラブル', scriptId: 'directions' },
+    1: { dayLabel: '金', focus: '4スクリプト総復習＋単語帳の苦手復習', scriptId: null },
+  };
+  function preTripPlanFor(d) {
+    var trip = new Date(TRIP_START + 'T00:00:00');
+    var day = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var diffDays = Math.round((trip - day) / 86400000);
+    return PRE_TRIP_PLAN[diffDays] || null;
+  }
+  function preTripCardHtml(plan) {
+    var openBtn = plan.scriptId
+      ? '<button class="btn btn-primary btn-block" style="margin-top:10px" onclick="App.state.pendingOpenScriptId=\'' + plan.scriptId + '\';App.switchTab(\'practice\')">練習する</button>'
+      : '<div style="display:flex;gap:8px;margin-top:10px">'
+        + '<button class="btn btn-primary" style="flex:1" onclick="App.state.pendingPracticeCategory=\'travel\';App.switchTab(\'practice\')">4スクリプトを見直す</button>'
+        + '<button class="btn btn-secondary" style="flex:1" onclick="VocabTab.toggleWeakOnly();App.switchTab(\'vocab\')">苦手単語を復習</button>'
+        + '</div>';
+    return '<div class="card" style="border-color:var(--color-accent)">'
+      + '<div style="display:flex;align-items:center;gap:8px"><span class="tag tag-accent">旅行直前・' + plan.dayLabel + '曜</span></div>'
+      + '<div class="card-title" style="margin-top:6px">' + esc(plan.focus) + '</div>'
+      + '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:4px">ローマ・バルセロナ旅行（9/12〜）に向けた集中復習</div>'
+      + openBtn + '</div>';
+  }
+
   // Confirmed on-device: ?q= prefill just lands on the project's top page, no session
   // starts. Fallback per Fami's suggestion — copy a starter prompt to the clipboard and
   // open the bare project URL, so the prompt can be pasted into the compose box by hand.
@@ -248,8 +278,10 @@
     }
     var wt = weekType(new Date());
     var nextWt = wt === 'business' ? '旅行英語' : 'ビジネス英語';
+    var daysToTrip = Math.max(0, Math.ceil((new Date(TRIP_START) - new Date()) / 86400000));
     var weeksToTrip = Math.max(0, Math.ceil((new Date(TRIP_START) - new Date()) / (7 * 86400000)));
     var userName = localStorage.getItem('profile_name') || 'Fami';
+    var preTrip = preTripPlanFor(new Date());
 
     var html = '';
     html += '<div style="display:flex;align-items:center;justify-content:space-between">'
@@ -258,14 +290,21 @@
       + '<div style="font-weight:600;font-size:24px">こんにちは、' + esc(userName) + 'さん</div></div>'
       + '<span class="tag tag-accent">継続' + streakDays() + '日</span></div>';
 
-    html += '<div class="card"><div style="display:flex;align-items:center;gap:8px">'
-      + '<span class="tag tag-accent">今週</span><span style="font-size:15px;font-weight:500">' + (wt === 'business' ? 'ビジネス英語' : '旅行英語') + ' week</span></div>'
-      + '<div style="font-size:13px;color:var(--color-neutral-400);margin-top:6px">来週は ' + nextWt + ' week ・ 旅行まで残り' + weeksToTrip + '週</div></div>';
+    if (preTrip) {
+      html += '<div class="card"><div style="display:flex;align-items:center;gap:8px">'
+        + '<span class="tag tag-accent">🧳 旅行直前</span><span style="font-size:15px;font-weight:500">出発まであと' + daysToTrip + '日</span></div>'
+        + '<div style="font-size:13px;color:var(--color-neutral-400);margin-top:6px">9/12(土)ローマ・バルセロナへ出発。今週は旅行英語に全振りします</div></div>';
+      html += preTripCardHtml(preTrip);
+    } else {
+      html += '<div class="card"><div style="display:flex;align-items:center;gap:8px">'
+        + '<span class="tag tag-accent">今週</span><span style="font-size:15px;font-weight:500">' + (wt === 'business' ? 'ビジネス英語' : '旅行英語') + ' week</span></div>'
+        + '<div style="font-size:13px;color:var(--color-neutral-400);margin-top:6px">来週は ' + nextWt + ' week ・ 旅行まで残り' + weeksToTrip + '週</div></div>';
 
-    html += '<div class="card"><div class="card-kicker">今日のタスク</div>'
-      + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">' + todayTaskItemsHtml() + '</div></div>';
+      html += '<div class="card"><div class="card-kicker">今日のタスク</div>'
+        + '<div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">' + todayTaskItemsHtml() + '</div></div>';
 
-    html += todayButtonsHtml();
+      html += todayButtonsHtml();
+    }
 
     html += continueScriptHtml();
 
