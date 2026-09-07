@@ -1761,10 +1761,10 @@
         "print a boarding pass",
         "mobile boarding pass"
       ],
-      "interval": 2.2,
-      "nextReview": "2026-09-10",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 10.648000000000003,
+      "nextReview": "2026-09-18",
+      "reviewCount": 3,
+      "streak": 3,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1787,10 +1787,10 @@
         "declare goods",
         "declare cash over a limit"
       ],
-      "interval": 2.2,
-      "nextReview": "2026-09-10",
-      "reviewCount": 1,
-      "streak": 1,
+      "interval": 10.648000000000003,
+      "nextReview": "2026-09-18",
+      "reviewCount": 3,
+      "streak": 3,
       "missCount": 0,
       "lastMissed": ""
     },
@@ -1813,12 +1813,12 @@
         "carousel number",
         "lost baggage"
       ],
-      "interval": 0.6,
-      "nextReview": "2026-09-08",
-      "reviewCount": 1,
-      "streak": 0,
-      "missCount": 1,
-      "lastMissed": "2026-09-07"
+      "interval": 1,
+      "nextReview": "2026-09-09",
+      "reviewCount": 3,
+      "streak": 1,
+      "missCount": 2,
+      "lastMissed": "2026-09-08"
     },
     {
       "id": "w067",
@@ -1839,12 +1839,12 @@
         "exchange rate",
         "exchange money"
       ],
-      "interval": 0.6,
-      "nextReview": "2026-09-08",
-      "reviewCount": 1,
-      "streak": 0,
-      "missCount": 1,
-      "lastMissed": "2026-09-07"
+      "interval": 1,
+      "nextReview": "2026-09-09",
+      "reviewCount": 3,
+      "streak": 1,
+      "missCount": 2,
+      "lastMissed": "2026-09-08"
     },
     {
       "id": "w068",
@@ -1865,10 +1865,10 @@
         "immigration officer",
         "immigration control"
       ],
-      "interval": 0.6,
-      "nextReview": "2026-09-08",
-      "reviewCount": 1,
-      "streak": 0,
+      "interval": 2.9040000000000004,
+      "nextReview": "2026-09-11",
+      "reviewCount": 3,
+      "streak": 2,
       "missCount": 1,
       "lastMissed": "2026-09-07"
     },
