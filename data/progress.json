@@ -52,7 +52,11 @@
     "pentest-alignment",
     "510k-readiness",
     "launch-status-update",
-    "custom"
+    "custom",
+    "airport",
+    "hotel",
+    "restaurant",
+    "directions"
   ],
   "vocabKnownScriptIds": [
     "short",
@@ -62,7 +66,11 @@
     "pentest-alignment",
     "510k-readiness",
     "launch-status-update",
-    "custom"
+    "custom",
+    "airport",
+    "hotel",
+    "restaurant",
+    "directions"
   ],
   "dailyTasks": {
     "2026-05-30": {
