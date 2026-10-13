@@ -1468,6 +1468,11 @@ async function callGeminiWithFallback(payload) {
 async function submitAddWord() {
   var wordVal = (document.getElementById('aw-word').value || '').trim();
   if (!wordVal) { document.getElementById('aw-status').textContent = '単語を入力してください'; return; }
+  var dupLocal = words.find(function(w){ return (w.word||'').toLowerCase() === wordVal.toLowerCase(); });
+  if (dupLocal) {
+    document.getElementById('aw-status').innerHTML = '⚠️ 「' + escHtml(dupLocal.word) + '」はすでに登録されています';
+    return;
+  }
   var meaningVal = (document.getElementById('aw-meaning').value || '').trim();
   var exampleVal = (document.getElementById('aw-example').value || '').trim();
   var sourceVal  = (document.getElementById('aw-source').value || '').trim();
@@ -1563,6 +1568,12 @@ async function submitAddWord() {
     var existing = [];
     if (ghData.content) {
       try { existing = JSON.parse(decodeURIComponent(escape(atob(ghData.content.replace(/\n/g,''))))).words || []; } catch(e) {}
+    }
+    var dupGH = existing.find(function(w){ return (w.word||'').toLowerCase() === wordVal.toLowerCase(); });
+    if (dupGH) {
+      st.innerHTML = '⚠️ 「' + escHtml(dupGH.word) + '」はすでにGitHub上の単語帳に登録されています';
+      btn.disabled = false; btn.textContent = '追加する';
+      return;
     }
     existing.push(newWord);
     var vocabObj = {words: existing};
