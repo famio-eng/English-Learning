@@ -2208,6 +2208,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w082",
+      "word": "consolidate",
+      "pron": "/kənˈsɒlɪdeɪt/",
+      "meaning": "統合する、強化する",
+      "example": "We need to consolidate our efforts to achieve the quarterly targets.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-13",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "複数のものや活動を一つにまとめる、または既存のものをより強固にする際に使います。",
+      "collocations": [
+        "consolidate debt",
+        "consolidate operations",
+        "consolidate power",
+        "consolidate market share"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-13",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
