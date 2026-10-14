@@ -2263,6 +2263,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w084",
+      "word": "tolerance",
+      "pron": "/ˈtɒlərəns/",
+      "meaning": "許容範囲、寛容",
+      "example": "We need to establish a clear tolerance level for errors in the new system.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-14",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "ビジネスでは「許容範囲」の意味で使われることが多いです。",
+      "collocations": [
+        "tolerance level",
+        "zero tolerance",
+        "within tolerance",
+        "error tolerance"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-14",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
