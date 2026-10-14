@@ -2236,6 +2236,33 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w083",
+      "word": "contradictory",
+      "pron": "/ˌkɒntrəˈdɪktəri/",
+      "meaning": "矛盾した、相反する",
+      "example": "The two reports presented contradictory findings regarding market trends.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-14",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "意見や情報が互いに食い違う状況で使います。",
+      "collocations": [
+        "contradictory evidence",
+        "contradictory statements",
+        "contradictory information"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-14",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
