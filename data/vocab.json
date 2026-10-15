@@ -2318,6 +2318,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w086",
+      "word": "justification",
+      "pron": "/ˌdʒʌstɪfɪˈkeɪʃn/",
+      "meaning": "正当化、根拠",
+      "example": "Please provide a clear justification for the increased budget request.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-15",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "ビジネスシーンでは、提案や決定の理由を説明する際に使われます。",
+      "collocations": [
+        "provide justification",
+        "seek justification",
+        "without justification",
+        "justification for"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-15",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
