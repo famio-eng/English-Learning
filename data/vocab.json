@@ -2294,7 +2294,7 @@
     },
     {
       "id": "w085",
-      "word": "foks",
+      "word": "folks",
       "pron": "/fəʊks/",
       "meaning": "皆さん、人々",
       "example": "Good morning, folks. Let's start the meeting.",
@@ -2308,7 +2308,8 @@
       "collocations": [
         "Hey folks",
         "You folks",
-        "Folks, listen up"
+        "Folks",
+        "listen up"
       ],
       "otherMeanings": [],
       "interval": 1,
