@@ -2291,6 +2291,32 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w085",
+      "word": "foks",
+      "pron": "/fəʊks/",
+      "meaning": "皆さん、人々",
+      "example": "Good morning, folks. Let's start the meeting.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-15",
+      "level": [
+        "ビジネス英語"
+      ],
+      "usageTips": "伊藤さん野アドバイス：\nworkers とは、雇用者・直接作業員　印象を与えます。櫻田さんが経営者で、その社員。　ちょっと見下した印象もあるかもしれません。\nこういう場合は、 folks （米国人はよく使う）　とか、reponsible persons とかで良いです。",
+      "collocations": [
+        "Hey folks",
+        "You folks",
+        "Folks, listen up"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-15",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
