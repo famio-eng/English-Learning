@@ -176,11 +176,6 @@
   },
   "cefrHistory": [
     {
-      "date": "2026-08-18",
-      "index": 7,
-      "avgScore": 74
-    },
-    {
       "date": "2026-08-19",
       "index": 7,
       "avgScore": 74
@@ -272,6 +267,11 @@
     },
     {
       "date": "2026-10-23",
+      "index": 7,
+      "avgScore": 74
+    },
+    {
+      "date": "2026-10-27",
       "index": 7,
       "avgScore": 74
     }
