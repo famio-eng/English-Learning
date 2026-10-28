@@ -2401,6 +2401,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w087",
+      "word": "clogging",
+      "pron": "/ˈklɒɡɪŋ/",
+      "meaning": "詰まり、閉塞",
+      "example": "Regular maintenance is crucial to prevent clogging in the drainage system.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-28",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "物理的な詰まりだけでなく、システムやプロセスの停滞にも使われます。",
+      "collocations": [
+        "pipe clogging",
+        "drain clogging",
+        "filter clogging",
+        "prevent clogging",
+        "reduce clogging"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-28",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
