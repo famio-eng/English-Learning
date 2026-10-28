@@ -2373,6 +2373,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w088",
+      "word": "repetitive",
+      "pron": "/rɪˈpɛtɪtɪv/",
+      "meaning": "反復的な、繰り返しの",
+      "example": "We need to automate this repetitive task to improve efficiency.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-28",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "「退屈な」というニュアンスを含むことが多いです。",
+      "collocations": [
+        "repetitive task",
+        "repetitive work",
+        "repetitive process",
+        "repetitive strain injury (RSI)"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-28",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
