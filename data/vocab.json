@@ -2346,6 +2346,33 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w087",
+      "word": "saline",
+      "pron": "/ˈseɪlaɪn/",
+      "meaning": "塩分を含んだ、塩辛い",
+      "example": "The company is developing a new method for desalinating saline water to make it potable.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-28",
+      "level": [
+        "ビジネス英語",
+        "TOEIC900+"
+      ],
+      "usageTips": "科学、医療、環境関連の文脈でよく使われます。",
+      "collocations": [
+        "saline solution",
+        "saline water",
+        "saline environment"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-28",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
