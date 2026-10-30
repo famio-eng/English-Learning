@@ -2430,6 +2430,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w089",
+      "word": "retain",
+      "pron": "/rɪˈteɪn/",
+      "meaning": "保持する、維持する、雇い続ける",
+      "example": "Our company is working hard to retain top talent in a competitive market.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-10-30",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "「保持する」という意味で、顧客、従業員、権利、情報などを失わないようにする文脈で使われます。",
+      "collocations": [
+        "retain customers",
+        "retain employees",
+        "retain rights",
+        "retain information",
+        "retain market share"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-10-30",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
