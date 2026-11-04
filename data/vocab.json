@@ -2459,6 +2459,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w090",
+      "word": "inkonsistecies",
+      "pron": "/ɪnkənˈsɪstənsiz/",
+      "meaning": "矛盾点、一貫性のなさ",
+      "example": "We need to address the inconsistencies in our sales data before presenting it to the board.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-11-04",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "複数形で使われることが多く、データ、報告書、戦略などにおける矛盾や一貫性のなさを指摘する際に用います。",
+      "collocations": [
+        "address inconsistencies",
+        "resolve inconsistencies",
+        "identify inconsistencies",
+        "glaring inconsistencies",
+        "minor inconsistencies"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-11-04",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
