@@ -2488,6 +2488,31 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w091",
+      "word": "keep up with",
+      "pron": "/kiːp ʌp wɪð/",
+      "meaning": "遅れずについていく、最新情報を把握する",
+      "example": "It's crucial to keep up with the latest industry trends to remain competitive.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-11-11",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "変化の速い状況や情報についていく際に使います。",
+      "collocations": [
+        "keep up with the conversation because of my English skills"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-11-11",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
