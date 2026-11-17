@@ -2516,24 +2516,24 @@
     },
     {
       "id": "w092",
-      "word": "rational",
-      "pron": "/ˈræʃənəl/",
-      "meaning": "合理的な、理性的な",
-      "example": "We need to make a rational decision based on the available data, not on emotions.",
+      "word": "rationale",
+      "pron": "/ˌræʃəˈnɑːl/",
+      "meaning": "根本的な理由、理論的根拠",
+      "example": "Could you please explain the rationale behind this strategic decision?",
       "source": "",
       "scriptId": "custom",
       "added": "2026-11-17",
       "level": [
         "ビジネス英語",
-        "TOEIC800"
+        "TOEIC800+"
       ],
-      "usageTips": "ビジネスでは「感情的ではなく論理的な判断」を意味する文脈でよく使われます。",
+      "usageTips": "フォーマルな文脈で、決定や行動の背後にある論理的な理由を説明する際に使われます。",
       "collocations": [
-        "rational decision",
-        "rational choice",
-        "rational thinking",
-        "rational approach",
-        "rational argument"
+        "the rationale behind",
+        "provide a rationale",
+        "understand the rationale",
+        "economic rationale",
+        "strategic rationale"
       ],
       "otherMeanings": [],
       "interval": 1,
