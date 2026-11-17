@@ -2513,6 +2513,35 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w092",
+      "word": "rational",
+      "pron": "/ˈræʃənəl/",
+      "meaning": "合理的な、理性的な",
+      "example": "We need to make a rational decision based on the available data, not on emotions.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-11-17",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "ビジネスでは「感情的ではなく論理的な判断」を意味する文脈でよく使われます。",
+      "collocations": [
+        "rational decision",
+        "rational choice",
+        "rational thinking",
+        "rational approach",
+        "rational argument"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-11-17",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
