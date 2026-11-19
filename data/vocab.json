@@ -2542,6 +2542,34 @@
       "streak": 0,
       "missCount": 0,
       "lastMissed": ""
+    },
+    {
+      "id": "w093",
+      "word": "massively",
+      "pron": "/ˈmæsɪvli/",
+      "meaning": "非常に、大幅に",
+      "example": "Our new marketing campaign has been massively successful in boosting sales.",
+      "source": "",
+      "scriptId": "custom",
+      "added": "2026-11-19",
+      "level": [
+        "ビジネス英語",
+        "TOEIC800"
+      ],
+      "usageTips": "「非常に」や「大幅に」を強調したいときに使います。",
+      "collocations": [
+        "massively successful",
+        "massively important",
+        "massively increase",
+        "massively reduce"
+      ],
+      "otherMeanings": [],
+      "interval": 1,
+      "nextReview": "2026-11-19",
+      "reviewCount": 0,
+      "streak": 0,
+      "missCount": 0,
+      "lastMissed": ""
     }
   ]
 }
