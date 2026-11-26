@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>英会話学習アプリ</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+<meta name="theme-color" content="#92ab5e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+  :root{
+    --color-bg:#181a16;
+    --color-neutral-900:#181a16;
+    --color-neutral-800:#21241e;
+    --color-neutral-700:#2c3026;
+    --color-neutral-600:#383d31;
+    --color-neutral-500:#6d7265;
+    --color-neutral-400:#8d9382;
+    --color-neutral-300:#aab09f;
+    --color-neutral-200:#d3d7c8;
+    --color-neutral-100:#e8ebde;
+    --color-text:#edf0e3;
+    --color-divider:#2c3026;
+    --color-accent:#92ab5e;
+    --color-accent-rgb:146,171,94;
+    --color-accent-300:#aac47c;
+    --color-accent-500:#92ab5e;
+    --color-accent-600:#7c9450;
+    --color-accent-700:#333d25;
+    --color-accent-800:#202717;
+    --color-success:#22c55e;
+    --color-warning:#c3815d;
+    --color-warning-rgb:195,129,93;
+    --color-error:#ef4444;
+    --color-info:#7c93a8;
+    --color-info-rgb:124,147,168;
+    --radius-sm:6px; --radius-md:10px; --radius-lg:16px;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --color-bg:#f1f3ea;
+      --color-neutral-900:#ffffff;
+      --color-neutral-800:#ffffff;
+      --color-neutral-700:#e2e6d7;
+      --color-neutral-600:#cbd1bc;
+      --color-neutral-500:#949a89;
+      --color-neutral-400:#767c6b;
+      --color-neutral-300:#565c4c;
+      --color-neutral-200:#2d3225;
+      --color-neutral-100:#1c1f18;
+      --color-text:#1c1f18;
+      --color-divider:#e2e6d7;
+      --color-accent:#637f3c;
+      --color-accent-rgb:99,127,60;
+      --color-accent-300:#4f6830;
+      --color-accent-500:#637f3c;
+      --color-accent-600:#56702f;
+      --color-accent-700:#e3e9d3;
+      --color-accent-800:#eef2e4;
+      --color-success:#16a34a;
+      --color-warning:#a8613e;
+      --color-warning-rgb:168,97,62;
+      --color-error:#dc2626;
+      --color-info:#51687d;
+      --color-info-rgb:81,104,125;
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--color-bg);color:var(--color-text);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;
+    -webkit-font-smoothing:antialiased;height:100%}
+  /* height (not min-height): #root must be capped to the viewport, or its flex children's
+     overflow:auto never gets a bounded box to scroll within — tall content just grows the
+     whole page instead, dragging the bottom nav and any "always visible" footer along with
+     it. */
+  #root{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:560px;margin:0 auto;position:relative}
+  a{color:var(--color-accent-300);text-decoration:none}
+  button{font-family:inherit;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+  ::-webkit-scrollbar{width:0;height:0}
+
+  .card{background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);padding:14px}
+  .card-kicker{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--color-neutral-400);margin-bottom:2px}
+  .card-title{font-size:16px;font-weight:600}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;
+    font-weight:500;font-size:14px;line-height:1.2;color:var(--color-text);
+    background:transparent;border:1px solid var(--color-neutral-600);
+    padding:10px 16px;border-radius:var(--radius-md);min-height:40px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  /* var(--color-bg)を文字色にしているのは、ダークモードのアクセントは明るめ・
+     ライトモードのアクセントは暗めに作ってあるため、どちらのテーマでも地の色を
+     文字にすればコントラストが自然に確保されるから(固定の#fffだとダークモードの
+     明るいアクセント上で読みにくくなる、2026-11-22、Famiの指摘「コントラストを
+     十分に」への対応)。 */
+  .btn-primary{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-bg)}
+  .btn-fill-warn{background:var(--color-warning);border-color:var(--color-warning);color:var(--color-bg)}
+  .btn-fill-info{background:var(--color-info);border-color:var(--color-info);color:var(--color-bg)}
+  .btn-secondary{border-color:var(--color-neutral-600)}
+  .btn-ghost{border-color:transparent;color:var(--color-accent-300)}
+  .btn-icon{width:36px;height:36px;padding:0}
+  .btn-block{width:100%}
+  /* 発音(スピーカー)ボタン等、カードに馴染ませつつ押せると分かる形に(2026-11-22、
+     Famiの指摘: 既定のbutton背景のまま浮いて見える＋タップ領域が狭い)。角丸四角で
+     他のアイコンボタンと形をそろえる(丸はNG、Famiの指摘どおり)。 */
+  .btn-sound{width:44px;height:44px;padding:0;border-radius:var(--radius-md);flex-shrink:0;
+    background:var(--color-neutral-700);border:1px solid var(--color-neutral-600);
+    color:var(--color-accent-300);transition:background .15s ease}
+  .btn-sound:active{background:var(--color-neutral-600)}
+  @media (hover:hover){.btn-sound:hover{background:var(--color-neutral-600)}}
+
+  .tag{display:inline-flex;align-items:center;font-size:11px;padding:3px 10px;border-radius:999px}
+  .tag-accent{background:var(--color-accent-800);color:var(--color-accent-300)}
+  .tag-neutral{background:var(--color-neutral-700);color:var(--color-neutral-300)}
+  .tag-outline{border:1px solid var(--color-accent);color:var(--color-accent-300)}
+
+  .seg{display:inline-flex;border:1px solid var(--color-neutral-700);border-radius:var(--radius-md);overflow:hidden}
+  .seg-opt{flex:1;padding:8px 10px;font-size:12px;text-align:center;cursor:pointer;
+    background:transparent;color:var(--color-neutral-400);border:none;border-right:1px solid var(--color-neutral-700)}
+  .seg-opt:last-child{border-right:none}
+  .seg-opt[data-active="true"]{background:var(--color-accent-700);color:var(--color-text)}
+
+  input.field,textarea.field{width:100%;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);
+    border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;color:var(--color-text);font-family:inherit;outline:none}
+  input.field:focus,textarea.field:focus{border-color:var(--color-accent)}
+
+  /* app shell */
+  #app{display:none;flex:1;min-height:0;flex-direction:column}
+  #app.active{display:flex}
+  .tab-panel{display:none;flex:1;overflow:auto;padding:20px 20px 100px;box-sizing:border-box;flex-direction:column;gap:16px}
+  .tab-panel.active{display:flex}
+
+  #bottom-nav{position:sticky;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;
+    padding:8px 6px calc(18px + env(safe-area-inset-bottom));background:var(--color-neutral-900);
+    border-top:1px solid var(--color-neutral-800);z-index:30}
+  .nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;
+    color:var(--color-neutral-500);padding:4px 8px}
+  .nav-btn.active{color:var(--color-accent)}
+  .nav-btn span{font-size:10px}
+
+  .sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
+  .sheet{position:fixed;left:0;right:0;bottom:0;background:var(--color-bg);border-radius:20px 20px 0 0;
+    border:1px solid var(--color-neutral-700);z-index:41;max-height:85vh;display:flex;flex-direction:column;
+    box-shadow:0 16px 40px rgba(0,0,0,.4)}
+
+  .toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--color-neutral-800);
+    border:1px solid var(--color-neutral-700);color:var(--color-text);padding:10px 18px;border-radius:999px;
+    font-size:13px;z-index:60;opacity:0;transition:opacity .2s}
+  .toast.show{opacity:1}
+  .toast.success{background:var(--color-success);border-color:var(--color-success);color:#fff;font-weight:600;
+    box-shadow:0 6px 20px rgba(34,197,94,.4)}
+
+  @keyframes vtCorrectPulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}60%{box-shadow:0 0 0 10px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  .vt-correct-pulse{animation:vtCorrectPulse .38s ease-out;border-radius:var(--radius-lg)}
+
+  /* 2026-11-26(Famiの指摘: 瞬発力ドリルのAI採点が「止まっているように感じる」):
+     何秒経ったか分かる進捗表示用。終了時刻が読めない処理なので、不確定(indeterminate)な
+     スライドストライプにして「動いている」ことだけ伝える。 */
+  @keyframes drillGradeStripe{0%{transform:translateX(-40%)}100%{transform:translateX(140%)}}
+  .drill-grade-bar{position:relative;height:5px;border-radius:3px;background:var(--color-neutral-700);overflow:hidden}
+  .drill-grade-bar::after{content:"";position:absolute;top:0;left:0;height:100%;width:40%;
+    background:var(--color-accent);border-radius:3px;animation:drillGradeStripe 1.1s ease-in-out infinite}
+</style>
+</head>
+<body>
+<div id="root">
+
+  <div id="app" class="active">
+    <div class="tab-panel active" id="tab-home"></div>
+    <div class="tab-panel" id="tab-practice"></div>
+    <div class="tab-panel" id="tab-vocab"></div>
+    <div class="tab-panel" id="tab-progress"></div>
+    <div class="tab-panel" id="tab-profile"></div>
+
+    <div id="bottom-nav">
+      <button class="nav-btn active" data-tab="home">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 10l8-7 8 7v9a1 1 0 01-1 1h-4v-6H8v6H4a1 1 0 01-1-1v-9z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <span>ホーム</span>
+      </button>
+      <button class="nav-btn" data-tab="practice">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 5h16a1 1 0 011 1v9a1 1 0 01-1 1h-9l-4 3v-3H3a1 1 0 01-1-1V6a1 1 0 011-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <span>会話</span>
+      </button>
+      <button class="nav-btn" data-tab="vocab">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="4" width="13" height="15" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="7" y="1" width="13" height="15" rx="1.5" fill="var(--color-bg)" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span>単語</span>
+      </button>
+      <button class="nav-btn" data-tab="progress">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 18V11M11 18V4M18 18v-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>進捗</span>
+      </button>
+      <button class="nav-btn" data-tab="profile">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M3 19c0-4 3.5-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>マイページ</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script src="./js/shared.js?v=56e4076"></script>
+<script>
+// ─────────────────────────────────────────────────────────────
+// App shell: tab router + toast helper. No onboarding gate — the app opens straight
+// to the last-viewed tab (the app icon lives in the Home tab header instead; see
+// js/dashboard.js). Stage 2-5 register themselves via App.registerTab(name, {onShow}).
+// ─────────────────────────────────────────────────────────────
+(function () {
+  'use strict';
+
+  var tabs = {};
+  // 旧ページ(vocab.html/dashboard.html)からのリダイレクト時に ?tab=vocab 等で
+  // 対応タブへ直接ランドできるようにする(未指定・不正な値はhomeにフォールバック)。
+  var VALID_TABS = ['home', 'practice', 'vocab', 'progress', 'profile'];
+  var requestedTab = new URLSearchParams(location.search).get('tab');
+  var App = {
+    state: { activeTab: VALID_TABS.indexOf(requestedTab) !== -1 ? requestedTab : 'home' },
+    registerTab: function (name, handlers) { tabs[name] = handlers; },
+    switchTab: function (name) {
+      if (!tabs[name]) return;
+      App.state.activeTab = name;
+      document.querySelectorAll('.tab-panel').forEach(function (el) { el.classList.remove('active'); });
+      document.querySelectorAll('.nav-btn').forEach(function (el) {
+        el.classList.toggle('active', el.getAttribute('data-tab') === name);
+      });
+      document.getElementById('tab-' + name).classList.add('active');
+      if (tabs[name].onShow) tabs[name].onShow();
+    },
+    toast: function (msg, type) {
+      var t = document.getElementById('toast');
+      t.innerHTML = (type === 'success' ? '<span style="display:inline-flex;align-items:center;gap:6px">' + window.Shared.icon('check', 15) + msg + '</span>' : msg);
+      t.classList.toggle('success', type === 'success');
+      t.classList.add('show');
+      setTimeout(function () { t.classList.remove('show'); }, 2200);
+    },
+    Shared: window.Shared,
+  };
+  window.App = App;
+
+  document.querySelectorAll('.nav-btn').forEach(function (btn) {
+    btn.onclick = function () { App.switchTab(btn.getAttribute('data-tab')); };
+  });
+
+  // Tabs register themselves on script load (see js/dashboard.js etc.), which may happen
+  // after or before this DOMContentLoaded fires — App.switchTab no-ops until the tab is
+  // registered, so re-invoking it here is what actually renders the initial Home tab.
+  window.addEventListener('DOMContentLoaded', function () {
+    App.switchTab(App.state.activeTab);
+  });
+})();
+</script>
+<script src="./js/dashboard.js?v=56e4076"></script>
+<script src="./js/practice.js?v=56e4076"></script>
+<script src="./js/vocab.js?v=56e4076"></script>
+<script src="./js/profile.js?v=56e4076"></script>
+</body>
+</html>

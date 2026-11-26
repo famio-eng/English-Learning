@@ -1,0 +1,55 @@
+name: 静的アセットのバージョンクエリ更新
+
+# GitHub Pagesのcache-control(max-age=600)により、app.htmlが読むjs/*.jsが
+# iPhone Chrome等でしばらく更新されない問題への対応(2026-11-22、Famiの指摘:
+# 「読み込み直しても直った画面にならない」)。pushのたびにscript/link参照へ
+# commitの短縮SHAを?v=として自動付与し、URLそのものを変えて確実に最新を
+# 取得させる。詳細はDEVLOG.mdを参照。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'js/**'
+      - 'css/**'
+
+permissions:
+  contents: write
+
+jobs:
+  stamp:
+    # github-actions[bot]自身のpushでは再発火しない(GITHUB_TOKENによるpushは
+    # 既定でワークフローを再トリガーしないため無限ループにはならないはずだが、
+    # 将来PAT等に変更された場合の保険として明示的にも防ぐ)。
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: バージョンクエリを付与
+        run: |
+          echo "SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+          node - "$(git rev-parse --short HEAD)" <<'NODE'
+          const fs = require('fs');
+          const files = fs.readdirSync('.').filter(f => f.endsWith('.html'));
+          const sha = process.argv[2];
+          const pattern = /((?:src|href)="\.\/(?:js|css)\/[^"?]+\.(?:js|css))(?:\?v=[A-Za-z0-9._-]+)?"/g;
+          for (const file of files) {
+            const before = fs.readFileSync(file, 'utf8');
+            const after = before.replace(pattern, (m, g1) => g1 + '?v=' + sha + '"');
+            if (after !== before) fs.writeFileSync(file, after);
+          }
+          NODE
+
+      - name: 差分があればコミット
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -- '*.html'
+            git commit -m "🔖 静的アセットのバージョンクエリを更新 ($SHA)"
+            git push
+          else
+            echo "変更なし、スキップ"
+          fi

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url=./app.html?tab=home">
+<script>
+  (function () {
+    var qs = location.search;
+    var sep = qs ? '&' : '?';
+    location.replace('./app.html' + qs + sep + 'tab=home');
+  })();
+</script>
+<title>英会話学習アプリ</title>
+</head>
+<body>
+<p><a href="./app.html?tab=home">ホームを開く</a></p>
+</body>
+</html>
