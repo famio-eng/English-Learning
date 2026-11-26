@@ -468,7 +468,7 @@
     drillGrading = true; drillGradeError = null; drillGradeStartedAt = Date.now(); renderHome(); startDrillGradeTick();
     var parts = [{ text: buildDrillGradingPrompt(q, input.text) }];
     if (input.audioB64) parts.push({ inline_data: { mime_type: input.mimeType, data: input.audioB64 } });
-    var payload = { contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 1024, thinkingConfig: { thinkingBudget: 0 } } };
+    var payload = { contents: [{ parts: parts }], generationConfig: { temperature: 0.3, maxOutputTokens: 1024 } };
     S.callGeminiWithFallback(payload).then(function (data) {
       if (!data.candidates || !data.candidates[0]) throw new Error('レスポンスなし');
       var txt = data.candidates[0].content.parts[0].text || '';

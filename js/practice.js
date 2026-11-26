@@ -635,7 +635,7 @@ var SCRIPTS = [
         + '- For pronunciation improvements: word: syl-LA-ble (uppercase = stress). Example: "European: eu-RO-pe-an。ROに強勢。"\n'
         + '- Katakana-only explanations are forbidden; pairing with syllable notation is OK\n'
         + '- Never write comparisons like "AではなくA" where both sides are identical';
-      var payload = { contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: mtype, data: b64 } }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096, thinkingConfig: { thinkingBudget: 0 } } };
+      var payload = { contents: [{ parts: [{ text: promptText }, { inline_data: { mime_type: mtype, data: b64 } }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 4096 } };
       S.callGeminiWithFallback(payload).then(function (data) {
         if (data.error) throw new Error(data.error.message || 'Gemini error');
         if (!data.candidates || !data.candidates[0]) throw new Error('レスポンスなし');

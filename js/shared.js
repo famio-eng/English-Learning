@@ -40,21 +40,18 @@
   var GH_REPO = 'English-Learning-data'; // 2026-11-27: 非公開データリポジトリへ移行済み
   var GH_API = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/';
   var GEM_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
-  // 2026-11-26(Famiの指摘「瞬発力ドリルのAI採点が止まっているように感じる」の調査):
-  // Google公式の非推奨ページ(ai.google.dev/gemini-api/docs/deprecations、2026-11-26時点)
-  // を確認したところ、以前の並び['gemini-2.5-flash','gemini-2.5-flash-lite',
-  // 'gemini-3.5-flash']は以下の状態だった。
-  //  - gemini-2.5-flash: 今はまだ応答するが2026-12-01にgemini-3.5-flash-liteへ
-  //    自動転送される予定(いずれ別モデルにこっそり差し替わる)
-  //  - gemini-2.5-flash-lite: 非推奨なし(問題なし)
-  //  - gemini-3.5-flash: 既にAI Studio上の選択肢からは外れ、実体はgemini-3.6-flash
-  //    に自動転送されているエイリアス(3番目=最後の砦なのに、実質「廃止済みの名前」
-  //    経由で現行モデルを叩いている状態だった)
-  // どれも404等ですぐ落ちるわけではなく実際には応答していたため、この並び自体が
-  // 「数十秒固まって見える」の直接証拠ではないが、曖昧なエイリアス頼みを避けるため、
-  // 現行の安定版IDに置き換えた。実機のGeminiキーでは未検証なので、採点が改善した
-  // かどうかは次回の実機確認で見てほしい。
-  var GEM_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-2.5-flash'];
+  // 2026-11-27(Famiが新しいGeminiキーで実機確認・Mac上でcurl直接検証した結果):
+  //  - gemini-2.5-flash / gemini-2.5-flash-lite: 新しいキーは新規プロジェクト扱いで、
+  //    どちらも404「is no longer available to new users」。新しいキーでは一切使えない
+  //    ため、フォールバック候補から完全に除外した。
+  //  - gemini-3.5-flash-lite: 200 OK、0.7秒。最速・最安定、最初に試す。
+  //  - gemini-3.6-flash: 応答はするがthinkingConfig次第で非常に遅くなる(後述)。
+  //    2番目の予備。
+  //  - gemini-3.8-flash: 503(混雑)はあるが実在し応答する。3番目の予備。
+  //  - gemini-3.8-flash-lite: 404(存在しないモデル名)。候補に入れない。
+  // thinkingConfigの扱い(モデルごとに異なる、THINKING_LEVEL_BY_MODEL参照)と合わせて
+  // 修正した。
+  var GEM_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-3.8-flash'];
 
   function b64EncodeUtf8(str) {
     return btoa(unescape(encodeURIComponent(str)));
@@ -133,22 +130,41 @@
     });
   }
 
+  // 2026-11-27(Famiが新しいGeminiキーで実機確認・Mac上でcurl直接検証): 新しいキーは
+  // 新規プロジェクト扱いで、2.5系モデルは「no longer available to new users」で404。
+  // またGemini 3系はthinkingConfig.thinkingBudget(2.5系の指定方法)を受け付けず、
+  // 400 INVALID_ARGUMENTになる(公式ドキュメントのControlling thinkingページで、
+  // 3系はthinkingConfig.thinkingLevel(minimal/low/medium/high)に変わったことを確認)。
+  // モデルごとに対応レベルが違う: gemini-3.5-flash-liteはデフォルトが既に最速のminimal
+  // なので、thinkingConfig自体を付けないのが最も安全(実機テストでも、付けると400・
+  // 外すと200で確認済み)。gemini-3.6-flashはデフォルトmedium(=厚く考えて遅い)なので
+  // 明示的にminimalを指定。gemini-3.8-flashはminimal非対応なので最速でもlow。
+  // 呼び出し元(gradeDrillAnswer等)が渡すgenerationConfig.thinkingConfigは無視し、
+  // ここでモデルごとに必ず正しい値へ差し替える(対象は採点・辞書・単語解説等、
+  // callGeminiWithFallback/callGeminiTextを使う全機能)。
+  var THINKING_LEVEL_BY_MODEL = {
+    'gemini-3.5-flash-lite': null, // 付けない(デフォルトのminimalが最速)
+    'gemini-3.6-flash': 'minimal',
+    'gemini-3.8-flash': 'low', // minimal非対応のため
+  };
+  function applyThinkingConfig(payload, model) {
+    var next = Object.assign({}, payload, { generationConfig: Object.assign({}, payload.generationConfig) });
+    var level = THINKING_LEVEL_BY_MODEL[model];
+    if (level) next.generationConfig.thinkingConfig = { thinkingLevel: level };
+    else delete next.generationConfig.thinkingConfig;
+    return next;
+  }
+
   // Calls Gemini, retrying across GEM_MODELS on quota/availability errors (429/503/404,
-  // or messages containing quota/unavailable/overloaded/not found/not supported/deprecated).
-  // 2026-11-25: 瞬発力ドリルの音声採点が実機(iPhone Chrome)で「AI採点中…」のまま
-  // 固まる不具合を調査した際、fetchに一切タイムアウトがなく、通信が詰まると
-  // Promiseが永遠に未解決のままになる(呼び出し側のcatchが発火せず、ローディング
-  // 表示から抜けられない)ことが根本原因と判明。AbortControllerで1回の試行につき
-  // 30秒のタイムアウトを設け、必ずどちらかに解決させる。タイムアウト時は通信状況が
-  // 原因である可能性が高く、他のモデルに切り替えても改善しないことが多いため、
-  // 429/503/404やレスポンスのエラーメッセージによる既存のフォールバックとは分けて、
-  // 即座に失敗として呼び出し元に返す(全モデル分待たせて無駄に長く待たせない)。
-  // 2026-11-25: タイムアウトを入れただけでは「何が原因で詰まったか」が分からず、
-  // 毎回ただ30秒待って自己採点に落ちるだけになりかねない、というFamiの指摘に対応。
-  // 各試行の失敗理由(HTTPステータス・レスポンスのエラーメッセージ・ネットワーク
-  // エラー)をlastDetailに積み、全モデルで失敗した場合の最終エラーメッセージに
-  // 含める。呼び出し元(瞬発力ドリル等)のcatchはErrorのmessageをそのまま短く
-  // トーストに出すので、ここでの分類がそのままFamiに見える「原因」になる。
+  // or messages containing quota/unavailable/overloaded/not found/not supported/deprecated)。
+  // 2026-11-25: fetchに一切タイムアウトがなく、通信が詰まるとPromiseが永遠に未解決の
+  // ままになる(「AI採点中…」から抜けられない)不具合への対応でAbortControllerを導入。
+  // 2026-11-27(Famiの実機確認): 当初はタイムアウトを「他モデルに切り替えても改善しない
+  // 可能性が高い」として__final(即時失敗)にしていたが、実際にはモデル固有の挙動
+  // (例: gemini-3.6-flashがthinking設定次第で非常に遅く応答すること)が原因で特定の
+  // モデルだけがタイムアウトするケースがあり、切り替えれば直ることが判明。タイムアウトも
+  // 他の失敗理由と同様に次のモデルへ切り替えるようにし、1回あたりの待ち時間は15秒に
+  // 短縮する(3モデル×15秒・リトライ待ち込みで最大1分弱に収める)。
   function callGeminiWithFallback(payload) {
     var RETRYABLE = /quota|unavailable|overloaded|not found|not supported|deprecated/i;
     // 2026-11-26(Famiの指摘「採点が止まっているように感じる」の調査): キー無効・権限
@@ -157,7 +173,7 @@
     // 無効な状態では「毎回必ず数秒〜十数秒待たされてから失敗する」が常に再現して
     // いた可能性がある。即座に失敗を確定させ、無駄な再試行で待たせないようにする。
     var PERMANENT = /api key not valid|api_key_invalid|permission.denied|unauthenticated/i;
-    var TIMEOUT_MS = 30000;
+    var TIMEOUT_MS = 15000;
     var lastDetail = '';
     function attempt(i) {
       if (i >= GEM_MODELS.length) {
@@ -166,13 +182,14 @@
         return Promise.reject(finalErr);
       }
       var model = GEM_MODELS[i];
+      var modelPayload = applyThinkingConfig(payload, model);
       var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
       var timedOut = false;
       var timer = controller ? setTimeout(function () { timedOut = true; controller.abort(); }, TIMEOUT_MS) : null;
       return fetch(GEM_BASE + model + ':generateContent?key=' + GEM_KEY, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(modelPayload),
         signal: controller ? controller.signal : undefined,
       }).then(function (res) {
         if (timer) clearTimeout(timer);
@@ -199,17 +216,16 @@
       }).catch(function (err) {
         if (timer) clearTimeout(timer);
         // __finalは、より深い再帰呼び出しで既に確定・分類済みのエラー
-        // (タイムアウト、または全モデル失敗の最終メッセージ)であることを示す。
-        // ここでさらにリトライ扱いにして上書き・二重ラップしないよう、素通しする
-        // (この.catchは自分のfetch呼び出しだけでなく、同じ.then内でさらに
-        // attempt(i+1)を呼んだ結果のrejectionも拾ってしまうチェーン構造のため)。
+        // (APIキー無効等のPERMANENT判定、または全モデル失敗の最終メッセージ)で
+        // あることを示す。タイムアウトはモデル固有の遅さが原因のこともあるため
+        // __finalにはしない(下のlastDetail設定を経て次のモデルへ再試行する)。
+        // ここでさらにリトライ扱いにして上書き・二重ラップしないよう、__finalだけは
+        // 素通しする(この.catchは自分のfetch呼び出しだけでなく、同じ.then内で
+        // さらにattempt(i+1)を呼んだ結果のrejectionも拾ってしまうチェーン構造のため)。
         if (err && err.__final) throw err;
-        if (timedOut) {
-          var timeoutErr = new Error('タイムアウト(通信状況をご確認ください)');
-          timeoutErr.__final = true;
-          throw timeoutErr;
-        }
-        lastDetail = (err && err.name === 'TypeError') ? 'ネットワークエラー' : ((err && err.message) ? err.message.slice(0, 50) : '不明なエラー');
+        lastDetail = timedOut
+          ? (TIMEOUT_MS / 1000) + '秒応答なし(' + model + ')'
+          : ((err && err.name === 'TypeError') ? 'ネットワークエラー' : ((err && err.message) ? err.message.slice(0, 50) : '不明なエラー'));
         return new Promise(function (resolve) { setTimeout(resolve, 2000); }).then(function () {
           return attempt(i + 1);
         });
@@ -222,7 +238,7 @@
   function callGeminiText(parts, opts) {
     var payload = {
       contents: [{ parts: parts }],
-      generationConfig: Object.assign({ temperature: 0.4, maxOutputTokens: 2048, thinkingConfig: { thinkingBudget: 0 } }, opts || {}),
+      generationConfig: Object.assign({ temperature: 0.4, maxOutputTokens: 2048 }, opts || {}),
     };
     return callGeminiWithFallback(payload).then(function (json) {
       var cands = (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
