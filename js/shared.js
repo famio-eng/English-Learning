@@ -369,6 +369,22 @@
     }).catch(function () {});
   }
 
+  // 2026-11-27(Anuvilia経由のFami依頼): iPhoneでGitHub上のconfig/secrets.jsonを直接
+  // 編集するのは間違えやすいため、アプリ内からGeminiキーを設定・差し替えできるように
+  // する。値はここでContents API経由でconfig/secrets.jsonへ書き込み、成功したら
+  // GEM_KEY(と exportしたShared.GEM_KEY)を更新するだけで、画面やコンソールログには
+  // 一切出さない(呼び出し元のUIコードも同様に扱うこと)。
+  function saveGeminiKey(key) {
+    return apiPutJson('config/secrets.json', function (obj) {
+      obj = obj || {};
+      obj.geminiKey = key;
+      return obj;
+    }, '🔑 Geminiキーを更新').then(function () {
+      GEM_KEY = key;
+      global.Shared.GEM_KEY = GEM_KEY;
+    });
+  }
+
   global.Shared = {
     GH_TOKEN: GH_TOKEN,
     GEM_KEY: GEM_KEY,
@@ -376,6 +392,7 @@
     GH_REPO: GH_REPO,
     profile: {}, // data/profile-config.jsonの中身をObject.assignで書き込む(ログイン後、非同期)
     clearStoredToken: clearStoredToken,
+    saveGeminiKey: saveGeminiKey,
     b64EncodeUtf8: b64EncodeUtf8,
     b64DecodeUtf8: b64DecodeUtf8,
     apiGet: apiGet,

@@ -6,6 +6,11 @@
   var S = window.Shared;
   var dayPickerOpen = false;
   var DAYS = ['日', '月', '火', '水', '木', '金', '土'];
+  // 2026-11-27(Anuvilia経由のFami依頼): Geminiキーをアプリ内で設定・差し替えできる
+  // ようにする。キーの値はrender()のHTML生成時以外には一切保持せず、入力欄の
+  // DOM要素から都度読み取るだけにする(変数にも、ログにも残さない)。
+  var geminiKeyFormOpen = false;
+  var geminiKeySaving = false;
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -20,6 +25,26 @@
       + '<div style="font-size:14px;color:var(--color-neutral-300)">' + esc(label) + '</div>'
       + '<div style="display:flex;align-items:center;gap:6px"><div style="font-size:14px;color:var(--color-text)">' + esc(value) + '</div>'
       + (opts.onclick ? '<span style="font-size:14px;color:var(--color-neutral-500)">›</span>' : '') + '</div></button>';
+  }
+
+  // Geminiキーの設定/差し替えカード。キーの値はDOM(入力欄)にしか存在させず、
+  // 保存成功後は入力欄ごと破棄する(JSの変数・ログには一切残さない)。
+  function geminiKeyCardHtml() {
+    var hasKey = !!S.GEM_KEY;
+    var showForm = !hasKey || geminiKeyFormOpen;
+    var body;
+    if (showForm) {
+      body = '<input type="password" id="gemini-key-input" autocomplete="off" class="field" placeholder="Geminiキーを入力" style="width:100%;margin-top:8px;box-sizing:border-box">'
+        + '<button class="btn btn-primary btn-block" style="margin-top:8px"' + (geminiKeySaving ? ' disabled' : '') + ' onclick="ProfileTab.saveGeminiKey()">' + (geminiKeySaving ? '保存中…' : '保存') + '</button>'
+        + (hasKey ? '<button class="btn btn-ghost btn-block" style="margin-top:6px"' + (geminiKeySaving ? ' disabled' : '') + ' onclick="ProfileTab.cancelGeminiKeyEdit()">キャンセル</button>' : '');
+    } else {
+      body = '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">'
+        + '<span style="font-size:13px;color:var(--color-success)">設定済み</span>'
+        + '<button class="btn btn-secondary" style="font-size:12px;padding:6px 12px" onclick="ProfileTab.openGeminiKeyEdit()">変更する</button></div>';
+    }
+    return '<div class="card" style="margin-top:10px"><div class="card-kicker">Geminiキー</div>'
+      + '<div style="font-size:11.5px;color:var(--color-neutral-500);margin-top:2px">AI採点・週次レポート等で使用します。値はこの端末にもログにも残さず、非公開のデータリポジトリにのみ保存します。</div>'
+      + body + '</div>';
   }
 
   function render() {
@@ -39,6 +64,8 @@
       + rowHtml('連携状態', S.GH_TOKEN ? 'GitHub連携済み' : '未連携（?gh=トークンが必要）')
       + rowHtml('ヘルプ', 'LEARNING_PLAN.md参照')
       + '</div>';
+    html += geminiKeyCardHtml();
+
     html += '<button class="btn btn-ghost btn-block" style="margin-top:4px" onclick="ProfileTab.logout()">ログアウト</button>';
 
     if (dayPickerOpen) {
@@ -60,6 +87,27 @@
     location.href = location.pathname;
   }
 
-  window.ProfileTab = { openDayPicker: function () { dayPickerOpen = true; render(); }, setFixedDay: setFixedDay, logout: logout };
+  function openGeminiKeyEdit() { geminiKeyFormOpen = true; render(); }
+  function cancelGeminiKeyEdit() { geminiKeyFormOpen = false; render(); }
+  function saveGeminiKey() {
+    var el = document.getElementById('gemini-key-input');
+    var key = el ? el.value.trim() : '';
+    if (!key) return;
+    geminiKeySaving = true; render();
+    S.saveGeminiKey(key).then(function () {
+      geminiKeySaving = false; geminiKeyFormOpen = false;
+      App.toast('Geminiキーを保存しました', 'success');
+      render();
+    }).catch(function (err) {
+      geminiKeySaving = false;
+      App.toast('保存に失敗しました(' + ((err && err.message) ? String(err.message).slice(0, 40) : '不明なエラー') + ')');
+      render();
+    });
+  }
+
+  window.ProfileTab = {
+    openDayPicker: function () { dayPickerOpen = true; render(); }, setFixedDay: setFixedDay, logout: logout,
+    openGeminiKeyEdit: openGeminiKeyEdit, cancelGeminiKeyEdit: cancelGeminiKeyEdit, saveGeminiKey: saveGeminiKey,
+  };
   App.registerTab('profile', { onShow: render });
 })();
