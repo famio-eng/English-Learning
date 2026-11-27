@@ -129,7 +129,14 @@
   /* app shell */
   #app{display:none;flex:1;min-height:0;flex-direction:column}
   #app.active{display:flex}
-  .tab-panel{display:none;flex:1;overflow:auto;padding:20px 20px 100px;box-sizing:border-box;flex-direction:column;gap:16px}
+  /* 2026-11-27(Famiの指摘: 単語帳の復習画面で、評価ボタンの下・下部メニューとの間に
+     大きな空白がもったいない): 以前は100pxの固定余白を全タブ共通で確保していたが、
+     単語帳の復習・瞬発力ドリル・シャドーイングのように画面の残り高さいっぱいまで
+     カードを伸ばす(flex:1)画面では、この固定余白がそのまま「使われない空白」に
+     なっていた。トースト通知(.toast、bottom:100px)は position:fixed でビューポート
+     基準のため、ここを減らしても重ならない。通常のスクロールするリスト画面でも
+     下部メニューの直前に文字が詰まりすぎないよう、左右・上と同じ20pxは残す。 */
+  .tab-panel{display:none;flex:1;overflow:auto;padding:20px;box-sizing:border-box;flex-direction:column;gap:16px}
   .tab-panel.active{display:flex}
 
   #bottom-nav{position:sticky;bottom:0;left:0;right:0;display:flex;justify-content:space-around;align-items:center;

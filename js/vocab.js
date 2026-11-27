@@ -556,8 +556,14 @@
           // その直接の子であるこのラッパーにflex:1を与えるだけで残り高さを埋められる。
           // #vt-flip-card自体はheight:100%にして、絶対配置の表裏両面(inset:0)に
           // このラッパーの実際の高さを伝える。
-          html += '<div id="vt-active-card" style="margin-top:12px;perspective:1200px;flex:1;min-height:220px;display:flex"><div id="vt-flip-card" style="position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s ease;transform:' + (flipped ? 'rotateY(180deg)' : 'rotateY(0)') + ';cursor:pointer" onpointerdown="VocabTab.flipPointerDown(event)" onpointerup="VocabTab.flipPointerUp(event)">'
-            + '<div style="position:absolute;inset:0;backface-visibility:hidden;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px;box-sizing:border-box;' + faceSelectable + '">'
+          // 2026-11-27(Famiの指摘が再発): 上の対応だけでは、.tab-panel自体が持つ
+          // 固定100pxの下余白(app.html)がそのまま使われない空白になっていた
+          // (flex:1はその余白を除いた残りを正しく埋めていたが、余白自体が大きすぎた)。
+          // app.html側で.tab-panelの余白を20pxへ減らし、こちらは横向き(高さが
+          // 極端に低い)の時にカードが最低220pxを確保しようとして画面からはみ出さない
+          // よう、min-height自体もmin(220px,35vh)にして画面に応じて縮むようにした。
+          html += '<div id="vt-active-card" style="margin-top:12px;perspective:1200px;flex:1;min-height:min(220px,35vh);display:flex"><div id="vt-flip-card" style="position:relative;width:100%;height:100%;-webkit-transform-style:preserve-3d;transform-style:preserve-3d;transition:transform .5s ease;transform:' + (flipped ? 'rotateY(180deg)' : 'rotateY(0)') + ';cursor:pointer" onpointerdown="VocabTab.flipPointerDown(event)" onpointerup="VocabTab.flipPointerUp(event)">'
+            + '<div style="position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);padding:26px 20px;display:flex;flex-direction:column;justify-content:center;gap:10px;box-sizing:border-box;' + faceSelectable + '">'
             + (askJa
               ? '<div style="font-weight:600;font-size:20px;line-height:1.5">' + esc(w.meaning) + '</div><div style="font-size:12px;color:var(--color-neutral-400)">英語で言ってみましょう</div>'
               : '<div style="display:flex;align-items:center;gap:8px"><div style="font-weight:600;font-size:26px">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div><div style="font-size:13px;color:var(--color-accent-300)">' + esc(w.pron || '') + '</div>')
@@ -576,7 +582,7 @@
             // backface-visibilityを持つ「面」用の外側divと、overflow-y:autoだけを持つ
             // 回転なしの内側divに分離し、実際にスクロールする要素には一切transformが
             // かからないようにした。
-            + '<div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);box-sizing:border-box;overflow:hidden">'
+            + '<div style="position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;transform:rotateY(180deg);background:var(--color-neutral-800);border:1px solid var(--color-neutral-700);border-radius:var(--radius-lg);box-sizing:border-box;overflow:hidden">'
             + '<div class="sel-dict" style="width:100%;height:100%;padding:20px 20px 24px;display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;box-sizing:border-box;' + faceSelectable + '">'
             + '<div style="display:flex;align-items:center;gap:8px"><div style="font-size:' + (askJa ? '24px' : '16px') + ';font-weight:' + (askJa ? '700' : '500') + '">' + esc(w.word) + '</div>' + speakBtn(wEsc) + '</div>'
             + '<div style="font-size:' + (askJa ? '13px' : '19px') + ';font-weight:' + (askJa ? '400' : '700') + ';color:var(--color-neutral-200);margin-top:2px">' + esc(w.meaning) + '</div>'
@@ -642,7 +648,7 @@
     // (2026-11-22、Famiの指摘: 答えを見るまではネイティブの選択メニューのままにしたい)。
     // カードを画面の残り高さいっぱいに広げ、収まらない分はカード内でスクロール
     // できるようにする(2026-11-23、Famiの指摘: 「評価ボタンの下に大きな空きがある」)。
-    var html = '<div id="vt-active-card" class="card' + (revealSolved ? ' sel-dict' : '') + '" style="margin-top:12px;padding:26px 20px;text-align:center;flex:1;min-height:220px;overflow-y:auto;box-sizing:border-box">'
+    var html = '<div id="vt-active-card" class="card' + (revealSolved ? ' sel-dict' : '') + '" style="margin-top:12px;padding:26px 20px;text-align:center;flex:1;min-height:min(220px,35vh);overflow-y:auto;box-sizing:border-box">'
       + '<div style="font-weight:600;font-size:18px;line-height:1.5">' + esc(w.meaning) + '</div>'
       + '<div style="font-size:12px;color:var(--color-neutral-400);margin-top:4px">英語で言ってみましょう（ヒントを見ながらでもOK）</div>'
       + '<div style="font-family:ui-monospace,Menlo,monospace;font-size:22px;letter-spacing:2px;margin-top:18px;min-height:32px;color:' + (revealSolved ? 'var(--color-accent-300)' : 'var(--color-text)') + '">' + shown + '</div>';
